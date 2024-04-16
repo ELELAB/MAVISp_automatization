@@ -1,0 +1,18 @@
+Membrane 1
+Parameters of Protein in Membrane
+Depth/Hydrophobic Thickness	ΔGtransfer	Tilt Angle
+31.8 ± 0.4 Å	-153.7 kcal/mol	2 ± 0°
+Membrane Embedded Residues
+(in Hydrocarbon Core)
+Subunits	Tilt	Segments
+Embedded residues:
+A	39	60-87,89,92-93,112,116,126,129-155,235,242,245-246,249-250,253,290-328,372-399,401-402,405-425,472-492
+B	39	60-87,89,92-93,112,116,126-127,129-155,235,242,245-246,249-250,253,290-328,372-399,401-402,405-425,472-492,495
+C	40	59-87,89,93,112,116,126,129-155,234-235,242,244-246,249-250,253,288,290-328,372-399,401-402,405-425,472-492,495
+Transmembrane secondary structure segments:
+A	17	1( 60- 84), 2( 129- 155), 3( 291- 303), 4( 372- 399), 5( 406- 424)
+B	17	1( 62- 84), 2( 129- 155), 3( 291- 303), 4( 321- 328), 5( 372- 399), 6( 406- 424)
+C	17	1( 60- 84), 2( 129- 155), 3( 290- 303), 4( 321- 328), 5( 372- 399), 6( 406- 424)
+Output Messages
+The protein hydrophobic boundaries are planar (no intrinsic curvature detected)
+emin= -153.7 thickn= 31.8+- 0.4 tilt= 2.+- 0.
