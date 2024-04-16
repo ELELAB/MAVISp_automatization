@@ -6,7 +6,7 @@ Cancer Systems Biology, Health and Technology Department, Section for Bioinforma
 
 ## Introduction
 
-"ToUpdate" is a Snakemake pipeline that has been designed to automate the various steps involved in the mavisp framework. With this pipeline, users are able to perform the following tasks automatically: 
+MAVISp_automatization is a Snakemake pipeline that has been designed to automate the various steps involved in the mavisp framework. With this pipeline, users are able to perform the following tasks automatically: 
 - mutations aggregation, 
 - retrieval and trimming of PDB models from AplphaFold ,
 - retrieval information of all available PDBs in the Protein Data Bank, 
@@ -14,7 +14,8 @@ Cancer Systems Biology, Health and Technology Department, Section for Bioinforma
 - retrieval information about interactors through two different databases,  
 - protein phosphorylation prediction,
 - RaSP calculation,
-- classification of mutations occurring in protein sequence through different approaches
+- classification of mutations occurring in protein sequence through different approaches,
+- identification of denovo phosphorylation sites upon mutation
 
 ## Requirements
 
@@ -171,6 +172,8 @@ The pipeline automates the following steps for each entry in the input CSV file,
   responsible for the phosphorylation and their associated confidence scores. The output is stored in the "netphos" folder.
 
 - **RosettaDDGprediction relax step**: The Cartesian2020 protocol and the ref2015 energy function from the Rosetta suite are exploited to perform the relax step required by the software using the trimmed structure obtained in the step above. The output is stored in a path specified in the config.yaml file.
+
+- **identification of denovo phosphorylation sites**: netphos is used on wild-type or mutant sequences to identify cases in which mutations cause significant changes in the propensity of a certain site to be phosphorylated
 
 
 ## Output structure
