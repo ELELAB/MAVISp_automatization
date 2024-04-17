@@ -9,7 +9,6 @@ pdb2labels -p $pdb
 set +e
 ddg2summary -p $pdb -d final_averages -l mutation_list.txt -L $list &> log
 exit_code=$?
-echo $exit_code
 
 if [[ $exit_code -eq 1 ]]; then
     line=$(grep 'no usable mutations were found in mutations file; exiting...' log)
