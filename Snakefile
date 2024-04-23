@@ -497,7 +497,7 @@ rule clinvar:
         # create the input for the clinvar.py script
         clinvar_input = df[['protein', 'ref_seq']]
         clinvar_input.rename(columns={'protein' : 'gene',
-                                      'ref_seq' : 'iso'}, inplace=True)
+                                      'ref_seq' : 'isoform'}, inplace=True)
         clinvar_input = clinvar_input[(clinvar_input['gene'] == \
     		                           wildcards.hugo_name)]
         clinvar_input.to_csv(os.path.join(wildcards.hugo_name,
