@@ -741,10 +741,10 @@ rule clinvar_mut:
                                     f"cancermuts/{mutlist}",
                                     header=None)
 
-        header=["variant_name"]
+        header=["protein_var"]
         df_clinvar.columns=header
-        df_clinvar.insert(0,"gene",wildcards.hugo_name)
-        df_clinvar.insert(2,"iso",refseq)
+        df_clinvar.insert(0, "gene", wildcards.hugo_name)
+        df_clinvar.insert(2, "iso",  refseq)
 
         shell("mkdir -p {wildcards.hugo_name}/clinvar")
         
