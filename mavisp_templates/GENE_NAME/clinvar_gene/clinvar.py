@@ -8,17 +8,17 @@ import pprint
 import time
 import traceback
 import argparse
-from tabulate import tabulate
 
-d = {'Cys': 'C', 'Asp': 'D', 'Ser': 'S', 'Gln': 'Q', 'Lys': 'K',
-     'Ile': 'I', 'Pro': 'P', 'Thr': 'T', 'Phe': 'F', 'Asn': 'N',
-     'Gly': 'G', 'His': 'H', 'Leu': 'L', 'Arg': 'R', 'Trp': 'W',
-     'Ala': 'A', 'Val':'V', 'Glu': 'E', 'Tyr': 'Y', 'Met': 'M'}
+
+three_one_letter_annotation = {'Cys': 'C', 'Asp': 'D', 'Ser': 'S', 'Gln': 'Q', 'Lys': 'K',
+                               'Ile': 'I', 'Pro': 'P', 'Thr': 'T', 'Phe': 'F', 'Asn': 'N',
+                               'Gly': 'G', 'His': 'H', 'Leu': 'L', 'Arg': 'R', 'Trp': 'W',
+                               'Ala': 'A', 'Val':'V', 'Glu': 'E', 'Tyr': 'Y', 'Met': 'M'}
 
 stars = {'practice guideline':'4', 
          'reviewed by expert panel':'3', 
          'criteria provided, multiple submitters, no conflicts':'2',
-         'criteria provided, multiple submitters': '1.2',
+         'criteria provided, multiple submitters': 'NA',
          'criteria provided, conflicting interpretations':'1',
          'criteria provided, conflicting classifications':'1',
          'criteria provided, single submitter':'1',
@@ -62,7 +62,7 @@ def mutations_convert(string,dic,print_message):
         #some variants are annotated as follow: p.Glu4Ter. 
         #So we need the if statement to match the second element 
         #after the number.
-        if match.group(3) in d.keys():
+        if match.group(3) in dic.keys():
             substring_list = list(match.groups())
             return f"{dic[substring_list[0]]}{substring_list[1]}{dic[substring_list[2]]}"
     
@@ -106,7 +106,7 @@ def from_321(string,dic):
             mutant_residue = {i for i in dic if dic[i] == substring_list[2]}
             return "(p." + str(wt_residue)[2:-2] + substring_list[1] + str(mutant_residue)[2:-2] + ")"
 
-def melting_dictionary(variants_annotation):
+def melting_dictionary(variants_annotation, add_method = False):
     '''
     Count the number of keys in the second element of variants annotation values
     dictionary, create as many lists as the number of counted keys, inserting in each list
@@ -133,25 +133,27 @@ def melting_dictionary(variants_annotation):
         List of lists from the variants_annotation dictionary.
     '''
     output_list = []
+    classifications = ['GermlineClassification',
+                       'SomaticClinicalImpact',
+                       'OncogenicityClassification']
+
     for clinvar_id in variants_annotation.keys():
-        for index in range(len(variants_annotation[clinvar_id][2][0].keys())):
+        variant_information = [clinvar_id,variants_annotation[clinvar_id]["variant"],variants_annotation[clinvar_id]["gene"]]
+        for classification in classifications:
             classification_check = []
-            classification_check.append(list(variants_annotation[clinvar_id][2][0].keys())[index])
-            classification_check.append(list(variants_annotation[clinvar_id][3][0].keys())[index])
-            classification_check.append(list(variants_annotation[clinvar_id][4][0].keys())[index])
-            if len(set(classification_check)) == 1:
-                classification = list(variants_annotation[clinvar_id][2][0].values())[index]
-                condition = list(variants_annotation[clinvar_id][3][0].values())[index]
-                review_status = list(variants_annotation[clinvar_id][4][0].values())[index]
-                features = [clinvar_id,
-                            variants_annotation[clinvar_id][0],
-                            variants_annotation[clinvar_id][1],
-                            [classification],
-                            condition,
-                            [review_status]]
-                if args.methods:
-                    features.append(variants_annotation[clinvar_id][5][0])
-                output_list.append(features)
+            if classification in variants_annotation[clinvar_id]["classifications"].keys():
+                classification_check.append(variants_annotation[clinvar_id]["classifications"][classification])
+            if classification in variants_annotation[clinvar_id]["conditions"].keys():
+                classification_check.append(variants_annotation[clinvar_id]["conditions"][classification])
+            if classification in variants_annotation[clinvar_id]["review_status"].keys():
+                classification_check.append(variants_annotation[clinvar_id]["review_status"][classification])
+            if add_method:
+                classification_check.append(variants_annotation[clinvar_id]["methods"])
+            if len(classification_check) == 3 or len(classification_check) == 4:
+                variant_features = variant_information+classification_check
+                output_list.append(variant_features)
+            else:
+                print(f"No information for {classification} associated to the clinvar id {clinvar_id}")
 
     return output_list
 
@@ -180,24 +182,30 @@ def URL_response_check(URL, error_message, function):
     max_retries = 200
     attempts = 0
     delay = 3
-    req_succeeded = False
-    while not req_succeeded and attempts < max_retries:
-        if attempts== max_retries:
-            print("ERROR: request failed after 155 attempts; exiting...")
-            exit(1)
-        response = requests.get(URL)
-        if response.status_code != 200:
-            print(f"WARNING: {function} failed to access to {error_message};"\
-                   f" will try again in {delay} seconds (attempt {attempts+1}/{max_retries})")
-            req_succeeded = False
+    while attempts < max_retries:
+        try:
+            response = requests.get(URL)
+        except:
+            print(f"WARNING: An error occurred during the ClinVar databse query."
+                  f" Will try again in {delay} seconds (attempt {attempts+1}/{max_retries})")
+            attempts +=1
+            time.sleep(delay)
+
+        if response and response.status_code == 200:
+            return response
+        elif response:
+            print(f"WARNING: The query to the ClinVar database to access {error_message}"\
+                  f" returned {response.status_code} as response."\
+                  f" Will try again in {delay} seconds (attempt {attempts+1}/{max_retries})")
             attempts +=1
             time.sleep(delay)
         else:
-            req_succeeded = True
-    if not req_succeeded:
-        print("ERROR: request failed after 155 attempts; exiting...")
-        exit(1)
-    return response
+            print("WARNING: No response received. Retrying...")
+            attempts += 1
+            time.sleep(delay)
+        
+    raise RuntimeError("ERROR: request failed after 200 attempts; exiting...")
+    
 
 
 def VCV_summary_retriever(clinvar_id):
@@ -220,12 +228,15 @@ def VCV_summary_retriever(clinvar_id):
         XML summary output associated with the VCV code provided as input.
     '''
     URL_summary="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=clinvar&id="+clinvar_id
-    error_message=f"the variant name in the Clinvar summary for the variant_id {clinvar_id}"
+    error_message=f"summary xml file for the variant_id {clinvar_id}"
     function = "VCV_summary_retriever"
     parse_summary=xmltodict.parse(URL_response_check(URL_summary,error_message,function).content)
-    VCV=(parse_summary['eSummaryResult']\
-                      ["DocumentSummarySet"]\
-                      ['DocumentSummary']['accession'])
+    try:
+        VCV=(parse_summary['eSummaryResult']\
+                          ["DocumentSummarySet"]\
+                          ['DocumentSummary']['accession'])
+    except KeyError:
+        raise KeyError("Error in parsing the summary XML file. Check the ClinVar summary XML structure. Exiting...")
     URL_VCV="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=clinvar&rettype=vcv&id="+VCV
     error_message=f"the XML for the following VCV accession: {VCV}"
     parse_VCV=xmltodict.parse(URL_response_check(URL_VCV,error_message,function).content)
@@ -282,12 +293,17 @@ def filtered_variants_extractor(URL_filter,gene,isoform,mutation_type):
 
     # return clinvar_id if there are variants associated to the query
 
+    try:
+        first_search["eSearchResult"]["Count"]
+    except KeyError:
+        raise KeyError("Error in parsing the XML file at the Count key level. Check the ClinVar XML structure")
+
     if first_search["eSearchResult"]["Count"] != "0":
         if "clinvar_id" in mutation_type:
             clinvar_ids = variant_ids_extractors(first_search)
         else:
             tot_variant=first_search["eSearchResult"]["Count"]
-            error_message=f"the number of missense variants annotated in Clinvar for {gene} gene"
+            error_message=f"the number of missense variants for {gene} gene"
             filtered_URL="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=clinvar&term="+URL_filter+"&retmax="+str(tot_variant)
             parse_search=xmltodict.parse(URL_response_check(filtered_URL,error_message,function).content)
             clinvar_ids = variant_ids_extractors(parse_search)
@@ -302,7 +318,7 @@ def filtered_variants_extractor(URL_filter,gene,isoform,mutation_type):
             print("No missense variants are annotated in Clinvar Database for "+gene+" "+\
                   "gene, the variants provided as input will be annotated in entry_not_found.csv file.")
 
-        return [],gene
+        return None,gene
 
 
 
@@ -337,32 +353,33 @@ def coding_region_variants_extractor(clinvar_VCV_xml,clinvar_code):
         simple_allele_accession = clinvar_VCV_xml['ClinVarResult-Set']\
                                                  ['VariationArchive']\
                                                  ['ClassifiedRecord']\
-                                                 ['SimpleAllele']\
+                                                 ['SimpleAllele']
+    except KeyError:
+        print("Error with 'SimpleAllele' key: the clinvar_id "+clinvar_code+ " could have a different annotation structure. It will be annotated in variants_to_check.csv")
+        simple_allele_accession={}
         
-        if "HGVSlist" in simple_allele_accession.keys():
-            try:
-                HGVS_accession = clinvar_VCV_xml['ClinVarResult-Set']\
-                                                ['VariationArchive']\
-                                                ['ClassifiedRecord']\
-                                                ['SimpleAllele']\
-                                                ["HGVSlist"]\
-                                                ["HGVS"]
-            except:
-                print(simple_allele_accession["HGVSlist"].keys())
+    if "HGVSlist" in simple_allele_accession.keys():
+        try:
+            HGVS_accession = clinvar_VCV_xml['ClinVarResult-Set']\
+                                            ['VariationArchive']\
+                                            ['ClassifiedRecord']\
+                                            ['SimpleAllele']\
+                                            ["HGVSlist"]\
+                                            ["HGVS"]
+        except KeyError:
+            print("Error with 'HGVS' key: the clinvar_id "+clinvar_code+ " could have a different annotation structure for the mutations. It will be annotated in variants_to_check.csv")
+            return list()
 
-            try:
-                hgvss = [ x for x in HGVS_accession if x['@Type'] == 'coding' and "ProteinExpression" in x.keys()]
-                    
-                # there are cases in which the field "InterpretedRecord" is "Included Record", so epeat the previous step with the 
-                # new key
+        try:
+            hgvss = [ x for x in HGVS_accession if x['@Type'] == 'coding' and "ProteinExpression" in x.keys()]
+                
+            # there are cases in which the field "InterpretedRecord" is "Included Record", so epeat the previous step with the 
+            # new key
 
-            except Exception:
-                print("The clinvar_id "+clinvar_code+ " does not have any annotation referring to variant in an expressed protein coding region")
-                hgvss=[]
-        else:
-            hgvss=[]
-    except:
-        print("The clinvar_id "+clinvar_code+ " has a different annotation structure. It will be annotated in variants_to_check.csv")
+        except Exception:
+            print("The clinvar_id "+clinvar_code+ " does not have any annotation referring to variant in an expressed protein coding region")
+            return list()
+    else:
         hgvss=[]
 
 
@@ -413,6 +430,7 @@ def missense_variants_extractor(hgvss, gene, clinvar_id, isoform_to_check):
                 print(f"{identifier} associated to the variant_id {clinvar_id}"\
                         f" is an alternative isoform of {gene} gene, only the mutations"\
                         f" belonging to the {isoform_to_check} isoform will be considered")
+    return "wrong isoform"
 
 def variant_ids_extractors(clinvar_VCV_xml):
     '''
@@ -433,9 +451,13 @@ def variant_ids_extractors(clinvar_VCV_xml):
         List with the ClinVar IDs of interest.
     '''
     
-    ids = clinvar_VCV_xml["eSearchResult"]\
-                         ["IdList"]\
-                         ["Id"]
+    try:
+        ids = clinvar_VCV_xml["eSearchResult"]\
+                             ["IdList"]\
+                             ["Id"]
+    except:
+        raise KeyError("Error in parsing the XML file at the IdList key level. Check the ClinVar XML structure")
+
     if isinstance(ids, list):
         return ids
     else:
@@ -632,8 +654,8 @@ parser=argparse.ArgumentParser(description = 'ClinVar.py: \
                                               gene or specific missense variants of interest\
                                               depending on the provided input.')
 
-group_input = parser.add_mutually_exclusive_group()
-group_search = parser.add_mutually_exclusive_group()
+group_input = parser.add_mutually_exclusive_group(required = True)
+
 
 group_input.add_argument('-g', "--gene_file",
                          dest = "gene_file", 
@@ -650,7 +672,7 @@ group_input.add_argument('-v',  "--variants_file",
                                 " the corresponding gene hugo name and "\
                                 " its isoform code (ref_seq)")
 
-group_search.add_argument('-c', "--cross_check",
+parser.add_argument('-c', "--cross_check",
                           action='store_true', 
                           dest = "cross_check", 
                           default = False,
@@ -672,7 +694,7 @@ parser.add_argument("-m","--methods_inclusion",
 
 parser.add_argument("-o","--output_csv",
                        dest = "out_csv", 
-                       default = False, 
+                       default = "output.csv", 
                        help = "output name")
 
 
@@ -683,170 +705,147 @@ if __name__ == '__main__':
     #                                             ERROR PARSING + OBJECTS INITIALIZATION                                                       #
     ############################################################################################################################################
 
-    if not args.variants_file and not args.gene_file: 
-        print("The command line must contain the following entries: python3 [script_name.py]"\
-              " [list_of_variant.csv] [output.csv].")
-
     if args.cross_check and args.variants_file:
-        print("The cross_check mode of the variants in ClinVar database do not have sense when"\
-              " a file with the mutations is provided. Please, change the command line to avoid"\
-              " waiste of time and make the script faster. Exiting... ")
+        print("The cross_check mode to check the consistency between variants "
+              "annotated as missense variants and variants classified as Pathogenic,"\
+              " Benign, Likely Pathogenic, Likely Benign,"\
+              " Uncertain Significance and Conflicting interpretation makes sense only when"\
+              " a file with the gene is provided. Exiting... ")
         exit(1)
 
     #------------------------------ Input Reading --------------------------#
 
-  
+    gene_search = False 
+    variant_search = False
+
     if args.gene_file:
+        gene_search = True  
         input_file = args.gene_file
+        required_cols = set(['gene', 'isoform'])
+        columns_name = {'gene':'gene','isoform':'ref_seq'}
+
     if args.variants_file:
+        variant_search = True
         input_file = args.variants_file
+        required_cols = set(['gene','protein_var','iso'])
+        columns_name = {'gene':'gene','protein_var':'variant','iso':'ref_seq'}
 
-    df = pd.read_csv(input_file, sep = ";")    # input csv file
+    df = pd.read_csv(input_file, sep = ";")   # input csv file
+   
+    df = df.astype(str)
 
-    if len(df.columns.tolist()) != 3 and len(df.columns.tolist()) != 2:
-        print(f"The input file must contain the following columns ';' separated depending on the analysis:\n"\
-              f" if you're looking for all mutations information for a given gene the input must have the following columns\n\n"\
-              f" gene;iso \n"\
-              f" (gene_name);(isoform)\n\n"\
-              f" if you're looking for information about specific mutations the input must have the following columns: \n\n"\
-              f" gene;protein_var;iso\n"\
-              f" (gene_name);(mutation);(isoform)\n\n")
+    if not required_cols.issubset(set(df.columns.tolist())):
+        print(f"The input file must contain the following columns ';' separated:\n"\
+              f" {';'.join(columns_name)}\n\n")
 
-        exit(1)
+        exit(1)    
+
+    df = df.rename(columns = columns_name)
 
     #----------------------- Initial object assignment ---------------------#
 
     # objects common to gene and variants searches
 
-    input_rows = df.to_numpy().tolist()   # convert input file into a numpy object with input rows as list
-    not_found_var=[]                      # list of variants not found
-    not_found_gene=[]                     # list of genes not found
-    strange_variant_annotation={}         # dictionary of variants not canonically annotated, in which the key is 
-                                          # the clinavr id and the value a list in which in the first position there is 
-                                          # the mutation and in second position the gene name
-    ids=[]                                # list with the Clinvar id associated to the mutations for a given gene
+    not_found_var = []                      # List to store variants that were not found.
+    not_found_gene = []                     # List to store genes that were not found.
+    strange_variant_annotation = {}         # Dictionary to store variants not canonically annotated. Key is the ClinVar ID, 
+                                            # and the value is a list containing the mutation in the first position and 
+                                            # the gene name in the second position.
+    ids = []                                # List of ClinVar IDs associated with mutations for a given gene.
     
     # objects for gene search
 
-    gene_name=[]                          # list with the genes name provided in the input file
-    selected_isoform=[]                   # list with the isoform provided in the input file
-    variants = []                         # list with missense mutations in coding region expressed in hgvs format
-    filter_ids = {}                       # list with the Clinvar id associated to a specifica classification in ClinVar 
-    inconsistent_annotations = {}         # list with the mutations that should be annotated in the missense class in ClinVar but actually not
-    key_to_remove=[]                      # list of keys that will be removed form the output dictionary    
-    missense_variants={}                  # dictionary to return in ehcih the key is the clinvar id and as value the
-                                          # a list containing mutation gene name, classification, condition and review status
-
-    # objects for variants search                             
-    var_right_iso=0                       # count the misssense mutations in the isoform provided as input
-    var_other_iso=0                       # count the missense mutations in other isoforms
-    uncanonical_annotation=0              # count the missense mutations in the isoform provided as input with
-                                          # a non-canonical annotation
-    gene_search = False
-    variant_search = False
-
-    # distinguish which kind of research to perform
-
-    if len(df.columns.tolist()) == 3:
-        variant_search = True
-        
-    if len(df.columns.tolist()) == 2:
-        gene_search = True
+    gene_name = []                          # List of gene names provided in the input file.
+    selected_isoform = []                   # List of isoforms provided in the input file.
+    variants = []                           # List of missense mutations in coding region expressed in HGVS format.
+    filter_ids = {}                         # Dictionary with ClinVar IDs associated with a specific classification in ClinVar.
+    inconsistent_annotations = {}           # Dictionary with mutations that should be annotated in the missense class in ClinVar but are not.
+    key_to_remove=[]                        # List of keys that will be removed from the output dictionary.
+    missense_variants={}                    # dictionary to return in ehcih the key is the clinvar id and as value the
+                                            # Dictionary to return, where the key is the ClinVar ID and the value is a list 
+                                            # containing mutation, gene name, classification, condition, and review status.
 
     ###########################################################################################################################################
     #                                     EXTRACTION OF CLINVAR IDS FROM MISSENSE MUTATIONS                                                   #
     ###########################################################################################################################################
 
-    string = 50*" "+"Clinvar id extraction"+50*" "
-    header = [string]
-    table =[""]
-    print(tabulate(table, header, tablefmt="fancy_grid"))
+    print(f"|{'-' * 81}|")
+    print(f"|{'Clinvar id extraction' : ^81}|")
+    print(f"|{'-' * 81}|")
     
     #get access to the xml file in dictionary format for each gene
-    for input_row in input_rows:
-        gene = input_row[0]          # gene name from input file
-        ref_seq = input_row[1]       # ref seq from input file
+    for _, row in df.iterrows():                                     
+
+    ########################## Get the clinvar ids associated to the missense mutations of interest ########################
+        if gene_search:
+            filter_missense_variants = "("+row["gene"]+"%5Bgene%5D%20AND%20((%22missense%20variant%22%5Bmolecular%20consequence%5D%20OR%20%22SO%200001583%22%5Bmolecular%20consequence%5D)))"
+            mutation_type = "missense"
         if variant_search:
-            variant = input_row[1]   # variant name in case a variant input file is provided
-            ref_seq = input_row[2]   # ref_seq in case of a variant input file is provided
-        i = 0                        # while loop stopping condition
-        attempt = 0                  # starting attempt number
-        max_attempts = 200           # ending attempt number
-        delay = 3                    # delay between two consecutive queries
+            filter_missense_variants = row["gene"]+"[gene]+AND+("+row["variant"]+")[all]"
+            mutation_type = "clinvar_id"
 
-        while i == 0 and attempt < max_attempts:
-            if attempt == max_attempts:
-                print("ERROR: request failed after 200 attempts; exiting...")
-                exit(1)  
+        try:
+            clinvar_ids,out_gene = filtered_variants_extractor(filter_missense_variants,row["gene"],row["ref_seq"],mutation_type)
+        except RuntimeError as e:
+            print(e)
+            exit(1)
 
-            ########################## Get the clinvar ids associated to the missense mutations of interest ########################
-            try:
-                if gene_search:
-                    term = "\"missense variant\""
-                    filter_missense_variants="("+str(gene)+"%5Bgene%5D%20AND%20((%22missense%20variant%22%5Bmolecular%20consequence%5D%20OR%20%22SO%200001583%22%5Bmolecular%20consequence%5D)))"
-                    clinvar_ids,out_gene = filtered_variants_extractor(filter_missense_variants,gene,ref_seq,"missense")
-                    if clinvar_ids:
-                        selected_isoform.append(ref_seq)
-                        gene_name.append(gene)
-                        ids.append(clinvar_ids)
-                    else:
-                        not_found_gene.append(out_gene)
+        if clinvar_ids:
+            selected_isoform.append(row["ref_seq"])
+            gene_name.append(row["gene"])
+            ids.append(clinvar_ids)
+            if variant_search:
+                variants.append(row["variant"])
+        else:
+            not_found_gene.append(out_gene)
+            if variant_search:
+                not_found_var.append(row["variant"])
 
-                if variant_search:
-                    URL_filter=str(gene)+"[gene]+AND+("+str(variant)+")[all]"
-                    clinvar_ids, out_gene = filtered_variants_extractor(URL_filter, gene, ref_seq, "clinvar_id" )
-                    if clinvar_ids:
-                        selected_isoform.append(ref_seq)
-                        gene_name.append(gene)
-                        ids.append(clinvar_ids)
-                        variants.append(variant)
-                    else:
-                        not_found_var.append(variant)
-                        not_found_gene.append(out_gene)
+        ################################### Get clinvar ids associated to the classified mutations #########################
+        # URLs for selecting the Pathogenic, Likely Pathognic, Likely Benign and Benign ClinVar ids associated to the input gene
+        if args.cross_check:
+            filter_pathogenic = "("+row["gene"]+"%5Bgene%5D%20AND%20((%22clinsig%20pathogenic%22%5BProperties%5D%20or%20%22clinsig%20pathogenic%20low%20penetrance%22%5BProperties%5D%20or%20%22clinsig%20established%20risk%20allele%22%5BProperties%5D)"
+            filter_benign = "("+row["gene"]+"%5Bgene%5D%20AND%20(%22clinsig%20benign%22%5BProperties%5D))"
+            filter_likely_pathogenic = "("+row["gene"]+"%5Bgene%5D%20AND%20((%22clinsig%20likely%20pathogenic%22%5BProperties%5D%20or%20%22clinsig%20likely%20pathogenic%20low%20penetrance%22%5BProperties%5D%20or%20%22clinsig%20likely%20risk%20allele%22%5BProperties%5D)"
+            filter_likely_benign = "("+row["gene"]+"%5Bgene%5D%20AND%20(%22clinsig%20benign%22%5BProperties%5D))%20AND%20(%22clinsig%20likely%20benign%22%5BProperties%5D))"
+            filter_conflicting = "("+row["gene"]+"%5Bgene%5D%20AND%20(%22clinsig%20has%20conflicts%22%5BProperties%5D))"
+            filter_uncertain = "("+row["gene"]+"%5Bgene%5D%20AND%20((%22clinsig%20vus%22%5BProperties%5D%20or%20%22clinsig%20uncertain%20risk%20allele%22%5BProperties%5D)))"
 
+            filters_on_classification = [filter_pathogenic, 
+                                         filter_benign, 
+                                         filter_likely_pathogenic, 
+                                         filter_likely_benign, 
+                                         filter_uncertain, 
+                                         filter_conflicting]
 
-                ################################### Get clinvar ids associated to the classified mutations #########################
-                # URLs for selecting the Pathogenic, Likely Pathognic, Likely Benign and Benign ClinVar ids associated to the input gene
-                if args.cross_check:
-                    filter_pathogenic = "("+str(gene)+"%5Bgene%5D%20AND%20((%22clinsig%20pathogenic%22%5BProperties%5D%20or%20%22clinsig%20pathogenic%20low%20penetrance%22%5BProperties%5D%20or%20%22clinsig%20established%20risk%20allele%22%5BProperties%5D)"
-                    filter_benign = "("+str(gene)+"%5Bgene%5D%20AND%20(%22clinsig%20benign%22%5BProperties%5D))"
-                    filter_likely_pathogenic = "("+str(gene)+"%5Bgene%5D%20AND%20((%22clinsig%20likely%20pathogenic%22%5BProperties%5D%20or%20%22clinsig%20likely%20pathogenic%20low%20penetrance%22%5BProperties%5D%20or%20%22clinsig%20likely%20risk%20allele%22%5BProperties%5D)"
-                    filter_likely_benign = "("+str(gene)+"%5Bgene%5D%20AND%20(%22clinsig%20benign%22%5BProperties%5D))%20AND%20(%22clinsig%20likely%20benign%22%5BProperties%5D))"
-                    filter_conflicting = "("+str(gene)+"%5Bgene%5D%20AND%20(%22clinsig%20has%20conflicts%22%5BProperties%5D))"
-                    filter_uncertain = "("+str(gene)+"%5Bgene%5D%20AND%20((%22clinsig%20vus%22%5BProperties%5D%20or%20%22clinsig%20uncertain%20risk%20allele%22%5BProperties%5D)))"
+            classifications = ["Pathogenic",     
+                               "Benign", 
+                               "Likely Pathogenic", 
+                               "Likely Benign", 
+                               "vus", 
+                               "Conflicting"]
 
-                    filters_on_classification = [filter_pathogenic, 
-                                                 filter_benign, 
-                                                 filter_likely_pathogenic, 
-                                                 filter_likely_benign, 
-                                                 filter_uncertain, 
-                                                 filter_conflicting]
+            for classification,URL in zip(classifications,filters_on_classification):
+                
+                try:
+                    clinvar_ids,out_gene = filtered_variants_extractor(URL,row["gene"],row["ref_seq"],classification)
+                except RuntimeError as e:
+                    print(e)
+                    exit(1)
 
-                    classifications = ["Pathogenic",     
-                                       "Benign", 
-                                       "Likely Pathogenic", 
-                                       "Likely Benign", 
-                                       "vus", 
-                                       "Conflicting"]
-
-                    for classification,URL in zip(classifications,filters_on_classification):
-                        clinvar_ids,out_gene = filtered_variants_extractor(URL,gene,ref_seq,classification)
-                        if clinvar_ids: 
-                            filter_ids[classification] = [clinvar_ids, [gene], [ref_seq]]
-                i=1
-            except Exception:
-                traceback.print_exc()
-                print(f"WARNING: Request failed; will try again in {delay} seconds (attempt {attempt+1}/{max_attempts}")
-                attempt+=1
-                time.sleep(delay)
+                if clinvar_ids: 
+                    filter_ids[classification] = [clinvar_ids, [row["gene"]], [row["ref_seq"]]]
 
     ##########################    Dictionary  with clinvar_id as key and ref_seq and gene as values     ############################
 
     for index in range(len(ids)):
         for clinvar_id in range(len(ids[index])):
-            missense_variants.update({ids[index][clinvar_id]: [selected_isoform[index],[gene_name[index]]]})
+            variant_information = {"gene":gene_name[index],
+                                   "isoform":selected_isoform[index],
+                                   }
             if variant_search:
-                 missense_variants.update({ids[index][clinvar_id]: [selected_isoform[index],[gene_name[index]],variants[index]]})
+                variant_information["variant"] = variants[index]
+            missense_variants[ids[index][clinvar_id]] = variant_information
 
 
 ###############################################################################################################################################
@@ -855,198 +854,188 @@ if __name__ == '__main__':
 
     ###### Parse each clinvar id to check if the mutation are associated to the main isoform and the mutations are annotated canonically ######
 
-    string = 40*" "+"Missense variants information annotation"+41*" "
-    header = [string]
-    table =[""]
-    print(tabulate(table, header, tablefmt="fancy_grid"))
+    print(f"|{'-' * 81}|")
+    print(f"|{'Missense variants information annotation' : ^81}|")
+    print(f"|{'-' * 81}|")
 
-    variants_to_check = missense_variants
     counter=0
-    for clinvar_id in variants_to_check:
-        gene = variants_to_check[clinvar_id][1][0]            # gene name from the entry in the dictionary
-        isoform_to_check = variants_to_check[clinvar_id][0]   # isoform to check 
-        variants_to_check[clinvar_id].pop(0)                  # remove the isoform information to provide a dictionary in the right format
+
+    # objects for variants search                             
+    var_right_iso=0                       # count the misssense mutations in the isoform provided as input
+    var_other_iso=0                       # count the missense mutations in other isoforms
+    uncanonical_annotation=0              # count the missense mutations in the isoform provided as input with
+                                          # a non-canonical annotation
+    for clinvar_id in missense_variants:
+        gene = missense_variants[clinvar_id]['gene']                     # remove the isoform information gene name from the entry in the dictionary
+        isoform_to_check = missense_variants[clinvar_id].pop('isoform')  # isoform to check                          
         if variant_search:
-            variant = variants_to_check[clinvar_id][1]
-            variants_to_check[clinvar_id].pop(1) 
+            variant = missense_variants[clinvar_id].pop('variant')
         correct_variant = ""                                
-        counter+=1                  
-        variation=[]  
-        i=0
-        attempt=0
-        max_attempts=200
-        delay=3
-        while i==0 and attempt<max_attempts:
-            if attempt==max_attempts:
-                print("ERROR: request failed after 200 attempts; exiting...")
-                exit(1)
+        counter += 1
 
-            ##################################### get access to specific summary VCV xml file access ######################################### 
+        ##################################### get access to specific summary VCV xml file access ######################################### 
 
-            try:
-                VCV = ""
-                print("Processing information for "+clinvar_id+" clinvar id from Clinvar. Progress --> "+str(counter)+"/"+str(len(variants_to_check)))
+        print("Processing information for "+clinvar_id+" clinvar id from Clinvar. Progress --> "+str(counter)+"/"+str(len(missense_variants)))
 
-                ##################################### get access to specific summary VCV xml file access #####################################
-                parse_VCV = VCV_summary_retriever(clinvar_id)
+        ##################################### get access to specific summary VCV xml file access #####################################
+        
+        try:
+            parse_VCV = VCV_summary_retriever(clinvar_id)
+        except (RuntimeError,KeyError) as e:
+            print(e)
+            exit(1)
 
-                ############################## get access to the hgvss list associated to the clinvar_id #####################################
+        ############################## get access to the hgvss list associated to the clinvar_id #####################################
 
-                hgvss = coding_region_variants_extractor(parse_VCV,clinvar_id)
+        hgvss = coding_region_variants_extractor(parse_VCV,clinvar_id)
 
-                if not hgvss:
-                    if gene_search:
-                        strange_variant_annotation.update({clinvar_id:["to check",variants_to_check[clinvar_id][0][0]]})
-                    if variant_search:
-                        strange_variant_annotation.update({clinvar_id:[variant,variants_to_check[clinvar_id][0][0]]})
-                    key_to_remove.append(clinvar_id)
+        if not hgvss:
+            clinvar_id_features = {}
+            clinvar_id_features["gene"] = gene
+            if gene_search:
+                clinvar_id_features["variant"] = "to check"
+            if variant_search:
+                clinvar_id_features["variant"] = variant
+            strange_variant_annotation[clinvar_id] = clinvar_id_features
 
-                else:
+            key_to_remove.append(clinvar_id)
+            continue
 
-                    correct_variant = missense_variants_extractor(hgvss, gene, clinvar_id, isoform_to_check)
+        correct_variant = missense_variants_extractor(hgvss, gene, clinvar_id, isoform_to_check)
 
-                    if correct_variant == None:
-                        print("The clinvar_id "+clinvar_id+ " has a different annotation structure. It will be annotated in variants_to_check.csv")
-                        strange_variant_annotation.update({clinvar_id:["to check",gene]})
-                        key_to_remove.append(clinvar_id)
+        if correct_variant is None:
+            print("The clinvar_id "+clinvar_id+ " has a different annotation structure. It will be annotated in variants_to_check.csv")
+            uncanonical_annotation += 1
+            clinvar_id_features = {}
+            clinvar_id_features["variant"] = "to check"
+            clinvar_id_features["gene"] = gene
+            strange_variant_annotation[clinvar_id] = clinvar_id_features
+            key_to_remove.append(clinvar_id)
+            continue
 
 
-                    ################################################# retrieve classification ####################################################
+        ################################################# retrieve classification ####################################################
 
-                    classifications = classifications_extractor(parse_VCV)
+        classifications = classifications_extractor(parse_VCV)
 
-                    ################################################### retrieve conditions ######################################################
+        ################################################### retrieve conditions ######################################################
+        
+        conditions = conditions_extractor(parse_VCV)
+
+        ############################################### retrieve assessment method ###################################################
+
+        methods = classification_methods_extractor(parse_VCV)
+
+        if isinstance(methods,tuple):
+            methods = methods[0]
+
+        ############################################### retrieve review status #######################################################
+        
+        review_status = review_status_extractor(parse_VCV)
+          
+        #the clinvar_id for which there are not mutations in the isoform provided as input will be added to the entry_not_found file
+        if gene_search:
+            if correct_variant=="wrong isoform":
+                print(f"The {clinvar_id} clinvar id for {gene} gene does not contain any mutation in the isoform provided as input.",\
+                      f" The entry will be added to entry_not_found.csv")
+                var_other_iso+=1
+                not_found_var.append(clinvar_id)
+                not_found_gene.append(gene)
+                key_to_remove.append(clinvar_id)
+                continue
+            var_right_iso+=1
+            if re.search("p.[A-Z][a-z][a-z][0-9]+[A-Z][a-z][a-z]",str(correct_variant)) or re.search("p.\w+delins\w+",str(correct_variant)):
+                missense_variants[clinvar_id]['variant'] = correct_variant
+                variant_features = {}
+                for feature,key_name in zip([classifications,conditions,review_status,methods],['classifications','conditions','review_status','methods']):
+                    variant_features[key_name] = feature
+                missense_variants[clinvar_id].update(variant_features)
+
+            else:
+                clinvar_id_features = {}
+                clinvar_id_features["variant"] = correct_variant
+                clinvar_id_features["gene"] = gene
+                uncanonical_annotation=uncanonical_annotation+1
+                strange_variant_annotation[clinvar_id] = clinvar_id_features
+                key_to_remove.append(clinvar_id)
                     
-                    conditions = conditions_extractor(parse_VCV)
+        if variant_search:
+            if not correct_variant:
+                key_to_remove.append(clinvar_id)
+                continue 
 
-                    ############################################### retrieve assessment method ###################################################
+            reference_variant = mutations_convert(correct_variant,three_one_letter_annotation,True)
+            # compile the dictionary with the mutation associated to the right isoform
+            if reference_variant == variant:
+                missense_variants[clinvar_id]['variant'] = variant
+                variant_features = {}
+                for feature,key_name in zip([classifications,conditions,review_status,methods],['classifications','conditions','review_status','methods']):
+                    variant_features[key_name] = feature
+                missense_variants[clinvar_id].update(variant_features)
+            else:
+                # if the isoform is correct but the input mutation is not in the hgvss dicitonary put the mutation 
+                # and the corresponding gene in not found lists.
+                clinvar_id_features = {}
+                clinvar_id_features["variant"] = variant
+                clinvar_id_features["gene"] = gene
+                strange_variant_annotation[clinvar_id] = clinvar_id_features
+                key_to_remove.append(clinvar_id)
 
-                    methods = classification_methods_extractor(parse_VCV)
-
-                    if isinstance(methods,tuple):
-                        methods = methods[0]
-
-                    ############################################### retrieve review status #######################################################
-                    
-                    review_status = review_status_extractor(parse_VCV)
-                      
-                    #the clinvar_id for which there are not mutations in the isoform provided as input will be added to the entry_not_found file
-                    if gene_search:
-                        if len(str(correct_variant))==0:
-                            print(f"The {clinvar_id} clinavr_id for {gene} gene does not contain any mutation in the isoform provided as input.",\
-                                  f" The entry will be added to entry_not_found.csv")
-                            var_other_iso=var_other_iso+1
-                            not_found_var.append(clinvar_id)
-                            not_found_gene.append(gene)
-                            key_to_remove.append(clinvar_id)
-                        else:
-                            var_right_iso=var_right_iso+1
-                            if re.search("p.[A-Z][a-z][a-z][0-9]+[A-Z][a-z][a-z]",str(correct_variant)) or re.search("p.\w+delins\w+",str(correct_variant)):
-                                variation.append(correct_variant)
-                                variants_to_check[clinvar_id].insert(0,variation)
-                                for feature in [classifications,conditions,review_status,methods]:
-                                    variants_to_check[clinvar_id].append([feature])
-                            else:
-                                if not correct_variant == None:
-                                    uncanonical_annotation=uncanonical_annotation+1
-                                    strange_variant_annotation.update({clinvar_id:[correct_variant,gene]})
-                                    key_to_remove.append(clinvar_id)
-                                
-                    if variant_search:
-                        if correct_variant:
-                            reference_variant = mutations_convert(correct_variant,d,True)
-                            # compile the dictionary with the mutation associated to the right isoform
-                            if reference_variant == str(variant):
-                                variation.append(reference_variant)
-                                variants_to_check[clinvar_id].insert(0,variation)
-                                for feature in [classifications,conditions,review_status,methods]:
-                                    variants_to_check[clinvar_id].append([feature])
-
-                            # if the isoform is correct but the input mutation is not in the hgvss dicitonary put the mutation 
-                            # and the correpsonding gene in not found lists.
-                            else:
-                                strange_variant_annotation.update({clinvar_id:[variant,gene]})
-                                key_to_remove.append(clinvar_id)
-                        else:
-                            key_to_remove.append(clinvar_id)
-
-
-                i=1
-
-            except Exception:
-                traceback.print_exc()
-                print(f"WARNING: Request failed; will try again in {delay} seconds (attempt {attempt+1}/{max_attempts}")
-                attempt+=1
-                time.sleep(delay)
-
+            
+                
     if gene_search:
 
-        print(f"{var_right_iso}/{len(variants_to_check)} missense mutations belong to the input isoform of which {var_right_iso-uncanonical_annotation}"\
+        print(f"{var_right_iso}/{len(missense_variants)} missense mutations belong to the input isoform of which {var_right_iso-uncanonical_annotation}"\
               f" with the canonical annotation and {uncanonical_annotation} with a different"\
-              f" annotation, {var_other_iso}/{len(variants_to_check)} missense mutations do not belong to the input isoform")
+              f" annotation, {var_other_iso}/{len(missense_variants)} missense mutations do not belong to the input isoform")
 
     # remove entries in which the clinvar id is associated with a non-proper mutation (i.e p.Gly123Ter) 
     for i in key_to_remove:
-        del variants_to_check[i]
+        missense_variants.pop(i)
 
     ###############################################################################################################################################
     #                                                      CLINVAR ANNOTATION CONSISTENCY CHECKING                                                #
     ###############################################################################################################################################
 
     if args.cross_check:
-        string = 38*" "+"Consistency check between ClinVar annotations"+38*" "
-        header = [string]
-        table =[""]
-        print(tabulate(table, header, tablefmt="fancy_grid"))
+        print(f"|{'-' * 81}|")
+        print(f"|{'Consistency check between ClinVar annotations' : ^81}|")
+        print(f"|{'-' * 81}|")
         misannotated = {}
+
         for classification,ids in filter_ids.items():
-            counter+=1                  
-            variation=[] 
-            i=0
-            attempt=0
-            max_attempts=200
-            delay=3
-            while i==0 and attempt<max_attempts:
+            clinvar_ids = ids[0]
+            variants = []
+            for clinvar_id in clinvar_ids:
+                variants_set = []
                 try:
-                    if attempt==max_attempts:
-                        print("ERROR: request failed after 200 attempts; exiting...")
-                        exit(1)
-                    clinvar_ids = ids[0]
-                    variants = []
-                    for clinvar_id in clinvar_ids:
-                        variants_set = []
-                        parse_VCV = VCV_summary_retriever(clinvar_id)
-                        hgvss = coding_region_variants_extractor(parse_VCV,clinvar_id)
-                        if hgvss:
-                            correct_variant = missense_variants_extractor(hgvss, ids[1][0], clinvar_id, ids[2][0])
-                            if re.search("p.[A-Z][a-z][a-z][0-9]+[A-Z][a-z][a-z]",str(correct_variant)) and "Ter" not in correct_variant:
-                                if not clinvar_id in variants_to_check.keys():
-                                    variants.append([clinvar_id,ids[1][0]])
-                                    classifications = classifications_extractor(parse_VCV)
-                                    conditions = conditions_extractor(parse_VCV)
-                                    methods = classification_methods_extractor(parse_VCV)
-                                    if isinstance(methods,tuple):
-                                        methods = methods[0]
-                                    review_status = review_status_extractor(parse_VCV)
-                                    value = [[correct_variant],[ids[1][0]]]
-                                    for feature in [classifications,conditions,review_status,methods]:
-                                            value.append([feature])
-                                    inconsistent_annotations[clinvar_id] = value
+                    parse_VCV = VCV_summary_retriever(clinvar_id)
+                except (RuntimeError,KeyError) as e:
+                    print(e)
+                    exit(1)
 
-                    misannotated[classification] = variants
+                hgvss = coding_region_variants_extractor(parse_VCV,clinvar_id)
+                if hgvss and re.search("p.[A-Z][a-z][a-z][0-9]+[A-Z][a-z][a-z]",str(correct_variant)) and "Ter" not in correct_variant:
+                    correct_variant = missense_variants_extractor(hgvss, ids[1][0], clinvar_id, ids[2][0])
+                    if not clinvar_id in missense_variants.keys():
+                        variants.append([clinvar_id,ids[1][0]])
+                        classifications = classifications_extractor(parse_VCV)
+                        conditions = conditions_extractor(parse_VCV)
+                        methods = classification_methods_extractor(parse_VCV)
+                        if isinstance(methods,tuple):
+                            methods = methods[0]
+                        review_status = review_status_extractor(parse_VCV)
+                        value = {"variant":correct_variant,"gene":ids[1][0]}
+                        for feature,key_name in zip([classifications,conditions,review_status,methods],["classifications","conditions","review_status","methods"]):
+                                value[key_name] = feature
+                        inconsistent_annotations[clinvar_id] = value
 
-                    i=1
+            misannotated[classification] = variants
 
-                except Exception:
-                    traceback.print_exc()
-                    print(f"WARNING: Request failed; will try again in {delay} seconds (attempt {attempt+1}/{max_attempts}")
-                    attempt+=1
-                    time.sleep(delay)
-
-        for classification,variants in misannotated.items():
-            if variants:
-                for clinvar_id in variants:
-                    print(f"annotation inconsistency detected for {clinvar_id[0]} clinvar_id in {clinvar_id[1]} gene")
+        for classification,mut_annotations in misannotated.items():
+            if mut_annotations:
+                for clinvar_id in mut_annotations:
+                    print(f"annotation inconsistency detected for {clinvar_id[0]} clinvar id in {clinvar_id[1]} gene")
             else:
                 print(f"{classification} mutations passed the consistency check")
  
@@ -1056,20 +1045,24 @@ if __name__ == '__main__':
 #                                                              OUTPUT COMPILING                                                               #
 ###############################################################################################################################################
 
-if not variants_to_check:
+columns = ['variant_id',
+           'variant_name', 
+           'gene_name', 
+           'interpretation', 
+           'condition',
+           'review_status']
+if args.methods:
+    columns.append('methods')
+
+if not missense_variants:
     print("WARNING: none of the variants given as input are included in"\
           " Clinvar database or an isoform code "\
           "not corresponding to the main isoform has" \
           " been provided: an empty output file will be generated.")
 
-    df = pd.DataFrame.from_dict(variants_to_check, 
+    df = pd.DataFrame.from_dict(missense_variants, 
                                 orient='index',
-                                columns=['variant_id',
-                                         'variant_name', 
-                                         'gene_name', 
-                                         'interpretation', 
-                                         'condition',
-                                         'review_status'])
+                                columns=columns)
     df.to_csv(args.out_csv, sep=";")
 
     # Process the input dataframe:
@@ -1077,37 +1070,30 @@ if not variants_to_check:
 else:
     dfs = {}
     inconsistency_output_list = []
-    output_list = melting_dictionary(variants_to_check)
-    if args.cross_check:
-        if inconsistent_annotations:
-            inconsistency_output_list = melting_dictionary(inconsistent_annotations)
-    
-    columns = ['variant_id',
-               'variant_name', 
-               'gene_name', 
-               'interpretation', 
-               'condition',
-               'review_status']
-    if args.methods:
-        columns.append('methods')
+    output_list = melting_dictionary(missense_variants,args.methods)
+    if args.cross_check and inconsistent_annotations:
+        inconsistency_output_list = melting_dictionary(inconsistent_annotations,args.methods)
    
-# assign the the values to the corresponding columns
+# assign the values to the corresponding columns
     df = pd.DataFrame(output_list, columns=columns)
     dfs[args.out_csv] = df
     if inconsistency_output_list:
         df2 = pd.DataFrame(inconsistency_output_list, columns=columns)
         dfs["inconsitency_annotations.csv"] = df2
 
+    df["condition"] = df["condition"].apply(lambda x: sorted(x))
+    if args.methods:
+            df["methods"] = df["methods"].apply(lambda x: sorted(x))
+
     for file_name,df in dfs.items():
-        df['variant_name']      = df['variant_name'].str.get(0)
-        df['gene_name']         = df['gene_name'].str.get(0)
-        df['interpretation']    = df['interpretation'].str.get(0)
-        df['review_status']     = df['review_status'].str.get(0)
+        df['variant_name']      = df['variant_name']
+        df['gene_name']         = df['gene_name']
+        df['interpretation']    = df['interpretation']
         df['number_of_stars']   = [stars[x] for x in df['review_status']]
         df["condition"]         = (df["condition"].apply(lambda x: ",".join(x) if isinstance(x, list) else x))
-        df["mutation"]          = df.apply(lambda x: mutations_convert(x["variant_name"],d,False),axis=1)
+        df["mutation"]          = df.apply(lambda x: mutations_convert(x["variant_name"],three_one_letter_annotation,False),axis=1)
         if args.methods:
-            df['methods']       = df['methods'].str.get(0)
+            df['methods']       = (df["methods"].apply(lambda x: ",".join(x) if isinstance(x, list) else x))
         
 
         if file_name == args.out_csv:
@@ -1117,15 +1103,14 @@ else:
             if pd.notnull(df["mutation"]).any():
                 for key in set(mutation_dict.keys()):
                     df_mutations=df.loc[df["gene_name"] == key]
-                    with open(f"{key}_mutation_list.txt","a") as f:
+                    with open(f"{key}_mutation_list.txt","w") as f:
                         for mutations in df_mutations["mutation"].tolist():
                             if mutations is not None:
                                 f.write(mutations+"\n")
-                    f.close()
 
         # remove useless columns
-        df=df.drop(["mutation"],axis=1)
-        df=df.drop(["review_status"],axis=1)
+        df = df.drop(["mutation"],axis=1)
+        df = df.drop(["review_status"],axis=1)
         if args.methods:
             out_csv_no_method = file_name.split(".")[0]+"_methods"+".csv"
             df.to_csv(out_csv_no_method, sep=";", index = False) 
@@ -1133,11 +1118,14 @@ else:
         df.to_csv(file_name,sep=";", index = False)
 
 # write the file with the mutations to check manually
+
 if strange_variant_annotation:
-    data_strange=strange_variant_annotation
+    data_strange={}
+    for clinvar_id,information in strange_variant_annotation.items():
+        data_strange[clinvar_id] = [information["variant"],information["gene"]]
     df_strange=pd.DataFrame.from_dict(data_strange, 
-                                          orient="index",
-                                          columns=['variant_name','gene_name'])
+                                      orient="index",
+                                      columns=['variant_name','gene_name'])
 
     df_strange.index.name = 'clinvar_id'
     df_strange.to_csv(f"variants_to_check.csv",sep=";")
@@ -1157,3 +1145,5 @@ if len(not_found_gene) != 0:
                      columns=['gene_name']).to_csv(f"entry_not_found.csv", 
                      sep=";", 
                      index=False)
+
+
