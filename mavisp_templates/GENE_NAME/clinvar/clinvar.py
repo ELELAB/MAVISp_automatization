@@ -138,7 +138,7 @@ def melting_dictionary(variants_annotation, add_method = False):
                        'OncogenicityClassification']
 
     for clinvar_id in variants_annotation.keys():
-        variant_information = [clinvar_id,variants_annotation[clinvar_id]["variant"],variants_annotation[clinvar_id]["gene"]]
+        variant_information = [clinvar_id,variants_annotation[clinvar_id]["variant"],variants_annotation[clinvar_id]["genomic_annotations"],variants_annotation[clinvar_id]["gene"]]
         for classification in classifications:
             classification_check = []
             if classification in variants_annotation[clinvar_id]["classifications"].keys():
@@ -368,22 +368,28 @@ def coding_region_variants_extractor(clinvar_VCV_xml,clinvar_code):
                                             ["HGVS"]
         except KeyError:
             print("Error with 'HGVS' key: the clinvar_id "+clinvar_code+ " could have a different annotation structure for the mutations. It will be annotated in variants_to_check.csv")
-            return list()
+            return list(),list()
 
         try:
-            hgvss = [ x for x in HGVS_accession if x['@Type'] == 'coding' and "ProteinExpression" in x.keys()]
+            hgvss_coding = [ x for x in HGVS_accession if x['@Type'] == 'coding' and "ProteinExpression" in x.keys()]
+            hgvss_genomic = [ x for x in HGVS_accession if "@Assembly" in x.keys()]
                 
             # there are cases in which the field "InterpretedRecord" is "Included Record", so epeat the previous step with the 
             # new key
 
-        except Exception:
-            print("The clinvar_id "+clinvar_code+ " does not have any annotation referring to variant in an expressed protein coding region")
-            return list()
+        except KeyError:
+            print("Error with '@Type' key: the clinvar_id "+clinvar_code+ " could have a different annotation structure for the mutations. It will be annotated in variants_to_check.csv")
+            return list(),list()
+        except TypeError:
+            print("the  following clinvar_id "+clinvar_code+ " is not associated with a missense mutation in a protein coding region")
+            return list(),list()
+
     else:
-        hgvss=[]
+        hgvss_coding = []
+        hgvss_genomic = []
 
 
-    return hgvss
+    return hgvss_coding,hgvss_genomic
 
 def missense_variants_extractor(hgvss, gene, clinvar_id, isoform_to_check):
     '''
@@ -431,6 +437,26 @@ def missense_variants_extractor(hgvss, gene, clinvar_id, isoform_to_check):
                         f" is an alternative isoform of {gene} gene, only the mutations"\
                         f" belonging to the {isoform_to_check} isoform will be considered")
     return "wrong isoform"
+
+def genomic_annotation_extractor(hgvss):
+    '''
+    Given an HGVS list from a VCV XML file associated with a ClinVar variant ID, 
+    returns the genomic coordinate in GRCh38 and GRCh37 assemblies of the mutation.
+
+    Parameters
+    ----------
+    hgvss: list
+        HGVS list with genomic coordinates for a secific mutation.
+
+    Returns
+    -------
+    str
+        string contianing the genomic coordinates for GRCh38 and GRCh37 assemblies
+    '''
+    genomic_coordinates = []
+    for key in hgvss:
+        genomic_coordinates.append(",".join([key['@Assembly'],key['NucleotideExpression']['Expression']]))
+    return " ".join(genomic_coordinates)
 
 def variant_ids_extractors(clinvar_VCV_xml):
     '''
@@ -887,9 +913,9 @@ if __name__ == '__main__':
 
         ############################## get access to the hgvss list associated to the clinvar_id #####################################
 
-        hgvss = coding_region_variants_extractor(parse_VCV,clinvar_id)
+        hgvss_coding,hgvss_genomic = coding_region_variants_extractor(parse_VCV,clinvar_id)
 
-        if not hgvss:
+        if not hgvss_coding or not hgvss_genomic:
             clinvar_id_features = {}
             clinvar_id_features["gene"] = gene
             if gene_search:
@@ -901,7 +927,7 @@ if __name__ == '__main__':
             key_to_remove.append(clinvar_id)
             continue
 
-        correct_variant = missense_variants_extractor(hgvss, gene, clinvar_id, isoform_to_check)
+        correct_variant = missense_variants_extractor(hgvss_coding, gene, clinvar_id, isoform_to_check)
 
         if correct_variant is None:
             print("The clinvar_id "+clinvar_id+ " has a different annotation structure. It will be annotated in variants_to_check.csv")
@@ -932,7 +958,10 @@ if __name__ == '__main__':
         ############################################### retrieve review status #######################################################
         
         review_status = review_status_extractor(parse_VCV)
-          
+
+        ############################################### retrieve genomic annotation ##################################################
+        genomic_annotations = genomic_annotation_extractor(hgvss_genomic)
+
         #the clinvar_id for which there are not mutations in the isoform provided as input will be added to the entry_not_found file
         if gene_search:
             if correct_variant=="wrong isoform":
@@ -947,7 +976,7 @@ if __name__ == '__main__':
             if re.search("p.[A-Z][a-z][a-z][0-9]+[A-Z][a-z][a-z]",str(correct_variant)) or re.search("p.\w+delins\w+",str(correct_variant)):
                 missense_variants[clinvar_id]['variant'] = correct_variant
                 variant_features = {}
-                for feature,key_name in zip([classifications,conditions,review_status,methods],['classifications','conditions','review_status','methods']):
+                for feature,key_name in zip([classifications,conditions,review_status,methods,genomic_annotations],['classifications','conditions','review_status','methods','genomic_annotations']):
                     variant_features[key_name] = feature
                 missense_variants[clinvar_id].update(variant_features)
 
@@ -969,7 +998,7 @@ if __name__ == '__main__':
             if reference_variant == variant:
                 missense_variants[clinvar_id]['variant'] = variant
                 variant_features = {}
-                for feature,key_name in zip([classifications,conditions,review_status,methods],['classifications','conditions','review_status','methods']):
+                for feature,key_name in zip([classifications,conditions,review_status,methods,genomic_annotations],['classifications','conditions','review_status','methods',"genomic_annotations"]):
                     variant_features[key_name] = feature
                 missense_variants[clinvar_id].update(variant_features)
             else:
@@ -1014,19 +1043,20 @@ if __name__ == '__main__':
                     print(e)
                     exit(1)
 
-                hgvss = coding_region_variants_extractor(parse_VCV,clinvar_id)
-                if hgvss and re.search("p.[A-Z][a-z][a-z][0-9]+[A-Z][a-z][a-z]",str(correct_variant)) and "Ter" not in correct_variant:
-                    correct_variant = missense_variants_extractor(hgvss, ids[1][0], clinvar_id, ids[2][0])
+                hgvss_coding,hgvss_genomic = coding_region_variants_extractor(parse_VCV,clinvar_id)
+                if hgvss_coding and re.search("p.[A-Z][a-z][a-z][0-9]+[A-Z][a-z][a-z]",str(correct_variant)) and "Ter" not in correct_variant:
+                    correct_variant = missense_variants_extractor(hgvss_coding, ids[1][0], clinvar_id, ids[2][0])
                     if not clinvar_id in missense_variants.keys():
                         variants.append([clinvar_id,ids[1][0]])
                         classifications = classifications_extractor(parse_VCV)
                         conditions = conditions_extractor(parse_VCV)
                         methods = classification_methods_extractor(parse_VCV)
+                        genomic_annotations = genomic_annotation_extractor(hgvss_genomic)
                         if isinstance(methods,tuple):
                             methods = methods[0]
                         review_status = review_status_extractor(parse_VCV)
                         value = {"variant":correct_variant,"gene":ids[1][0]}
-                        for feature,key_name in zip([classifications,conditions,review_status,methods],["classifications","conditions","review_status","methods"]):
+                        for feature,key_name in zip([classifications,conditions,review_status,methods,genomic_annotations],["classifications","conditions","review_status","methods","genomic_annotations"]):
                                 value[key_name] = feature
                         inconsistent_annotations[clinvar_id] = value
 
@@ -1046,7 +1076,8 @@ if __name__ == '__main__':
 ###############################################################################################################################################
 
 columns = ['variant_id',
-           'variant_name', 
+           'variant_name',
+           'genomic_annotation',
            'gene_name', 
            'interpretation', 
            'condition',
@@ -1082,11 +1113,13 @@ else:
         dfs["inconsitency_annotations.csv"] = df2
 
     df["condition"] = df["condition"].apply(lambda x: sorted(x))
-    df["methods"] = df["methods"].apply(lambda x: sorted(x))
+    if args.methods:
+            df["methods"] = df["methods"].apply(lambda x: sorted(x))
 
     for file_name,df in dfs.items():
         df['variant_name']      = df['variant_name']
         df['gene_name']         = df['gene_name']
+        df['genomic_annotation'] = df['genomic_annotation']
         df['interpretation']    = df['interpretation']
         df['number_of_stars']   = [stars[x] for x in df['review_status']]
         df["condition"]         = (df["condition"].apply(lambda x: ",".join(x) if isinstance(x, list) else x))
