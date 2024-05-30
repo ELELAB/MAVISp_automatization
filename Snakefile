@@ -97,6 +97,91 @@ modules.update({"ClinVar_database":{"clinvar_gene":\
 	                                 {"script":clinvar_script,
 	                                  "readme":clinvar_readme}}})
 
+column_names = ['name',
+                'site',
+                'type',
+                'function',
+                'reference',
+                'genomic_mutations']
+
+HGVSp_re = re.compile('\((p.[A-Z][a-z]{2}[0-9]+[A-Z][a-z]{2})\)')
+
+GRCh_to_hg = {'GRCh37' : 'hg19',
+              'GRCh38' : 'hg38'}
+
+refseq_to_UCSC = {'GRCh38': {
+                        "NC_000001.11" : "chr1",
+                        "NC_000002.12" : "chr2",
+                        "NC_000003.12" : "chr3",
+                        "NC_000004.12" : "chr4",
+                        "NC_000005.10" : "chr5",
+                        "NC_000006.12" : "chr6",
+                        "NC_000007.14" : "chr7",
+                        "NC_000008.11" : "chr8",
+                        "NC_000009.12" : "chr9",
+                        "NC_000010.11" : "chr10",
+                        "NC_000011.10" : "chr11",
+                        "NC_000012.12" : "chr12",
+                        "NC_000013.11" : "chr13",
+                        "NC_000014.9"  : "chr14",
+                        "NC_000015.10" : "chr15",
+                        "NC_000016.10" : "chr16",
+                        "NC_000017.11" : "chr17",
+                        "NC_000018.10" : "chr18",
+                        "NC_000019.10" : "chr19",
+                        "NC_000020.11" : "chr20",
+                        "NC_000021.9"  : "chr21",
+                        "NC_000022.11" : "chr22",
+                        "NC_000023.11" : "chrX",
+                        "NC_000024.10" : "chrY"
+                }, 'GRCh37' : {
+                        "NC_000001.10" : "chr1",
+                        "NC_000002.11" : "chr2",
+                        "NC_000003.11" : "chr3",
+                        "NC_000004.11" : "chr4",
+                        "NC_000005.9"  : "chr5",
+                        "NC_000006.11" : "chr6",
+                        "NC_000007.13" : "chr7",
+                        "NC_000008.10" : "chr8",
+                        "NC_000009.11" : "chr9",
+                        "NC_000010.10" : "chr10",
+                        "NC_000011.9"  : "chr11",
+                        "NC_000012.11" : "chr12",
+                        "NC_000013.10" : "chr13",
+                        "NC_000014.8"  : "chr14",
+                        "NC_000015.9"  : "chr15",
+                        "NC_000016.9"  : "chr16",
+                        "NC_000017.10" : "chr17",
+                        "NC_000018.9"  : "chr18",
+                        "NC_000019.9"  : "chr19",
+                        "NC_000020.10" : "chr20",
+                        "NC_000021.8"  : "chr21",
+                        "NC_000022.10" : "chr22",
+                        "NC_000023.10" : "chrX",
+                        "NC_000024.9"  : "chrY"
+                }
+}
+
+def variant_name_to_HGVSp(row):
+    hgvsps = re.findall(HGVSp_re, row['variant_name'])
+    assert len(hgvsps) == 1
+    return hgvsps[0]
+
+def HGVSg_to_cancermuts(row):
+    hgvsgs = row['genomic_annotation'].split()
+    out = []
+
+    for hgvsg in hgvsgs:
+        build, variant = hgvsg.split(',')
+        ref_seq, coords = variant.split(':')
+
+        ref_seq = refseq_to_UCSC[build][ref_seq]
+        build = GRCh_to_hg[build]
+
+        out.append(f"{build},{ref_seq}:{coords}")
+
+    return " ".join(out)
+
 #------------------------------- Mutlist -----------------------------------#
 
 mutlist_script = f"mavisp_templates/GENE_NAME/"\
@@ -497,7 +582,7 @@ rule clinvar:
         # create the input for the clinvar.py script
         clinvar_input = df[['protein', 'ref_seq']]
         clinvar_input.rename(columns={'protein' : 'gene',
-                                      'ref_seq' : 'iso'}, inplace=True)
+                                      'ref_seq' : 'isoform'}, inplace=True)
         clinvar_input = clinvar_input[(clinvar_input['gene'] == \
     		                           wildcards.hugo_name)]
         clinvar_input.to_csv(os.path.join(wildcards.hugo_name,
@@ -580,23 +665,18 @@ rule cancermuts:
         # input file for the cancermuts run
 
         if not df_clinvar.empty:
-            file = f'{wildcards.hugo_name}/clinvar_gene/'\
-                   f'{wildcards.hugo_name}_mutation_list.txt'
-            df_clinvar = pd.read_csv(file, header=None)
-            df_clinvar['mutations'] = df_clinvar[0].apply(lambda x: \
-                f"p.{IUPACData.protein_letters_1to3.get(x[0])}"\
-                f"{x[1:-1]}{IUPACData.protein_letters_1to3.get(x[-1])}")
-
-            df_clinvar=df_clinvar.rename(columns={"mutations":"site",0:"name"})
-            df_clinvar["type"]="mutation"
-            df_clinvar["function"]=""
-            df_clinvar["reference"]=""
+            df_clinvar['name'] = ''
+            df_clinvar['site'] = df_clinvar.apply(variant_name_to_HGVSp, axis=1)
+            df_clinvar['type'] = 'mutation'
+            df_clinvar['function'] = ''
+            df_clinvar['reference'] = ''
+            df_clinvar['genomic_mutations'] = df_clinvar.apply(HGVSg_to_cancermuts, axis=1)
             df_clinvar.to_csv(f'{path}/clinvar.csv',
-                              sep=";",
-                              index=False)
+                                sep=";",
+                                index=False)
+
         else:
-            print("No mutations reported in Clinvar, Cancermuts will be"\
-                  " run without the clinvar.csv")
+            print("No mutations reported in Clinvar, Cancermuts will be run without the clinvar.csv")
 
          ################ mutation list from external sources ###############
 
@@ -741,7 +821,7 @@ rule clinvar_mut:
                                     f"cancermuts/{mutlist}",
                                     header=None)
 
-        header=["variant_name"]
+        header=["protein_var"]
         df_clinvar.columns=header
         df_clinvar.insert(0,"gene",wildcards.hugo_name)
         df_clinvar.insert(2,"iso",refseq)
