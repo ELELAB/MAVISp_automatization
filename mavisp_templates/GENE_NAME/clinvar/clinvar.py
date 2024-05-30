@@ -190,7 +190,7 @@ def URL_response_check(URL, error_message, function):
                   f" Will try again in {delay} seconds (attempt {attempts+1}/{max_retries})")
             attempts +=1
             time.sleep(delay)
-
+            continue
         if response and response.status_code == 200:
             return response
         elif response:
