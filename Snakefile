@@ -66,17 +66,19 @@ modules['structure_selection']['pdbminer'].update({"readme":pdbminer_readme})
 #---------------------------- Aggregation step -----------------------------#
 
 
-cancermuts_readme = f"/data/raw_data/computational_data/cancermuts_testing/"\
-                    f"mavisp_templates_final/readme.txt"
+cancermuts_readme = "mavisp_templates/GENE_NAME/cancermuts_metatable/readme.txt"
 
-cancermuts_input_script = f"/data/raw_data/computational_data/"\
-                          f"cancermuts_testing/mavisp_templates_final/"\
-                          f"input_csv.py"
+cancermuts_input_script = "mavisp_templates/GENE_NAME/cancermuts_metatable/input_csv.py"
 
-modules['mutations_aggregation']['cancermuts'].update({"readme":\
-                                                       cancermuts_readme,
-                                                       "script_inputs":\
-                                                       cancermuts_input_script})
+cancermuts_pancancer_script = "mavisp_templates/GENE_NAME/cancermuts_metatable/pancancer.py"
+
+cancermuts_plot_script = "mavisp_templates/GENE_NAME/cancermuts_metatable/plot.py"
+
+
+modules['mutations_aggregation']['cancermuts'].update({"readme" : cancermuts_readme,
+                                                       "script_inputs" : cancermuts_input_script,
+                                                       "script_pancancer" : cancermuts_pancancer_script,
+                                                       "script_plot" : cancermuts_plot_script})
 
 #--------------------------------- ClinVar ---------------------------------#
 
@@ -164,7 +166,9 @@ refseq_to_UCSC = {'GRCh38': {
 
 def variant_name_to_HGVSp(row):
     hgvsps = re.findall(HGVSp_re, row['variant_name'])
-    assert len(hgvsps) == 1
+    if len(hgvsps) != 1:
+        print(f"WARNING: skipping {row.variant_id}, {row.variant_name}")
+        return 'unexpected'
     return hgvsps[0]
 
 def HGVSg_to_cancermuts(row):
@@ -666,11 +670,16 @@ rule cancermuts:
 
         if not df_clinvar.empty:
             df_clinvar['name'] = ''
+
             df_clinvar['site'] = df_clinvar.apply(variant_name_to_HGVSp, axis=1)
+            df_clinvar = df_clinvar[ df_clinvar['site'] != 'unexpected' ]
+
             df_clinvar['type'] = 'mutation'
             df_clinvar['function'] = ''
             df_clinvar['reference'] = ''
+
             df_clinvar['genomic_mutations'] = df_clinvar.apply(HGVSg_to_cancermuts, axis=1)
+            
             df_clinvar.to_csv(f'{path}/clinvar.csv',
                                 sep=";",
                                 index=False)
@@ -724,11 +733,11 @@ rule cancermuts:
                             'uniprot_id'].iloc[0]
         uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
                             'uniprot_ac'].iloc[0]
-        script=modules["mutations_aggregation"]\
-                      ["cancermuts"]\
-                      ["template_path"]
+        script = os.path.abspath(modules["mutations_aggregation"]\
+                                        ["cancermuts"]\
+                                        ["script_pancancer"])
 
-        cancermuts_readme=modules["mutations_aggregation"]\
+        cancermuts_readme = modules["mutations_aggregation"]\
                                  ["cancermuts"]\
                                  ["readme"]
 
