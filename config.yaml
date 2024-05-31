@@ -26,7 +26,6 @@ modules:
         cancermuts:
             source: /usr/local/envs/cancermuts/bin/activate
             Cosmic_database_path: /data/databases/cosmic-v96/CosmicMutantExport.tsv
-            template_path: /data/raw_data/computational_data/cancermuts_testing/mavisp_templates_final/pancancer.py
             saturation: true
             ELM_connections_per_run: 1
             folder_name: /data/raw_data/computational_data/cancermuts_testing/
