@@ -414,8 +414,6 @@ rule all:
                path = df_exploded['output_rosetta_folder'],
                resrange = df_exploded['trimmed'],
                research_field = df_exploded['research_field']),
-        expand("{hugo_name}/denovo_phospho/results/aggregated_filtered_output.csv",
-                hugo_name = df_exploded['protein']),
 
         expand("{hugo_name}/ptm/AF2_{resrange}/mutatex/summary_stability.txt",
             zip,
