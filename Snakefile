@@ -169,6 +169,10 @@ def variant_name_to_HGVSp(row):
     if len(hgvsps) != 1:
         print(f"WARNING: skipping {row.variant_id}, {row.variant_name}")
         return 'unexpected'
+    if hgvsps[0].endswith('Ter'):
+        print(f"WARNING: skipping {row.variant_id}, {row.variant_name}")
+        return 'unexpected'
+
     return hgvsps[0]
 
 def HGVSg_to_cancermuts(row):
