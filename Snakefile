@@ -111,7 +111,7 @@ HGVSp_re = re.compile('\((p.[A-Z][a-z]{2}[0-9]+[A-Z][a-z]{2})\)')
 GRCh_to_hg = {'GRCh37' : 'hg19',
               'GRCh38' : 'hg38'}
 
-refseq_to_UCSC = {'GRCh38': {
+refseq_to_UCSC = {'hg38': {
                         "NC_000001.11" : "1",
                         "NC_000002.12" : "2",
                         "NC_000003.12" : "3",
@@ -136,7 +136,7 @@ refseq_to_UCSC = {'GRCh38': {
                         "NC_000022.11" : "22",
                         "NC_000023.11" : "X",
                         "NC_000024.10" : "Y"
-                }, 'GRCh37' : {
+                }, 'hg19' : {
                         "NC_000001.10" : "1",
                         "NC_000002.11" : "2",
                         "NC_000003.11" : "3",
@@ -183,8 +183,13 @@ def HGVSg_to_cancermuts(row):
         build, variant = hgvsg.split(',')
         ref_seq, coords = variant.split(':')
 
+        try:
+            build = GRCh_to_hg[build]
+        except KeyError:
+            print(f"WARNING: unexpected genome build for {row['variant_id']} ({ref_seq}). Genomic mutation won't be annotated. ")
+            continue
+
         ref_seq = refseq_to_UCSC[build][ref_seq]
-        build = GRCh_to_hg[build]
 
         out.append(f"{build},{ref_seq}:{coords}")
 
