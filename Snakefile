@@ -598,7 +598,7 @@ rule efoldmine:
         mkdir -p {wildcards.hugo_name}/efoldmine/
         cd {wildcards.hugo_name}/efoldmine/
         wget https://rest.uniprot.org/uniprotkb/{wildcards.uniprot_ac}.fasta
-        set +eu && . /usr/local/envs/efoldmine/bin/activate && set -eu &&
+        {modules[efoldmine][environment]} &&
         b2bTools -i {wildcards.uniprot_ac}.fasta -t $(basename {output}) -o $(basename {output}) --efoldmine
         '''
     
