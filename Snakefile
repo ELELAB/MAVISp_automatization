@@ -433,7 +433,11 @@ rule all:
             zip,
             hugo_name = df_exploded['protein'],
             resrange = df_exploded['trimmed'],
-            uniprot_ac = df_exploded['uniprot_ac'].str.upper())
+            uniprot_ac = df_exploded['uniprot_ac'].str.upper()),
+
+	expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
+	    hugo_name=df['protein'].str.upper(),
+            uniprot_ac=df['uniprot_ac'].str.upper())
 
 
 ###################### Structure selection and trimming ######################
@@ -582,8 +586,23 @@ rule hpc_atlas:
         echo "No entries in hpc_atlas database for "\
              "{wildcards.hugo_name} entry" > myoutput
         '''
-    
 
+
+###############################Efoldmine####################################
+
+rule efoldmine:
+    output:
+        "{hugo_name}/efoldmine/{uniprot_ac}.tabular"
+    shell:
+        '''
+        mkdir -p {wildcards.hugo_name}/efoldmine/
+        cd {wildcards.hugo_name}/efoldmine/
+        wget https://rest.uniprot.org/uniprotkb/{wildcards.uniprot_ac}.fasta
+        {modules[efoldmine][environment]} &&
+        b2bTools -i {wildcards.uniprot_ac}.fasta -t $(basename {output}) -o $(basename {output}) --efoldmine
+        '''
+    
+    
 ################## mutations retrieval and aggregation ######################
 
 rule clinvar:
