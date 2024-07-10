@@ -957,7 +957,7 @@ rule mutlist:
 
         if os.path.exists(mutlist_clinvar) and\
             not os.path.exists(external_mutlist):
-            cancermode="pancancer_clinvar"
+            cancermode="pancancer_clinvar_saturation"
 
         if not os.path.exists(mutlist_clinvar) and\
             os.path.exists(external_mutlist):
@@ -1061,11 +1061,11 @@ rule ptm_stability:
     input:
         data=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                         f"AF_{wcs.resrange}/free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
+                         f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/results/mutation_ddgs/final_averages/",
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                        f"AF_{wcs.resrange}/free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
+                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb",
         mutlist_dir="{hugo_name}/cancermuts/"
@@ -1100,7 +1100,7 @@ rule ptm_sas:
     input:
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                        f"AF_{wcs.resrange}/free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
+                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb"
     run:
@@ -1418,13 +1418,3 @@ rule allosigma4:
 
          
       	 
-
-
-
-
-
-
-
-
-
-
