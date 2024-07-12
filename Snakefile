@@ -393,7 +393,6 @@ rule all:
                "{research_field}/"\
                "{hugo_name}/free/AF_{resrange}/model_v2/",
                zip,
-               uniprot_ac = df_exploded['uniprot_ac'],
                resrange = df_exploded['trimmed'],
                hugo_name = df_exploded['protein'].str.lower(),
                path = df_exploded['output_path_folder'],
