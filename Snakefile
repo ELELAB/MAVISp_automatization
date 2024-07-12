@@ -391,13 +391,11 @@ rule all:
 
         expand("{path}/"\
                "{research_field}/"\
-               "{hugo_name}/AF_{resrange}/"\
-               "{uniprot_ac}/"\
-               "model_v2/",            
-               zip, 
+               "{hugo_name}/free/AF_{resrange}/model_v2/",
+               zip,
                uniprot_ac = df_exploded['uniprot_ac'],
-               resrange = df_exploded['trimmed'], 
-               hugo_name = df_exploded['protein'],
+               resrange = df_exploded['trimmed'],
+               hugo_name = df_exploded['protein'].str.lower(),
                path = df_exploded['output_path_folder'],
                research_field = df_exploded['research_field']),
 
@@ -1202,21 +1200,20 @@ rule alphamissense:
 
 rule rasp_workflow:
     input:
-        "{hugo_name}/structure_selection/trimmed_model/",
+        lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
     output:
-        directory("{path}/{research_field}/"\
-    		      "{hugo_name}/AF_{resrange}/"\
-    		      "{uniprot_ac}/model_v2/")
+        directory("{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v2/")
     shell:
         """
         mkdir -p {output}
         cp {config[modules][rasp][readme]} {output}
         cp {config[modules][rasp][script]} {output}
-        egrep -v '^(END|TER)' {input}/{wildcards.uniprot_ac}_{wildcards.resrange}.pdb > {output}/{wildcards.uniprot_ac}_{wildcards.resrange}.pdb
+        pdb_name=$(ls {input}/*_{wildcards.resrange}.pdb | xargs basename)
+        egrep -v '^(END|TER)' {input}/$pdb_name > {output}/$pdb_name
         cd {output}
         set +u; source {config[modules][rasp][conda_activation]}
         conda activate {config[modules][rasp][rasp_conda_env]}; set -u
-        RaSP_workflow -i {wildcards.uniprot_ac}_{wildcards.resrange}.pdb\
+        RaSP_workflow -i $pdb_name\
                       -r cpu \
                       -p /usr/local/envs/RaSP_workflow/RaSP_workflow/src/ \
                       -o . \
