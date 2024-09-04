@@ -87,17 +87,9 @@ clinvar_gene_script = f"mavisp_templates/GENE_NAME/"\
 clinvar_gene_readme = f"mavisp_templates/GENE_NAME/"\
                       f"clinvar_gene/readme.txt"
 
-clinvar_script = f"mavisp_templates/GENE_NAME/clinvar/"\
-                 f"clinvar.py"
-clinvar_readme = f"mavisp_templates/GENE_NAME/clinvar/"\
-                 f"readme.txt"
-
 modules.update({"ClinVar_database":{"clinvar_gene":\
-	                                 {"script":clinvar_gene_script,
-	                                  "readme":clinvar_gene_readme},
-	                                "clinvar":\
-	                                 {"script":clinvar_script,
-	                                  "readme":clinvar_readme}}})
+                                         {"script":clinvar_gene_script,
+                                          "readme":clinvar_gene_readme}}})
 
 column_names = ['name',
                 'site',
@@ -404,10 +396,6 @@ rule all:
                zip, 
                hugo_name = df['protein'].str.upper(), 
                uniprot_ac = df['uniprot_ac'].str.upper()),
-
-        expand("{hugo_name}/clinvar/"\
-        	   "variants_output.csv",       
-               hugo_name = df['protein'].str.upper()),
 
         expand("{path}/"\
                "{research_field}/"\
@@ -830,44 +818,6 @@ rule cancermuts:
                   " set -eu && python {script} -p {wildcards.hugo_name} \
                                                -i {uniprot_id} \
                                                -a {uniprot_ac}")
-
-rule clinvar_mut:
-    input:
-        "{hugo_name}/cancermuts/"
-    output:
-        "{hugo_name}/clinvar/variants_output.csv",
-    run:
-        # save in the mutlist string the mutation_list with the cancermuts
-        # date
-        mutlist = ""
-        pattern = "mutlist_\d{8}\.txt"
-        for filename in os.listdir(str(input)):
-            if re.match(pattern,filename):
-                mutlist = filename
-        refseq = df.loc[df['protein'] == wildcards.hugo_name, \
-                            'ref_seq'].iloc[0]
-        script = modules['ClinVar_database']['clinvar']['script']
-        readme = modules['ClinVar_database']['clinvar']['readme']
-
-        df_clinvar = pd.read_csv(f"{wildcards.hugo_name}/"\
-                                    f"cancermuts/{mutlist}",
-                                    header=None)
-
-        header=["protein_var"]
-        df_clinvar.columns=header
-        df_clinvar.insert(0,"gene",wildcards.hugo_name)
-        df_clinvar.insert(2,"iso",refseq)
-
-        shell("mkdir -p {wildcards.hugo_name}/clinvar")
-        
-        df_clinvar.to_csv(f'{wildcards.hugo_name}/clinvar/variants.csv',
-                            sep=";",
-                            index=False)
-    
-        shell("cd {wildcards.hugo_name}/clinvar &&\
-                cp ../../{readme} . && \
-                cp ../../{script} . && \
-                python clinvar.py -v variants.csv -o variants_output.csv")
 
 ################ Mutlists generation and protein annotations ################
 
