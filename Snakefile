@@ -602,7 +602,7 @@ rule clinvar:
     		                           wildcards.hugo_name)]
         clinvar_input.to_csv(os.path.join(wildcards.hugo_name,
                                           "clinvar_gene", 
-                                          "genes.csv"),
+                                          "gene.csv"),
                                            sep=";",
                                            index=False)
         script=modules['ClinVar_database']['clinvar_gene']['script']
@@ -611,7 +611,7 @@ rule clinvar:
             f"cd {os.path.join(wildcards.hugo_name, 'clinvar_gene')} && "
             f"cp ../../{readme} . && "
             f"cp ../../{script} . && "
-            f"python3 clinvar.py -g genes.csv -o variants_output.csv"
+            f"python3 clinvar.py -g gene.csv -o variants_output.csv"
         )
 
 rule saturation_list:
