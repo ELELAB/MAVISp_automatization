@@ -86,10 +86,13 @@ clinvar_gene_script = f"mavisp_templates/GENE_NAME/"\
                       f"clinvar_gene/clinvar.py"
 clinvar_gene_readme = f"mavisp_templates/GENE_NAME/"\
                       f"clinvar_gene/readme.txt"
+clinvar_gene_bash =   f"mavisp_templates/GENE_NAME/"\
+                      f"clinvar_gene/run.sh"
 
 modules.update({"ClinVar_database":{"clinvar_gene":\
-                                         {"script":clinvar_gene_script,
-                                          "readme":clinvar_gene_readme}}})
+                                         {"script" : clinvar_gene_script,
+                                          "readme" : clinvar_gene_readme,
+                                          "bash"   : clinvar_gene_bash}}})
 
 column_names = ['name',
                 'site',
@@ -592,7 +595,7 @@ rule efoldmine:
 
 rule clinvar:
     output:
-        "{hugo_name}/clinvar_gene/variants_output.csv"
+        "{hugo_name}/clinvar_gene/genes_output.csv"
     run:
         # create the input for the clinvar.py script
         clinvar_input = df[['protein', 'ref_seq']]
@@ -607,12 +610,13 @@ rule clinvar:
                                            index=False)
         script=modules['ClinVar_database']['clinvar_gene']['script']
         readme=modules['ClinVar_database']['clinvar_gene']['readme']
+        bash=modules['ClinVar_database']['clinvar_gene']['bash']
         shell(
             f"cd {os.path.join(wildcards.hugo_name, 'clinvar_gene')} && "
             f"cp ../../{readme} . && "
             f"cp ../../{script} . && "
-            f"python3 clinvar.py -g gene.csv -o variants_output.csv"
-        )
+            f"cp ../../{bash} . && "
+            f"bash run.sh")
 
 rule saturation_list:
     output:
@@ -635,7 +639,7 @@ rule saturation_list:
 
 rule cancermuts:
     input:
-        clinvar_output="{hugo_name}/clinvar_gene/variants_output.csv",
+        clinvar_output="{hugo_name}/clinvar_gene/genes_output.csv",
         saturation_mutlist=lambda wcs: f"{wcs.hugo_name}/saturation_mutlist/saturation_mutlist.txt" if modules['mutations_aggregation']['cancermuts']['saturation'] else [],
     output:
         f"{modules['mutations_aggregation']['cancermuts']['folder_name']}"+
