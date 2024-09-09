@@ -1028,10 +1028,6 @@ rule ptm_stability:
         for filename in os.listdir(input.mutlist_dir):
             if re.match(pattern,filename):
                 mutlist = filename
-        refseq = df.loc[df['protein'] == wildcards.hugo_name, \
-                            'ref_seq'].iloc[0]
-        script = modules['ClinVar_database']['clinvar']['script']
-        readme = modules['ClinVar_database']['clinvar']['readme']
 
         outdir = os.path.dirname(output.summary)
         shutil.copy(f"{input.mutlist_dir}/{mutlist}", f"{outdir}")
