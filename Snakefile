@@ -423,7 +423,7 @@ rule all:
             resrange = df_exploded['trimmed'],
             uniprot_ac = df_exploded['uniprot_ac'].str.upper()),
 
-	    expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
+	expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
             zip,
 	        hugo_name=df['protein'].str.upper(),
             uniprot_ac=df['uniprot_ac'].str.upper())
