@@ -49,6 +49,9 @@
 ./GENE_NAME/structure_selection/pdbminer
 ./GENE_NAME/structure_selection/pdbminer/do.sh
 ./GENE_NAME/structure_selection/pdbminer/readme.txt
+./GENE_NAME/structure_selection/pdbminer_complexes
+./GENE_NAME/structure_selection/pdbminer_complexes/find_PDBminer_complexes.py
+./GENE_NAME/structure_selection/pdbminer_complexes/readme.txt
 ./GENE_NAME/structure_selection/pdb_curation
 ./GENE_NAME/structure_selection/pdb_curation/curation.py
 ./GENE_NAME/structure_selection/pdb_curation/scripts
