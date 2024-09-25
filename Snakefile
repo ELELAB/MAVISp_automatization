@@ -390,7 +390,7 @@ rule all:
 
         expand("{path}/"\
                "{research_field}/"\
-               "{hugo_name}/free/AF_{resrange}/model_v4/",
+               "{hugo_name}/free/AF_{resrange}/model_v2/",
                zip,
                resrange = df_exploded['trimmed'],
                hugo_name = df_exploded['protein'].str.lower(),
@@ -408,7 +408,7 @@ rule all:
                "{research_field}/"\
                "{hugo_name}/free/"\
                "AF_{resrange}/"\
-               "model_v4/ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb",           
+               "model_v2/ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb",           
                zip, 
                uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
                hugo_name = df_exploded['protein'],
@@ -1069,11 +1069,11 @@ rule ptm_stability:
     input:
         data=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                         f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v4/saturation/" +\
+                         f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/results/mutation_ddgs/final_averages/",
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v4/saturation/" +\
+                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb",
         mutlist_dir="{hugo_name}/cancermuts/"
@@ -1104,7 +1104,7 @@ rule ptm_sas:
     input:
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v4/saturation/" +\
+                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb"
     run:
@@ -1208,7 +1208,7 @@ rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
     output:
-        directory("{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v4/")
+        directory("{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v2/")
     shell:
         """
         mkdir -p {output}
@@ -1231,7 +1231,7 @@ rule rosetta_relax:
     input:
         "{hugo_name}/structure_selection/trimmed_model/"
     output:
-        "{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v4/"\
+        "{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v2/"\
         "ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb"
     params:
         rosetta_module = modules['rosetta_relax']['rosetta_module'],
@@ -1242,10 +1242,10 @@ rule rosetta_relax:
     shell:
         """
         set +u; source {config[modules][rosetta_relax][rosetta_env]}; set -u && \
-        mkdir -p {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v4/ref2015_cartesian2020/ && \
+        mkdir -p {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v2/ref2015_cartesian2020/ && \
         cp {input}/{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
-           {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v4/ref2015_cartesian2020/ && \
-        cd {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v4/ref2015_cartesian2020/ && \
+           {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v2/ref2015_cartesian2020/ && \
+        cd {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v2/ref2015_cartesian2020/ && \
         cp {params.mpi} . && \
         cp {params.readme} . && \
         cp {params.yaml} . && \
