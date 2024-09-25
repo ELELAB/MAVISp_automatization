@@ -205,7 +205,6 @@ mutlist_readme = f"mavisp_templates/GENE_NAME/"\
 modules.update({"mutlist_generation":{"script":mutlist_script,
 	                                  "readme":mutlist_readme}})
 
-
 saturation_mutlist_sh = "mavisp_templates/GENE_NAME/"\
                         "saturation_list/saturation_mutlist.py"
 saturation_mutlist_readme = "mavisp_templates/GENE_NAME/"\
