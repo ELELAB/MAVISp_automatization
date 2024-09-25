@@ -1,25 +1,26 @@
-# AFTER HAVING SUCCESSFULLY RUN PDBMINER YOU CAN FILTER ON COMPLEXES:
+# DESCRIPTION:
+# This step:
+# 1.Filters complexes extracted by PDBminer based on a 10 Å interaction distance, storing the results in {uniprot_ac}_filtered.csv.
+# 2.Downloads the PDB files of the complexes, if available, and stores them in the dir {uniprot_ac}_pdb_complexes/.
 
-#uniprot ID starting and ending residue of the domain
-bash do.sh P36896 29 110
+# REQUIREMENT:
+# PDBminer must have been run successfully
 
-#activate the python environment (module load python)
-
-#to run for mavisp - replace uniprot ID with the one of your protein
-python find_PDBminer_complexes.py -i P35869_all.csv --binding_interface -d 10 -s 35 -e 591 -o P35869_filtered.csv
-
-
-#general info
-#SIMPLE USE, just specify input and output
-python find_PDBminer_complexes.py -i uniprot_all.csv -o uniprot_filtered.csv
-
-#DOMAIN USE, define your domain of interest
-python find_PDBminer_complexes.py -i uniprot_all.csv -o uniprot_filtered.csv -s start_residue -e end_residue
-
-#INTERFACE USE:
-python find_PDBminer_complexes.py -i uniprot_all.csv -o uniprot_filtered.csv --binding_interface
-
-#INTERFACE USE WITH DEFINED DISTANCE:
-python find_PDBminer_complexes.py -i uniprot_all.csv -o uniprot_filtered.csv --binding_interface -d 5 -s start_residue -e end_residue
+# INPUT FILE:
+# {uniprot_ac}_all.csv 
+# Must be present in the pdbminer/ dir. 
 
 
+# COMMANDS OPERATED IN SNAKEFILE:
+# Run find_PDBminer_complexes.py to retain filtered complexes and to download PDBs
+python find_PDBminer_complexes.py\
+               -i ../pdbminer/results/{wildcards.uniprot_ac}/{wildcards.uniprot_ac}_all.csv\
+               -o {wildcards.uniprot_ac}_filtered.csv\
+               --binding_interface -d 10
+
+
+# If PDB structures are available, create directory for the PDBs files and move them there:
+if ls *.pdb 1> /dev/null 2>&1; then
+    mkdir -p {wildcards.uniprot_ac}_pdb_complexes/
+    mv *.pdb {wildcards.uniprot_ac}_pdb_complexes/
+fi
