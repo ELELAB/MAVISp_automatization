@@ -1,2 +1,2 @@
-protein,uniprot_ac,uniprot_id,trimmed,ref_seq,research_field
-CASP8,Q14790,CASP8_HUMAN,1-189_223-479,NP_203519,cosmic_tsg
+protein,uniprot_ac,uniprot_id,trimmed,ref_seq,research_field,input_pdb,database,model
+APC,P25054,APC_HUMAN,1-5,NP_000029,tf,APC_1-238.pdb,EXPR,v1
