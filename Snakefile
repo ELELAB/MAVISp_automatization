@@ -568,11 +568,6 @@ rule procheck:
             # Output .sum file path
             sum_output_path = os.path.join(output_dir, f"{pdb_filename}.sum")
 
-            # Print debug info
-            print(f"Processing PDB file: {pdb_input_path}")
-            print(f"Output SUM file: {sum_output_path}")
-            sys.stdout.flush()
-
             # Run PROCHECK for each PDB file
             shell(f"""
                 cp {readme_path} {output_dir} &&
