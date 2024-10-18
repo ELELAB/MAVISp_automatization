@@ -15,6 +15,8 @@ modules:
             dssp_exec: /usr/local/dssp-3.0.10/bin/mkdssp
         pdbminer:
             pdbminer_env: . /usr/local/envs/PDBminer/bin/activate
+        procheck:
+            procheck_env: module load procheck
     mutations_classifier:
         demask:
             source: /usr/local/envs/demask/demask_env/bin/activate 
@@ -33,7 +35,7 @@ modules:
             source: . /usr/local/envs/cancermuts/bin/activate
         mutatex:
             repository: /data/raw_data/computational_data/mutatex_data/
-    rasp: 
+    rasp:
         conda_activation: /usr/local/miniconda3/bin/activate
         rasp_conda_env: /usr/local/envs/RaSP_workflow
         output_path_folder: /data/raw_data/computational_data/rasp_testing/

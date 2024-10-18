@@ -390,7 +390,7 @@ rule all:
 
         expand("{path}/"\
                "{research_field}/"\
-               "{hugo_name}/free/AF_{resrange}/model_v2/",
+               "{hugo_name}/free/AF_{resrange}/model_v4/",
                zip,
                resrange = df_exploded['trimmed'],
                hugo_name = df_exploded['protein'].str.lower(),
@@ -399,7 +399,7 @@ rule all:
 
         expand("{hugo_name}/interactome/"\
         	   "mentha2pdb/"\
-               "{uniprot_ac}.csv", 	   
+               "{uniprot_ac}.csv",
                zip, 
                hugo_name = df['protein'].str.upper(), 
                uniprot_ac = df['uniprot_ac'].str.upper()),
@@ -408,7 +408,7 @@ rule all:
                "{research_field}/"\
                "{hugo_name}/free/"\
                "AF_{resrange}/"\
-               "model_v2/ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb",           
+               "model_v4/ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb",           
                zip, 
                uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
                hugo_name = df_exploded['protein'],
@@ -545,21 +545,15 @@ rule procheck:
         chain="A",
         resolution="2.0",
     run:
-        import os
-
-        # Get absolute path to the directory containing PDB files
+        # Get path to the directory containing PDB files
         trimmed_pdb_dir = os.path.abspath(input.trimmed_pdb_dir)
-        readme=config['modules']['structure_selection']['procheck']['readme']
-        # Get absolute path to the readme file
-        readme_path = os.path.abspath(readme)
-
+	procheck_env=modules['structure_selection']['procheck']
         # List all PDB files in the trimmed_model directory
         pdb_files = [f for f in os.listdir(trimmed_pdb_dir) if f.endswith(".pdb")]
 
         # Ensure output directory exists
         output_dir = os.path.abspath(output[0])
         os.makedirs(output_dir, exist_ok=True)
-
         # Iterate over each PDB file
         for pdb_file in pdb_files:
             pdb_input_path = os.path.join(trimmed_pdb_dir, pdb_file)
@@ -569,11 +563,13 @@ rule procheck:
             sum_output_path = os.path.join(output_dir, f"{pdb_filename}.sum")
 
             # Run PROCHECK for each PDB file
-            shell(f"""
-                cp {readme_path} {output_dir} &&
-                cd {output_dir} &&
-                export prodir="/usr/local/procheck" &&
-                /usr/local/procheck/procheck.scr {pdb_input_path} {params.chain} {params.resolution}
+            shell(
+		"""
+                set +eu; {config[modules][structure_selection][procheck][procheck_env]}; set -eu
+                readme={modules[structure_selection][procheck][readme]}
+                cd {output_dir}
+                cp ../../../$readme .
+                procheck.scr {pdb_input_path} {params.chain} {params.resolution}
             """)
 
             # Ensure the .sum file is generated (assuming the procheck.scr command generates the .sum file in the current directory)
@@ -1064,11 +1060,11 @@ rule ptm_stability:
     input:
         data=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                         f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
+                         f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v4/saturation/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/results/mutation_ddgs/final_averages/",
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
+                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v4/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb",
         mutlist_dir="{hugo_name}/cancermuts/"
@@ -1099,7 +1095,7 @@ rule ptm_sas:
     input:
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
+                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v4/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb"
     run:
@@ -1203,7 +1199,7 @@ rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
     output:
-        directory("{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v2/")
+        directory("{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v4/")
     shell:
         """
         mkdir -p {output}
@@ -1226,7 +1222,7 @@ rule rosetta_relax:
     input:
         "{hugo_name}/structure_selection/trimmed_model/"
     output:
-        "{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v2/"\
+        "{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v4/"\
         "ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb"
     params:
         rosetta_module = modules['rosetta_relax']['rosetta_module'],
@@ -1237,10 +1233,10 @@ rule rosetta_relax:
     shell:
         """
         set +u; source {config[modules][rosetta_relax][rosetta_env]}; set -u && \
-        mkdir -p {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v2/ref2015_cartesian2020/ && \
+        mkdir -p {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v4/ref2015_cartesian2020/ && \
         cp {input}/{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
-           {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v2/ref2015_cartesian2020/ && \
-        cd {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v2/ref2015_cartesian2020/ && \
+           {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v4/ref2015_cartesian2020/ && \
+        cd {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v4/ref2015_cartesian2020/ && \
         cp {params.mpi} . && \
         cp {params.readme} . && \
         cp {params.yaml} . && \
@@ -1375,44 +1371,3 @@ rule allosigma4:
 		      "{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
 		      -i down_mutations.tsv -t 2 -d 8 -a 20")
 '''
-
-		
-			  
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	         		        
-
-
-
-         
-      	 
