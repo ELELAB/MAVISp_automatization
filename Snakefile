@@ -390,7 +390,7 @@ rule all:
 
         expand("{path}/"\
                "{research_field}/"\
-               "{hugo_name}/free/AF_{resrange}/model_v4/",
+               "{hugo_name}/free/AF_{resrange}/model_v2/",
                zip,
                resrange = df_exploded['trimmed'],
                hugo_name = df_exploded['protein'].str.lower(),
@@ -408,7 +408,7 @@ rule all:
                "{research_field}/"\
                "{hugo_name}/free/"\
                "AF_{resrange}/"\
-               "model_v4/ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb",           
+               "model_v2/ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb",           
                zip, 
                uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
                hugo_name = df_exploded['protein'],
