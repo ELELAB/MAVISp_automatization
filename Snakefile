@@ -60,6 +60,10 @@ pdbminer_complexes_script = f"mavisp_templates/GENE_NAME/"\
                             f"structure_selection/pdbminer_complexes/"\
                             f"find_PDBminer_complexes.py"
 
+procheck_readme = f"/mavisp_templates/GENE_NAME/"\
+                  f"structure_selection/procheck/readme.txt"
+
+
 modules['structure_selection']["alphafold"].update({"script":alphafold_script,
 	                                               "readme":alphafold_readme})
 
@@ -72,6 +76,9 @@ modules['structure_selection']['pdbminer'].update({"readme":pdbminer_readme})
 modules['structure_selection'].update({"pdbminer_complexes":\
                                       {"script": pdbminer_complexes_script,
                                        "readme": pdbminer_complexes_readme}})
+
+modules['structure_selection']['procheck'].update({"readme":procheck_readme})
+
 
 #---------------------------- Aggregation step -----------------------------#
 
@@ -361,7 +368,6 @@ rule all:
         expand("{hugo_name}/structure_selection/"\
         	   "domain_annotations/"\
         	   "domains_mutlist.csv",       
-
               hugo_name = df['protein'].str.upper()),
 
         expand("{hugo_name}/netphos/"\
@@ -405,7 +411,7 @@ rule all:
 
         expand("{hugo_name}/interactome/"\
         	   "mentha2pdb/"\
-               "{uniprot_ac}.csv", 	   
+               "{uniprot_ac}.csv",
                zip, 
                hugo_name = df['protein'].str.upper(), 
                uniprot_ac = df['uniprot_ac'].str.upper()),
@@ -443,6 +449,10 @@ rule all:
             hugo_name = df['protein'].str.upper(),
             uniprot_ac = df['uniprot_ac'].str.upper()),
 
+        expand("{hugo_name}/structure_selection/procheck/",
+               zip,
+               hugo_name=df['protein'].str.upper())
+        
 
 ###################### Structure selection and trimming ######################
 
@@ -566,6 +576,45 @@ rule pdbminer_complexes:
         fi
         '''
 
+rule procheck:
+    input:
+        trimmed_pdb_dir="{hugo_name}/structure_selection/trimmed_model/"  # The directory containing the PDB files
+    output:
+        directory("{hugo_name}/structure_selection/procheck/")  # The directory for the output .sum files
+    params:
+        chain="A",
+        resolution="2.0",
+    run:
+        # Get path to the directory containing PDB files
+        trimmed_pdb_dir = os.path.abspath(input.trimmed_pdb_dir)
+	procheck_env=modules['structure_selection']['procheck']
+        # List all PDB files in the trimmed_model directory
+        pdb_files = [f for f in os.listdir(trimmed_pdb_dir) if f.endswith(".pdb")]
+
+        # Ensure output directory exists
+        output_dir = os.path.abspath(output[0])
+        os.makedirs(output_dir, exist_ok=True)
+        # Iterate over each PDB file
+        for pdb_file in pdb_files:
+            pdb_input_path = os.path.join(trimmed_pdb_dir, pdb_file)
+            pdb_filename = os.path.splitext(pdb_file)[0]  # Remove the .pdb extension to construct the output file name
+
+            # Output .sum file path
+            sum_output_path = os.path.join(output_dir, f"{pdb_filename}.sum")
+
+            # Run PROCHECK for each PDB file
+            shell(
+		"""
+                set +eu; {config[modules][structure_selection][procheck][procheck_env]}; set -eu
+                readme={modules[structure_selection][procheck][readme]}
+                cd {output_dir}
+                cp ../../../$readme .
+                procheck.scr {pdb_input_path} {params.chain} {params.resolution}
+            """)
+
+            # Ensure the .sum file is generated (assuming the procheck.scr command generates the .sum file in the current directory)
+            if not os.path.exists(sum_output_path):
+                raise FileNotFoundError(f"PROCHECK failed to generate {sum_output_path}.")
 
 ############################### Interactome #################################
 
@@ -1362,41 +1411,3 @@ rule allosigma4:
 		      "{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
 		      -i down_mutations.tsv -t 2 -d 8 -a 20")
 '''
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	         		        
-
-
-
-         
-      	 
