@@ -16,7 +16,7 @@ modules:
         pdbminer:
             pdbminer_env: . /usr/local/envs/PDBminer/bin/activate
         procheck:
-            procheck_env: module load procheck
+            procheck_env: export prodir=/usr/local/procheck && export PATH=$PATH:$prodir
     mutations_classifier:
         demask:
             source: /usr/local/envs/demask/demask_env/bin/activate 
