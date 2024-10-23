@@ -54,8 +54,15 @@ filter_pdb_readme = f"mavisp_templates/GENE_NAME/"\
 pdbminer_readme = f"/mavisp_templates/GENE_NAME/"\
                   f"structure_selection/pdbminer/readme.txt"
 
+pdbminer_complexes_readme = f"mavisp_templates/GENE_NAME/"\
+                            f"structure_selection/pdbminer_complexes/readme.txt"
+pdbminer_complexes_script = f"mavisp_templates/GENE_NAME/"\
+                            f"structure_selection/pdbminer_complexes/"\
+                            f"find_PDBminer_complexes.py"
+
 procheck_readme = f"/mavisp_templates/GENE_NAME/"\
                   f"structure_selection/procheck/readme.txt"
+
 
 modules['structure_selection']["alphafold"].update({"script":alphafold_script,
 	                                               "readme":alphafold_readme})
@@ -66,7 +73,12 @@ modules['structure_selection'].update({"trimmed_models":\
 
 modules['structure_selection']['pdbminer'].update({"readme":pdbminer_readme})
 
+modules['structure_selection'].update({"pdbminer_complexes":\
+                                      {"script": pdbminer_complexes_script,
+                                       "readme": pdbminer_complexes_readme}})
+
 modules['structure_selection']['procheck'].update({"readme":procheck_readme})
+
 
 #---------------------------- Aggregation step -----------------------------#
 
@@ -432,10 +444,15 @@ rule all:
             hugo_name=df['protein'].str.upper(),
             uniprot_ac=df['uniprot_ac'].str.upper()),
 
+        expand("{hugo_name}/structure_selection/pdbminer_complexes/{uniprot_ac}_filtered.csv", 
+            zip, 
+            hugo_name = df['protein'].str.upper(),
+            uniprot_ac = df['uniprot_ac'].str.upper()),
+
         expand("{hugo_name}/structure_selection/procheck/",
                zip,
                hugo_name=df['protein'].str.upper())
-
+        
 
 ###################### Structure selection and trimming ######################
 
@@ -535,6 +552,29 @@ rule pdbminer:
         cp ../../../$readme .
 	    PDBminer -g {wildcards.hugo_name} -u {wildcards.uniprot_ac} -f csv
 	    '''
+
+rule pdbminer_complexes:
+    input:
+        "{hugo_name}/structure_selection/pdbminer/results/{uniprot_ac}/{uniprot_ac}_all.csv"
+    output:
+        "{hugo_name}/structure_selection/pdbminer_complexes/{uniprot_ac}_filtered.csv",
+    shell:
+        '''
+        mkdir -p "{wildcards.hugo_name}/structure_selection/pdbminer_complexes/"
+        cd {wildcards.hugo_name}/structure_selection/pdbminer_complexes/
+        readme={modules[structure_selection][pdbminer_complexes][readme]}
+        script={modules[structure_selection][pdbminer_complexes][script]}
+        cp  ../../../${{readme}} .
+        cp  ../../../${{script}} .
+        python find_PDBminer_complexes.py\
+               -i ../pdbminer/results/{wildcards.uniprot_ac}/{wildcards.uniprot_ac}_all.csv\
+               -o {wildcards.uniprot_ac}_filtered.csv\
+               --binding_interface -d 10
+        if ls *.pdb 1> /dev/null 2>&1; then
+            mkdir -p {wildcards.uniprot_ac}_pdb_complexes/
+            mv *.pdb {wildcards.uniprot_ac}_pdb_complexes/
+        fi
+        '''
 
 rule procheck:
     input:
