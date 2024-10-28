@@ -35,6 +35,7 @@ The pipeline requires the following programs:
 - netphos
 - demask
 - RosettaDDGprediction
+- procheck
 
 The pipeline requires the following databases:
 - mentha
@@ -88,6 +89,8 @@ modules:
             dssp_exec: /usr/local/dssp-3.0.10/bin/mkdssp
         pdbminer:
             pdbminer_env: . /usr/local/envs/PDBminer/bin/activate
+        procheck:
+            procheck_env: export prodir=/usr/local/procheck && export PATH=$PATH:$prodir
     mutations_classifier:
         demask:
             source: /usr/local/envs/demask/demask_env/bin/activate 
@@ -139,6 +142,8 @@ The pipeline automates the following steps for each entry in the input CSV file,
 
 - **Trimming AlphaFold models**: The AlphaFold model is trimmed based on the specified range in the input file. Only regions with high pLDDT scores are retained. The trimmed PDB files are 
   stored in the "structure_selection/trimmed_model/" path. The residue range is used in subsequent steps to filter the mutation list for calculations.
+
+- **Running Procheck for Structure Quality Assessment**: The Procheck tool is used to assess the quality of the trimmed AlphaFold models. This analysis generates summary files that provide detailed information about the stereochemical quality of the trimmed models generated in the previous step, including Ramachandran plot statistics. The readouts are stored in the "structure_selection/procheck/" folder.
 
 - **Retrieving mutations from the ClinVar database**: Missense mutations reported in the ClinVar database, along with corresponding classifications, review status, and associated 
   conditions (diseases), are collected for each entry in the input file. The readouts are stored in the "clinvar_gene/" folder.
@@ -282,11 +287,31 @@ The output structure is based on the first entry from the input file, but it fol
     │   └── P54132_pdb_complexes
     │      ├── 7XUW.pdb 
     │      └── 7XV0.pdb 
-    └── trimmed_model
+    ├── trimmed_model
+    │   ├── P54132_368-1290.pdb
+    │   ├── filtre_pdb.py
+    │   └── readme.txt
+    └── procheck
         ├── P54132_368-1290.pdb
-        ├── filtre_pdb.py
+        ├── anglen.log  
+        ├──P54132_368-1290_*.ps   
+        ├──P54132_368-1290.new  
+        ├──P54132_368-1290.rin  
+        ├──pplot.log
+        ├──bplot.log     
+        ├──P54132_368-1290.out  
+        ├──P54132_368-1290.sco  
+        ├──procheck.prm
+        ├──clean.log     
+        ├──P54132_368-1290.lan      
+        ├──P54132_368-1290.sdh  
+        ├──secstr.log
+        ├──nb.log      
+        ├──P54132_368-1290.nb     
+        ├──P54132_368-1290.pln  
+        ├──P54132_368-1290.sum  
+        ├──tplot.log
         └── readme.txt
-
 
 ```
 ## Usage
