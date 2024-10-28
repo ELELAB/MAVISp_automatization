@@ -16,6 +16,7 @@ MAVISp_automatization is a Snakemake pipeline that has been designed to automate
 - RaSP calculation,
 - classification of mutations occurring in protein sequence through different approaches,
 - identification of denovo phosphorylation sites upon mutation
+- early folding regions prediction
 
 ## Requirements
 
@@ -35,6 +36,7 @@ The pipeline requires the following programs:
 - netphos
 - demask
 - RosettaDDGprediction
+- efoldmine
 
 The pipeline requires the following databases:
 - mentha
@@ -115,6 +117,8 @@ modules:
         rosetta_module: /usr/local/rosetta-2022.11/
         rosetta_folder:  /data/raw_data/computational_data/rosetta_testing/
         rosetta_template: /data/raw_data/computational_data/rosetta_data/mavisp_templates/stability/ref2015_cartesian2020
+    efoldmine:
+        environment: set +eu && . /usr/local/envs/efoldmine/bin/activate && set -eu
 ```
 
 Before running the pipeline, please ensure that you customize the configuration file by providing the correct paths for the environment, databases and the location of the cancermuts script template.
@@ -176,6 +180,8 @@ The pipeline automates the following steps for each entry in the input CSV file,
 - **RosettaDDGprediction relax step**: The Cartesian2020 protocol and the ref2015 energy function from the Rosetta suite are exploited to perform the relax step required by the software using the trimmed structure obtained in the step above. The output is stored in a path specified in the config.yaml file.
 
 - **identification of denovo phosphorylation sites**: netphos is used on wild-type or mutant sequences to identify cases in which mutations cause significant changes in the propensity of a certain site to be phosphorylated
+
+-**Prediction of early folding sites**: EFoldMine is employed in order to predict regions with early folding propensity from the target protein's primary sequence, so that it can be subsequently identified whether the mutation sites of the investigated variants fall within the predicted early folding regions. The EFoldMine output is stored in the "efoldmine/" folder.
 
 
 ## Output structure
@@ -282,12 +288,14 @@ The output structure is based on the first entry from the input file, but it fol
     │   └── P54132_pdb_complexes
     │      ├── 7XUW.pdb 
     │      └── 7XV0.pdb 
-    └── trimmed_model
-        ├── P54132_368-1290.pdb
-        ├── filtre_pdb.py
-        └── readme.txt
-
-
+    ├── trimmed_model
+    │   ├── P54132_368-1290.pdb
+    │   ├── filtre_pdb.py
+    │   └── readme.txt
+    └── efoldmine
+        ├── readme.md
+        ├── P54132.fasta 
+        └── P54132.tabular
 ```
 ## Usage
 

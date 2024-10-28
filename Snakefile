@@ -355,6 +355,11 @@ readme = "mavisp_templates/GENE_NAME/denovo_phospho/readme.txt"
 
 modules.update({"denovo_phospho":{"snakefile":snakefile,
                                   "readme":readme}})
+                                  
+#---------------------------------- Efoldmine ---------------------------------#
+
+efoldmine_readme = f"mavisp_templates/GENE_NAME/efoldmine/readme.md"
+modules['efoldmine'].update({"readme": efoldmine_readme})
 
  
 ##############################################################################
@@ -672,7 +677,9 @@ rule efoldmine:
     shell:
         '''
         mkdir -p "{wildcards.hugo_name}/efoldmine/"
+        readme={modules[efoldmine][readme]}
         cd "{wildcards.hugo_name}/efoldmine/"
+        cp ../../${{readme}} .
         wget https://rest.uniprot.org/uniprotkb/{wildcards.uniprot_ac}.fasta
         {modules[efoldmine][environment]} &&
         b2bTools -i {wildcards.uniprot_ac}.fasta -t $(basename {output}) -o $(basename {output}) --efoldmine
