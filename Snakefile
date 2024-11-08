@@ -993,24 +993,18 @@ rule mutlist:
         t_obj = time.strptime(s_ti)
         date=time.strftime("%d%m%Y", t_obj)
         
-        if not os.path.exists(mutlist_clinvar) and\
-            not os.path.exists(external_mutlist):
-            cancermode="pancancer"
-
         if os.path.exists(mutlist_clinvar) and\
             os.path.exists(external_mutlist):
             cancermode="pancancer_clinvar_others"
 
-        if os.path.exists(mutlist_clinvar) and\
-            not os.path.exists(external_mutlist):
-            cancermode="pancancer_clinvar_saturation"
-
         if not os.path.exists(mutlist_clinvar) and\
             os.path.exists(external_mutlist):
             cancermode="pancancer_others"
+        
+        if not os.path.exists(external_mutlist):
+            cancermode="pancancer_clinvar_saturation"
 
-
-        final_path = f"{path}/{research_field}/{wildcards.hugo_name}/"\
+        final_path = f"{path}/{research_field}/{wildcards.hugo_name.lower()}/"\
                         f"{cancermode}/{date}"
 
         shell("mkdir -p {final_path} &&"\
