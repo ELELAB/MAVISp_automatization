@@ -349,17 +349,17 @@ modules.update({"denovo_phospho":{"snakefile":snakefile,
 rule all:
     input:
         expand("{hugo_name}/structure_selection/"\
-                "db_{database}/",
+                "original_model/",
                 zip,
                 hugo_name = df['protein'].str.upper(),
-                database = df['database']),
+                structure_source = df['structure_source']),
 
         expand("{hugo_name}/structure_selection/"\
-        	   "domain_annotations_{database}/"\
+        	   "domain_annotations/"\
         	   "domains_mutlist.csv",       
                 zip,
                 hugo_name = df['protein'].str.upper(),
-                database = df['database']),
+                structure_source = df['structure_source']),
 
         expand("{hugo_name}/netphos/"\
         	   "netphos.out",               
@@ -388,20 +388,20 @@ rule all:
 
         expand("{hugo_name}/"\
                "structure_selection/"\
-               "trimmed/db_{database}/",
+               "trimmed/",
                zip,             
                hugo_name = df['protein'].str.upper(),
-               database = df['database']),
+               structure_source = df['structure_source']),
 
         expand("{path}/"\
                "{research_field}/"\
-               "{hugo_name}/free/{database}_{resrange}/{model}_model/",
+               "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/",
                zip,
                resrange = df_exploded['trimmed'],
                hugo_name = df_exploded['protein'].str.lower(),
                path = df_exploded['output_path_folder'],
                research_field = df_exploded['research_field'],
-               database = df['database'],
+               structure_source = df['structure_source'],
                model = df['model']),
 
         expand("{hugo_name}/interactome/"\
@@ -414,7 +414,7 @@ rule all:
         expand("{path}/"\
                "{research_field}/"\
                "{hugo_name}/free/"\
-               "{database}_{resrange}/"\
+               "{structure_source}_{resrange}/"\
                "{model}_model/ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb",           
                zip, 
                uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
@@ -422,21 +422,21 @@ rule all:
                path = df_exploded['output_rosetta_folder'],
                resrange = df_exploded['trimmed'],
                research_field = df_exploded['research_field'],
-               database = df['database'],
+               structure_source = df['structure_source'],
                model = df['model']),
 
-        expand("{hugo_name}/ptm/{database}_{resrange}/mutatex/summary_stability.txt",
+        expand("{hugo_name}/ptm/{structure_source}_{resrange}/mutatex/summary_stability.txt",
             zip,
             hugo_name = df_exploded['protein'],
             resrange = df_exploded['trimmed'],
-            database = df['database']),
+            structure_source = df['structure_source']),
 
-        expand("{hugo_name}/ptm/{database}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
+        expand("{hugo_name}/ptm/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
             zip,
             hugo_name = df_exploded['protein'],
             resrange = df_exploded['trimmed'],
             uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
-            database = df['database']),
+            structure_source = df['structure_source']),
 
         expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
             zip,
@@ -444,27 +444,23 @@ rule all:
             uniprot_ac=df['uniprot_ac'].str.upper())
 
 
-ruleorder:
-ruleorder:
-    structure_selection > trim_model > domains > demask_config > demask_homologs > demask_prediction > netphos > ptm_stability > ptm_sas > cancermuts >mutlist
 
 ###################### Structure selection and trimming ######################
 
 rule structure_selection:
     # input:
-    #     database=lambda wcs: df.loc[df['protein'] == wcs.hugo_name, 'database'].iloc[0]
+    #     structure_source=lambda wcs: df.loc[df['protein'] == wcs.hugo_name, 'structure_source'].iloc[0]
     output:
-        directory("{hugo_name}/structure_selection/db_{database}")
+        directory("{hugo_name}/structure_selection/original_model")
 
     run:
-        os.makedirs(str(output), exist_ok=True) 
+        shell("mkdir -p {wildcards.hugo_name}/structure_selection/original_model") 
             
         pdb = df.loc[
-            (df['protein'] == wildcards.hugo_name) &
-            (df['database'] == wildcards.database),
+            (df['protein'] == wildcards.hugo_name),
             'input_pdb'].iloc[0]
 
-        if pdb == "":       
+        if pd.isna(pdb):       
 
             uniprot_ac = df.loc[df["protein"] == wildcards.hugo_name,
                                                 "uniprot_ac"].iloc[0]
@@ -498,14 +494,16 @@ rule structure_selection:
                 "cp ../../../{script} . && "
                 "python get_alphafolddb_data.py -c config_alphafolddb.yaml")
         else:
-            shell("cp {pdb} {wildcards.hugo_name}/structure_selection/db_{wildcards.database}")
+            structure_folder = f'{output}/{wildcards.hugo_name.lower()}'
+            shell("mkdir -p {structure_folder}")
+            shell("cp {pdb} {structure_folder}")
 
 
 rule trim_model:
     input:
-        "{hugo_name}/structure_selection/db_{database}"
+        "{hugo_name}/structure_selection/original_model"
     output:
-        directory("{hugo_name}/structure_selection/trimmed/db_{database}/")
+        directory("{hugo_name}/structure_selection/trimmed")
     run:
 
         # list with all the residue ranges specified in the input file
@@ -514,7 +512,7 @@ rule trim_model:
 
         uniprot_ac  = df.loc[df['protein'] == wildcards.hugo_name,\
                                                 'uniprot_ac'].iloc[0]
-        input_files = f'{input}' # path of the pdb files
+        input_files = f'{input}/{wildcards.hugo_name.lower()}' # path of the pdb files
 
         # list containing all the files in the folder
         files = os.listdir(input_files) 
@@ -539,7 +537,7 @@ rule trim_model:
                       " {start}"\
                       " {end}"\
                       " {wildcards.hugo_name}/structure_selection/"\
-                      "trimmed/db_{wildcards.database}/{trimmed_pdb} && "\
+                      "trimmed/{trimmed_pdb} && "\
                       "cp {script} {readme} {output} ")
 
 rule pdbminer:
@@ -856,12 +854,12 @@ rule cancermuts:
 
 rule mutlist:
     input:
-        "{hugo_name}/structure_selection/trimmed/db_{database}/",
+        "{hugo_name}/structure_selection/trimmed/",
         f"{modules['mutations_aggregation']['cancermuts']['folder_name']}"+
         "{hugo_name}"+"/metatable_pancancer_{hugo_name}.csv"
         
     output:
-        directory("{hugo_name}/cancermuts_{database}")
+        directory("{hugo_name}/cancermuts")
     run:
         # list with the ranges of the trimmed models to 
         # obtain from the AF model 
@@ -893,7 +891,7 @@ rule mutlist:
 
         # path with the trimmed models
         trimmed_pdb_path = f"../structure_selection/"\
-                            f"trimmed_{wildcards.database}/"
+                            f"trimmed/"
         script = modules['mutlist_generation']['script']
         readme = modules['mutlist_generation']['readme']
         shell("set +u && "\
@@ -957,9 +955,9 @@ rule mutlist:
 
 rule domains:
     input:
-        directory("{hugo_name}/cancermuts_{database}/")
+        directory("{hugo_name}/cancermuts/")
     output:
-        "{hugo_name}/structure_selection/domain_annotations_{database}/"\
+        "{hugo_name}/structure_selection/domain_annotations/"\
         "domains_mutlist.csv"
     run:
         uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
@@ -978,12 +976,12 @@ rule domains:
         # run the script for the domain module
 
         shell("mkdir -p {wildcards.hugo_name}/structure_selection/"\
-                        "domain_annotations_{wildcards.database}/ &&"\
+                        "domain_annotations/ &&"\
                 " cd {wildcards.hugo_name}/structure_selection/"\
-                "domain_annotations_{wildcards.database}/ && "\
+                "domain_annotations/ && "\
                 " cp ../../../{script} . &&"\
                 " cp ../../../{readme} . &&"\
-                " ln -snf ../../cancermuts_{wildcards.database}/{mutlist} mutlist.txt &&"\
+                " ln -snf ../../cancermuts/{mutlist} mutlist.txt &&"\
                 " python ../../../{script} -u {uniprot_ac} -m mutlist.txt")
 
 rule netphos:
@@ -1002,9 +1000,9 @@ rule netphos:
 
 rule denovo_phospho:
     input:
-        cancermuts_dir="{hugo_name}/cancermuts_{database}/"
+        cancermuts_dir="{hugo_name}/cancermuts/"
     output:
-        "{hugo_name}/denovo_phospho/results_{database}/aggregated_filtered_output.csv",
+        "{hugo_name}/denovo_phospho/results/aggregated_filtered_output.csv",
     threads: 
         workflow.cores
     params:
@@ -1041,20 +1039,20 @@ rule ptm_stability:
     input:
         data=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                         f"free/stability/mutatex_runs/{wcs.database}_" +\
+                         f"free/stability/mutatex_runs/{wcs.structure_source}_" +\
                          f"{df_exploded.loc[df_exploded['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]}/model_" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'model'].iloc[0]}/saturation/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/results/mutation_ddgs/final_averages/",
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                        f"free/stability/mutatex_runs/{wcs.database}_" +\
+                        f"free/stability/mutatex_runs/{wcs.structure_source}_" +\
                         f"{df_exploded.loc[df_exploded['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]}/model_" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'model'].iloc[0]}/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb",
-        mutlist_dir="{hugo_name}/cancermuts_{database}/"
+        mutlist_dir="{hugo_name}/cancermuts/"
     output:
-        summary="{hugo_name}/ptm/{database}_{resrange}/mutatex/summary_stability.txt",
+        summary="{hugo_name}/ptm/{structure_source}_{resrange}/mutatex/summary_stability.txt",
     run:
         mutlist = ""
         pattern = "mutlist_mutatex_P_\d{8}\.txt"
@@ -1067,7 +1065,11 @@ rule ptm_stability:
         shutil.copy(modules['mutations_aggregation']['ptm']['mutatex']['readme'], outdir)
         shutil.copy(modules['mutations_aggregation']['ptm']['mutatex']['script'], outdir)
         shutil.copy(modules['mutations_aggregation']['ptm']['mutatex']['mutlist'], outdir)
+        if os.path.islink(f"{outdir}/final_averages") or os.path.exists(f"{outdir}/final_averages"):
+            os.remove(f"{outdir}/final_averages") 
         os.symlink(input.data, f"{outdir}/final_averages")
+        if os.path.islink(f"{outdir}/{os.path.basename(input.pdb)}") or os.path.exists(f"{outdir}/{os.path.basename(input.pdb)}"):
+            os.remove(f"{outdir}/{os.path.basename(input.pdb)}")
         os.symlink(input.pdb,  f"{outdir}/{os.path.basename(input.pdb)}")
 
         shell(f"""cd {outdir} &&\
@@ -1076,11 +1078,11 @@ rule ptm_stability:
 
 rule ptm_sas:
     output:
-        rsa="{hugo_name}/ptm/{database}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa"
+        rsa="{hugo_name}/ptm/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa"
     input:
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                        f"free/stability/mutatex_runs/{wcs.database}_{wcs.resrange}/model_" +\
+                        f"free/stability/mutatex_runs/{wcs.structure_source}_{wcs.resrange}/model_" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'model'].iloc[0]}/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb"
@@ -1183,12 +1185,9 @@ rule alphamissense:
 
 rule rasp_workflow:
     input:
-        lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed/db_{wcs.database}/",
+        lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed/",
     output:
-        directory("{path}/{research_field}/{hugo_name}/free/{database}_{resrange}/{model}_model/")
-    # params:
-    #     model = lambda wcs: df.loc[df['protein'] == wcs.hugo_name, 
-    #     'model'].iloc[0]
+        directory("{path}/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/")
     shell:
         """
         mkdir -p {output}
@@ -1209,9 +1208,9 @@ rule rasp_workflow:
         """
 rule rosetta_relax:
     input:
-        "{hugo_name}/structure_selection/trimmed/db_{database}/"
+        "{hugo_name}/structure_selection/trimmed/"
     output:
-        "{path}/{research_field}/{hugo_name}/free/{database}_{resrange}/{model}_model/"\
+        "{path}/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/"\
         "ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb"
     params:
         rosetta_module = modules['rosetta_relax']['rosetta_module'],
@@ -1222,10 +1221,10 @@ rule rosetta_relax:
     shell:
         """
         set +u; source {config[modules][rosetta_relax][rosetta_env]}; set -u && \
-        mkdir -p {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/{wildcards.database}_{wildcards.resrange}/{wildcards.model}_model/ref2015_cartesian2020/ && \
+        mkdir -p {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.model}_model/ref2015_cartesian2020/ && \
         cp {input}/{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
-           {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/{wildcards.database}_{wildcards.resrange}/{wildcards.model}_model/ref2015_cartesian2020/ && \
-        cd {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/{wildcards.database}_{wildcards.resrange}/{wildcards.model}_model/ref2015_cartesian2020/ && \
+           {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.model}_model/ref2015_cartesian2020/ && \
+        cd {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.model}_model/ref2015_cartesian2020/ && \
         cp {params.mpi} . && \
         cp {params.readme} . && \
         cp {params.yaml} . && \
