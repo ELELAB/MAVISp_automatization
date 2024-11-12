@@ -1,0 +1,13 @@
+REM  Relative accessibilites read from external file "/usr/local/naccess-2.1.1/standard.data"
+REM  File of summed (Sum) and % (per.) accessibilities for 
+REM RES _ NUM      All-atoms   Total-Side   Main-Chain    Non-polar    All polar
+REM                ABS   REL    ABS   REL    ABS   REL    ABS   REL    ABS   REL
+RES MET A   1   249.81 128.7 174.99 111.7  74.82 199.5 176.45 111.8  73.36 202.0
+RES ALA A   2   108.61 100.6  76.05 109.6  32.57  84.5  76.26 106.8  32.35  88.4
+RES ALA A   3    98.31  91.1  75.60 108.9  22.71  58.9  75.81 106.2  22.50  61.5
+RES ALA A   4   103.95  96.3  75.68 109.0  28.27  73.3  75.68 106.0  28.27  77.3
+RES SER A   5   162.34 139.3  96.25 123.2  66.08 172.1  92.14 189.8  70.19 103.3
+END  Absolute sums over single chains surface 
+CHAIN  1 A      723.0        498.6        224.4        496.3        226.7
+END  Absolute sums over all chains 
+TOTAL           723.0        498.6        224.4        496.3        226.7

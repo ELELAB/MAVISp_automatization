@@ -1,0 +1,16 @@
+start;end;pfam_domain;accession
+4;55;Coiled-coil N-terminus of APC, dimerisation domain;PF16689
+134;202;Adenomatous polyposis coli tumour suppressor protein;PF11414
+393;466;Adenomatous polyposis coli (APC) repeat;PF18797
+523;552;Armadillo/beta-catenin-like repeat;PF00514
+732;1019;Armadillo-associated region on APC;PF16629
+1020;1034;APC 15 residue motif;PF05972
+1036;1135;Unstructured region on APC between 1st and 2nd catenin-bdg motifs;PF16630
+1260;1280;APC repeat;PF05923
+1282;1368;Unstructured region on APC between 1st two creatine-rich regions;PF16633
+1567;1588;SAMP Motif;PF05924
+1662;1715;Unstructured region on APC between APC_crr and SAMP;PF16634
+1746;1839;Unstructured region on APC between SAMP and APC_crr;PF16635
+1867;1947;Unstructured region on APC between APC_crr regions 5 and 6;PF16636
+2224;2575;APC basic domain;PF05956
+2670;2843;EB-1 Binding Domain;PF05937
