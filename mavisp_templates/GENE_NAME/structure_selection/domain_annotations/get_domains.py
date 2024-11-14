@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2022 Ludovica Beltrame, updated 2024 Kristine Degn, updated 2024 Lorenzo Favaro
+# Copyright (C) 2022 Ludovica Beltrame
+# Copyright (C) 2024 Ludovica Beltrame, Kristine Degn, Lorenzo Favaro
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -87,18 +88,21 @@ def output_lists():
     pfam_domain = []
     accession = []
     
-    if 'results' in payload:
-        for item in payload['results']:
-            # Check if the expected keys are present
-            if 'proteins' in item and item['proteins'] and \
-               'entry_protein_locations' in item['proteins'][0] and item['proteins'][0]['entry_protein_locations'] and \
-               'fragments' in item['proteins'][0]['entry_protein_locations'][0] and item['proteins'][0]['entry_protein_locations'][0]['fragments']:
-                
-                for fragment in item['proteins'][0]['entry_protein_locations'][0]['fragments']:
-                    start.append(fragment['start'])
-                    end.append(fragment['end'])
-                    pfam_domain.append(item['metadata']['name'])
-                    accession.append(item['metadata']['accession'])
+    # Early return if 'results' is not in payload
+    if not 'results' in payload:
+        return start, end, pfam_domain, accession
+
+    for item in payload['results']:
+        # Check if the expected keys are present
+        if 'proteins' in item and item['proteins'] and \
+           'entry_protein_locations' in item['proteins'][0] and item['proteins'][0]['entry_protein_locations'] and \
+           'fragments' in item['proteins'][0]['entry_protein_locations'][0] and item['proteins'][0]['entry_protein_locations'][0]['fragments']:
+            
+            for fragment in item['proteins'][0]['entry_protein_locations'][0]['fragments']:
+                start.append(fragment['start'])
+                end.append(fragment['end'])
+                pfam_domain.append(item['metadata']['name'])
+                accession.append(item['metadata']['accession'])
 
     return start, end, pfam_domain, accession
 
