@@ -51,9 +51,9 @@ Before running the pipeline, please ensure that all the requirements are met.
 
 The pipeline necessitates a CSV input file, a folder containing the scripts essential for the MAVISP framework (mavisp_templates), and a config.yaml file specifying the locations of the scripts essential for the pipeline. The input file, 'input.csv,' and the scripts directory should reside in the same directory as the Snakefile (an example is provided in the repository). The CSV file should encompass the subsequent comma-separated columns:
 
-|protein|uniprot_ac|uniprot_id|trimmed|ref_seq|research_field|
-|-------|----------|----------|-------|-------|--------------|
-|BLM|P54132|BLM_HUMAN|1-359_368-1290|NP_000048|vus|
+|protein|uniprot_ac|uniprot_id|trimmed|ref_seq|research_field|input_pdb|structure_source|model
+|-------|----------|----------|-------|-------|--------------|---------|----------------|-----
+|BLM|P54132|BLM_HUMAN|1-359_368-1290|NP_000048|vus||AF|v4
 
 where:
 "protein" is the hugo name of the protein
@@ -62,6 +62,9 @@ where:
 "trimmed" represents the residues range of your trimmed model (in case of multiple models specify the ranges "_" separeted)
 "ref_seq" is the ref seq code associated with the isoform used by cancermuts (usually the first one). The RefSeq associated with the first isoform can be accessed through the Uniprot database in the "Sequence & isoforms" or "Sequence" section (depending on the protein being investigated) under the field "Sequence databases". The RefSeq code required by the pipeline consists of the "NP" followed by all subsequent characters until the dot, excluding it. There may be multiple RefSeq codes available. The one associated with the correct isoform includes the isoform code, which is enclosed in square brackets, corresponding to the canonical isoform. Verify by clicking on it that it corresponds to the correct isoform.
 "research field" is the project or the research field in which the protein is involved (this is the name of the folder in which the cancermuts and rasp calculation will be organized).
+"input_pdb" is an optional input pdb file the user provides
+"structure_source" the source of the input structure (AF,PDB ID etc.)
+"model" is the model of the structure used (vX)
 An additional and optional input file in txt format containing the mutations from other sources than COSMIC, cBioPortal, and Clinvar can be provided. The mutations will be aggregated along with all the mutations found in the afromentioned databases by cancermuts in the metatable. This file name must start with the hugo name of the protein in capital letters and end with .txt extension (i.e BLM_my_mutation_list.txt); the mutations must be reported in one letter code as reported below without header
 A34P
 C56Y
@@ -119,7 +122,7 @@ modules:
 
 Before running the pipeline, please ensure that you customize the configuration file by providing the correct paths for the environment, databases and the location of the cancermuts script template.
 N.B the field ELM_connections_per_run specifiy the number of cancermuts run that can be run in parallell. It's essential to query ELM database once at time, for this reason the parameter needs to be set 1. 
-N.B The template files for the RasP calculations are collecte in the following path: 
+N.B The template files for the RasP calculations are collected in the following path: 
 
 ```
 /data/raw_data/computational_data/rasp_data/mavisp_templates/free/AF2_XX-YY/model_vX/
@@ -134,6 +137,8 @@ The pipeline automates the following steps for each entry in the input CSV file,
 
 - **Retrieving available PDB information through PDB miner**: Information about all possible experimental structures available in the Protein Data Bank (PDB), such as resolution, 
   experimental method, and missing residues, is collected for each entry in the input file. The readouts are stored in the "structure_selection/pdbminer/" path.
+  
+- **Filtering PDB miner results**: Complexes extracted by PDB miner are filtered based on a 10 Å interaction distance. Only complexes meeting this criterion are retained, and their binding interface residues are extracted. If available, the PDB structures of these complexes are downloaded. The readouts are stored in the "structure_selection/pdbminer_complexes/" folder. 
 
 - **Trimming AlphaFold models**: The AlphaFold model is trimmed based on the specified range in the input file. Only regions with high pLDDT scores are retained. The trimmed PDB files are 
   stored in the "structure_selection/trimmed_model/" path. The residue range is used in subsequent steps to filter the mutation list for calculations.
@@ -249,7 +254,7 @@ The output structure is based on the first entry from the input file, but it fol
 │   ├── netphos.out
 │   └── readme.txt
 └── structure_selection
-    ├── alphafold_db
+    ├── original_model
     │   ├── BLM
     │   │   ├── P54132.csv
     │   │   ├── P54132.json
@@ -273,9 +278,16 @@ The output structure is based on the first entry from the input file, but it fol
     │   └── results
     │       └── P54132
     │           └── P54132_all.csv
+    ├── pdbminer_complexes
+    │   ├── readme.txt
+    │   ├── find_PDBminer_complexes.py
+    │   ├── P54132_filtered.csv
+    │   └── P54132_pdb_complexes
+    │      ├── 7XUW.pdb 
+    │      └── 7XV0.pdb 
     └── trimmed_model
         ├── P54132_368-1290.pdb
-        ├── filtre_pdb.py
+        ├── filter_pdb.py
         └── readme.txt
 
 

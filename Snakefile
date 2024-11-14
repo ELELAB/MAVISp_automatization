@@ -454,7 +454,7 @@ rule structure_selection:
         directory("{hugo_name}/structure_selection/original_model")
 
     run:
-        shell("mkdir -p {wildcards.hugo_name}/structure_selection/original_model") 
+        #shell("mkdir -p {wildcards.hugo_name}/structure_selection/original_model") 
             
         pdb = df.loc[
             (df['protein'] == wildcards.hugo_name),
@@ -467,7 +467,9 @@ rule structure_selection:
             dssp_exec=modules['structure_selection']['alphafold']['dssp_exec']
 
             # Alphafold: Create the config.yaml file for the analysis 
-
+            
+            if not os.path.exists(str(output)):
+                os.makedirs(str(output))
             data = {
                 "dssp_exec": dssp_exec,
                 "plddt_cutoff": 70,
@@ -503,7 +505,7 @@ rule trim_model:
     input:
         "{hugo_name}/structure_selection/original_model"
     output:
-        directory("{hugo_name}/structure_selection/trimmed")
+        directory("{hugo_name}/structure_selection/trimmed_model")
     run:
 
         # list with all the residue ranges specified in the input file
