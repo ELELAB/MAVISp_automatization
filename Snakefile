@@ -388,7 +388,7 @@ rule all:
 
         expand("{hugo_name}/"\
                "structure_selection/"\
-               "trimmed/",
+               "trimmed_model/",
                zip,             
                hugo_name = df['protein'].str.upper(),
                structure_source = df['structure_source']),
@@ -539,7 +539,7 @@ rule trim_model:
                       " {start}"\
                       " {end}"\
                       " {wildcards.hugo_name}/structure_selection/"\
-                      "trimmed/{trimmed_pdb} && "\
+                      "trimmed_model/{trimmed_pdb} && "\
                       "cp {script} {readme} {output} ")
 
 rule pdbminer:
@@ -856,7 +856,7 @@ rule cancermuts:
 
 rule mutlist:
     input:
-        "{hugo_name}/structure_selection/trimmed/",
+        "{hugo_name}/structure_selection/trimmed_model/",
         f"{modules['mutations_aggregation']['cancermuts']['folder_name']}"+
         "{hugo_name}"+"/metatable_pancancer_{hugo_name}.csv"
         
@@ -893,7 +893,7 @@ rule mutlist:
 
         # path with the trimmed models
         trimmed_pdb_path = f"../structure_selection/"\
-                            f"trimmed/"
+                            f"trimmed_model/"
         script = modules['mutlist_generation']['script']
         readme = modules['mutlist_generation']['readme']
         shell("set +u && "\
@@ -1187,7 +1187,7 @@ rule alphamissense:
 
 rule rasp_workflow:
     input:
-        lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed/",
+        lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
     output:
         directory("{path}/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/")
     shell:
@@ -1210,7 +1210,7 @@ rule rasp_workflow:
         """
 rule rosetta_relax:
     input:
-        "{hugo_name}/structure_selection/trimmed/"
+        "{hugo_name}/structure_selection/trimmed_model/"
     output:
         "{path}/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/"\
         "ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb"
