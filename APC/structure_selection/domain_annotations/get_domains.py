@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C) 2022 Ludovica Beltrame, updated 2024 Kristine Degn
+# Copyright (C) 2022 Ludovica Beltrame, updated 2024 Kristine Degn, updated 2024 Lorenzo Favaro
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -87,19 +87,20 @@ def output_lists():
     pfam_domain = []
     accession = []
     
-    for item in payload['results']:
-        # Check if the expected keys are present
-        if 'proteins' in item and item['proteins'] and \
-           'entry_protein_locations' in item['proteins'][0] and item['proteins'][0]['entry_protein_locations'] and \
-           'fragments' in item['proteins'][0]['entry_protein_locations'][0] and item['proteins'][0]['entry_protein_locations'][0]['fragments']:
-            
-            for fragment in item['proteins'][0]['entry_protein_locations'][0]['fragments']:
-                start.append(fragment['start'])
-                end.append(fragment['end'])
-                pfam_domain.append(item['metadata']['name'])
-                accession.append(item['metadata']['accession'])
+    if 'results' in payload:
+        for item in payload['results']:
+            # Check if the expected keys are present
+            if 'proteins' in item and item['proteins'] and \
+               'entry_protein_locations' in item['proteins'][0] and item['proteins'][0]['entry_protein_locations'] and \
+               'fragments' in item['proteins'][0]['entry_protein_locations'][0] and item['proteins'][0]['entry_protein_locations'][0]['fragments']:
+                
+                for fragment in item['proteins'][0]['entry_protein_locations'][0]['fragments']:
+                    start.append(fragment['start'])
+                    end.append(fragment['end'])
+                    pfam_domain.append(item['metadata']['name'])
+                    accession.append(item['metadata']['accession'])
 
-    return start,end,pfam_domain,accession
+    return start, end, pfam_domain, accession
 
 def domains_to_mutations(x):
     '''Assign domain to point mutation'''
@@ -131,34 +132,38 @@ if __name__ == "__main__":
         start, end, pfam_domain, accession = output_lists()
     except UnboundLocalError:
         print('WARNING: no domains found annotated in pfam. Exiting...')
-        sys.exit()
+        start, end, pfam_domain, accession = [], [], [], []
     
-    #Convert lists to dataframe
-    data = pd.DataFrame(list(zip(start, end, pfam_domain, accession)),
-                 columns =['start', 'end', 'pfam_domain', 'accession'])
-    data = data.sort_values(by=['start'], ascending=True)
-    #If you want the residues in the [start:end] format
-    #uncomment the next line and add the 'residues' column to the output.to_csv
-    #data['residues'] = '[' + data['start'].astype(str) + ':' + data['end'].astype(str) + ']'
+    # Convert lists to dataframe
+    if start and end and pfam_domain and accession:
+        data = pd.DataFrame(list(zip(start, end, pfam_domain, accession)),
+                     columns =['start', 'end', 'pfam_domain', 'accession'])
+        data = data.sort_values(by=['start'], ascending=True)
+    else:
+        # Create an empty dataframe with the expected columns
+        data = pd.DataFrame(columns=['start', 'end', 'pfam_domain', 'accession'])
     
-    #Save summary.csv containing a summary of the protein domains
+    # Save summary.csv containing a summary of the protein domains
     data.to_csv('summary.csv', sep=';', index=False, columns=['start', 'end','pfam_domain', 'accession'])
      
-    #If mutlist is provided do the following
+    # If mutlist is provided do the following
     if args.mutation_file:
         # Process mutation file
         mutation_file_path = args.mutation_file
-        #Read mutlist file in dataframe and add position column
+        # Read mutlist file in dataframe and add position column
         out = pd.read_csv(mutation_file_path, names=['mutation'])
         out['pos'] = out['mutation'].str[1:-1]  
         
-        data["start"] = pd.to_numeric(data["start"])
-        data['end'] = pd.to_numeric(data['end'])
-        out['pos'] = pd.to_numeric(out['pos'])
+        data["start"] = pd.to_numeric(data["start"], errors='coerce')
+        data['end'] = pd.to_numeric(data['end'], errors='coerce')
+        out['pos'] = pd.to_numeric(out['pos'], errors='coerce')
         
-        #Get domains of point mutations            
+        # Get domains of point mutations            
         out[['pfam_domain', 'accession']] = out['pos'].apply(domains_to_mutations)
     
-        #Save mut_domains.csv
+        # Save mut_domains.csv
         out.to_csv('domains_mutlist.csv', index=False, sep=';', columns=['mutation', 'pfam_domain', 'accession'])
-
+    else:
+        # Create an empty domains_mutlist.csv if no mutation file is provided
+        empty_out = pd.DataFrame(columns=['mutation', 'pfam_domain', 'accession'])
+        empty_out.to_csv('domains_mutlist.csv', index=False, sep=';')

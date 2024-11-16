@@ -1,0 +1,7 @@
+    A    /A0001-MET O   A    /A0002-ALA C    3.2 MM   1 3.8     1
+    A    /A0001-MET O   A    /A0003-ALA N    3.5 MM   2 6.2     2
+    A    /A0002-ALA O   A    /A0003-ALA C    3.1 MM   1 3.8     3
+    A    /A0002-ALA O   A    /A0004-ALA N    3.8 MM   2 6.5     4
+    A    /A0003-ALA O   A    /A0004-ALA C    2.9 MM   1 3.8     5
+    A    /A0003-ALA O   A    /A0005-SER N    3.4 MM   2 6.4     6
+    A    /A0004-ALA O   A    /A0005-SER C    3.1 MM   1 3.8     7
