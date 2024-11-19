@@ -54,9 +54,9 @@ Before running the pipeline, please ensure that all the requirements are met.
 
 The pipeline necessitates a CSV input file, a folder containing the scripts essential for the MAVISP framework (mavisp_templates), and a config.yaml file specifying the locations of the scripts essential for the pipeline. The input file, 'input.csv,' and the scripts directory should reside in the same directory as the Snakefile (an example is provided in the repository). The CSV file should encompass the subsequent comma-separated columns:
 
-|protein|uniprot_ac|uniprot_id|trimmed|ref_seq|research_field|
-|-------|----------|----------|-------|-------|--------------|
-|BLM|P54132|BLM_HUMAN|1-359_368-1290|NP_000048|vus|
+|protein|uniprot_ac|uniprot_id|trimmed|ref_seq|research_field|input_pdb|structure_source|model
+|-------|----------|----------|-------|-------|--------------|---------|----------------|-----
+|BLM|P54132|BLM_HUMAN|1-359_368-1290|NP_000048|vus||AF|v4
 
 where:
 "protein" is the hugo name of the protein
@@ -65,6 +65,9 @@ where:
 "trimmed" represents the residues range of your trimmed model (in case of multiple models specify the ranges "_" separeted)
 "ref_seq" is the ref seq code associated with the isoform used by cancermuts (usually the first one). The RefSeq associated with the first isoform can be accessed through the Uniprot database in the "Sequence & isoforms" or "Sequence" section (depending on the protein being investigated) under the field "Sequence databases". The RefSeq code required by the pipeline consists of the "NP" followed by all subsequent characters until the dot, excluding it. There may be multiple RefSeq codes available. The one associated with the correct isoform includes the isoform code, which is enclosed in square brackets, corresponding to the canonical isoform. Verify by clicking on it that it corresponds to the correct isoform.
 "research field" is the project or the research field in which the protein is involved (this is the name of the folder in which the cancermuts and rasp calculation will be organized).
+"input_pdb" is an optional input pdb file the user provides
+"structure_source" the source of the input structure (AF,PDB ID etc.)
+"model" is the model of the structure used (vX)
 An additional and optional input file in txt format containing the mutations from other sources than COSMIC, cBioPortal, and Clinvar can be provided. The mutations will be aggregated along with all the mutations found in the afromentioned databases by cancermuts in the metatable. This file name must start with the hugo name of the protein in capital letters and end with .txt extension (i.e BLM_my_mutation_list.txt); the mutations must be reported in one letter code as reported below without header
 A34P
 C56Y
@@ -262,7 +265,7 @@ The output structure is based on the first entry from the input file, but it fol
 │   ├── netphos.out
 │   └── readme.txt
 └── structure_selection
-    ├── alphafold_db
+    ├── original_model
     │   ├── BLM
     │   │   ├── P54132.csv
     │   │   ├── P54132.json
@@ -323,6 +326,7 @@ The output structure is based on the first entry from the input file, but it fol
             ├── filtre_pdb.py
             └── readme.txt
 ```
+
 ## Usage
 
 In order to run the pipeline (see example folder):

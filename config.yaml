@@ -30,7 +30,7 @@ modules:
             Cosmic_database_path: /data/databases/cosmic-v96/CosmicMutantExport.tsv
             saturation: true
             ELM_connections_per_run: 1
-            folder_name: /data/raw_data/computational_data/cancermuts_data/
+            folder_name: /data/user/raw_data/computational_data/cancermuts_data/
         mutlist:
             source: . /usr/local/envs/cancermuts/bin/activate
         mutatex:
@@ -38,7 +38,7 @@ modules:
     rasp:
         conda_activation: /usr/local/miniconda3/bin/activate
         rasp_conda_env: /usr/local/envs/RaSP_workflow
-        output_path_folder: /data/raw_data/computational_data/rasp_data/
+        output_path_folder: /data/user/raw_data/computational_data/rasp_data/
         folder_name: rasp
     rosetta_relax:
         rosetta_env: /usr/local/envs/rosettaddgprediction/bin/activate

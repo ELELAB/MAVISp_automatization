@@ -1,0 +1,6 @@
+dssp_exec: /usr/local/dssp-3.0.10/bin/mkdssp
+plddt_cutoff: 70
+uniprot_ids:
+  O43186:
+    dir_name: crx
+    version: latest

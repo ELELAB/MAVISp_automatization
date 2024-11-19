@@ -1,0 +1,109 @@
+target uniprot id,target uniprot gene,interactor uniprot id,interactor uniprot gene,mentha score,PDB id,fusion,target chain id,target starting residue,target ending residue,interactor chain id,interactor starting residue,interactor ending residue,other interactors,method,resolution,dna chains,num ligands,PMID,pDockQ HuMap,pDockQ HuRI
+O43186,CRX,Q96NJ5,KLHL32,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.265071,na
+O43186,CRX,O75603,GCM2,0.722,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 unassigned1304 25910212 ,na,na
+O43186,CRX,O43741,PRKAB2,0.659,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 unassigned1304 24722188 ,na,na
+O43186,CRX,P35219,CA8,0.636,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 25910212 ,0.283805,na
+O43186,CRX,O15265,ATXN7,0.623,na,na,na,na,na,na,na,na,na,na,na,na,na,11580893 15932940 ,na,na
+O43186,CRX,P35711,SOX5,0.583,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 unassigned1304 ,na,na
+O43186,CRX,Q08117,AES,0.583,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 unassigned1304 ,na,na
+O43186,CRX,Q2TAL8,QRICH1,0.583,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 unassigned1304 ,na,na
+O43186,CRX,O75531,BANF1,0.523,na,na,na,na,na,na,na,na,na,na,na,na,na,12215455 ,na,na
+O43186,CRX,Q17RB8,LONRF1,0.523,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 unassigned1304 ,0.200298,na
+O43186,CRX,O14964,HGS,0.49,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 26871637 ,na,na
+O43186,CRX,Q8N9N5,BANP,0.49,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 26871637 ,na,na
+O43186,CRX,O75716,STK16,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.373013,na
+O43186,CRX,O94817,ATG12,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,P24863,CCNC,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.331449,na
+O43186,CRX,P40306,PSMB10,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,P63241,EIF5A,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,Q14154,KIAA0141,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.226471,na
+O43186,CRX,Q14CS0,UBXN2B,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,Q5T011,SZT2,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,Q71RC2,LARP4,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,Q7Z2X4,PID1,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,Q8TC57,M1AP,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,16189514 unassigned1304 ,0.200896,na
+O43186,CRX,Q96LT7,C9ORF72,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,Q96NT3,GUCD1,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,Q96T49,PPP1R16B,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.207333,na
+O43186,CRX,Q9NX04,C1ORF109,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.370565,na
+O43186,CRX,Q9NYB9,ABI2,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.383641,na
+O43186,CRX,Q9UJX0,OSGIN1,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.325057,na
+O43186,CRX,Q9Y221,NIP7,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.432397,na
+O43186,CRX,Q01974,ROR2,0.376,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 25416956 ,0.207838,na
+O43186,CRX,Q02446,SP4,0.376,na,na,na,na,na,na,na,na,na,na,na,na,na,15781457 ,na,na
+O43186,CRX,A0A0S2Z5G4,BANP {ECO:0000313|EMBL:ALQ34127.1},0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,26871637 ,na,na
+O43186,CRX,A0A0S2Z6P0,ZNF688 {ECO:0000313|EMBL:ALQ34329.1},0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,26871637 ,na,na
+O43186,CRX,A1L4F5,ROR2 {ECO:0000313|EMBL:AAI30523.1},0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,B4DE54,BANP {ECO:0000313|EMBL:ALQ34126.1},0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,26871637 ,na,na
+O43186,CRX,K7EM05,K7EM05,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,26871637 ,na,na
+O43186,CRX,P84022,SMAD3,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,25910212 ,na,na
+O43186,CRX,Q53HV7,SMUG1,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,26871637 ,na,na
+O43186,CRX,Q5THT1,KLHL32 {ECO:0000313|ENSEMBL:ENSP00000358258},0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,Q6P2C6,MLLT6,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+O43186,CRX,O94829,IPO13,0.309,na,na,na,na,na,na,na,na,na,na,na,na,na,15143176 ,na,na
+O43186,CRX,Q09472,EP300,0.309,na,na,na,na,na,na,na,na,na,na,na,na,na,10708567 ,na,na
+O43186,CRX,Q92830,KAT2A,0.309,na,na,na,na,na,na,na,na,na,na,na,na,na,15932940 ,na,na
+O43186,CRX,Q99750,MDFI,0.286,na,na,na,na,na,na,na,na,na,na,na,na,na,16189514 ,na,na
+O43186,CRX,A0A024R8L2,A0A024R8L2,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,A5D8V6,VPS37C,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,H0YDU7,ATM {ECO:0000313|ENSEMBL:ENSP00000434327},0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,27107012 ,na,na
+O43186,CRX,O00560,SDCBP,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,O43247,TEX33,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,O43711,TLX3,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.225572,na
+O43186,CRX,O75593,FOXH1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,O94888,UBXN7,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,O95007,OR6B1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,O95376,ARIH2,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.351085,na
+O43186,CRX,O95416,SOX14,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,O95947,TBX6,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P0CG20,PRR35,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P0CW19,LIMS3,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P0CW24,PNMA6A {ECO:0000312|HGNC:HGNC:28248},0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P13807,GYS1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.545262,na
+O43186,CRX,P17931,LGALS3,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P25786,PSMA1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.25253,na
+O43186,CRX,P34130,NTF4,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P35680,HNF1B,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P41225,SOX3,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P42773,CDKN2C,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P51687,SUOX,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.33751,na
+O43186,CRX,P54253,ATXN1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P56693,SOX10,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,P78412,IRX6,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q13492,PICALM,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,27107012 ,na,na
+O43186,CRX,Q13952,NFYC,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q15915,ZIC1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q63HR2,TENC1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.324573,na
+O43186,CRX,Q63ZY3,KANK2,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q6NZ36,FAAP20,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q6P088,Q6P088,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q7Z3K3,POGZ,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q86VF2,IGFN1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.28365,na
+O43186,CRX,Q8IYB5,SMAP1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q8IYR0,C6ORF165,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.583682,na
+O43186,CRX,Q8IYS8,BOD1L2 {ECO:0000312|HGNC:HGNC:28505},0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q8N8Y2,ATP6V0D2,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.509582,na
+O43186,CRX,Q8TBB1,LNX1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q8WU79,SMAP2,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q92530,PSMF1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,27107012 ,na,na
+O43186,CRX,Q92734,TFG,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.206105,na
+O43186,CRX,Q93062,RBPMS,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,27107012 ,na,na
+O43186,CRX,Q969S2,NEIL2,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.274256,na
+O43186,CRX,Q96K80,ZC3H10,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q9BQY4,RHOXF2,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q9BUN1,MENT,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q9BV19,C1ORF50,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q9BZE0,GLIS2,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q9H503,BANF2,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q9NP98,MYOZ1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q9NQB0,TCF7L2,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q9NRN7,AASDHPPT,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.393398,na
+O43186,CRX,Q9NZD8,SPG21,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q9UBE0,SAE1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.369047,na
+O43186,CRX,Q9UDX3,SEC14L4,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.497601,na
+O43186,CRX,Q9UFG5,C19ORF25,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+O43186,CRX,Q9UI47,CTNNA3,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.285633,na
+O43186,CRX,Q9UMX1,SUFU,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.479497,na
+O43186,CRX,P08047,SP1,0.21,na,na,na,na,na,na,na,na,na,na,na,na,na,15781457 ,na,na
+O43186,CRX,P41743,PRKCI,0.21,na,na,na,na,na,na,na,na,na,na,na,na,na,23718855 ,na,na
+O43186,CRX,Q02447,SP3,0.21,na,na,na,na,na,na,na,na,na,na,na,na,na,15781457 ,na,na

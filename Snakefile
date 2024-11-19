@@ -35,7 +35,7 @@ hpc_atlas_readme = f"mavisp_templates/GENE_NAME/interactome/"\
                    f"hpc_atlas/readme.txt"
 
 modules['interactome']['mentha2pdb'].update({"script":mentha_script,
-	                                         "readme":mentha_readme,
+                                             "readme":mentha_readme,
                                              "bash":mentha_bash})
 modules['interactome']['hpc_atlas'].update({"readme":hpc_atlas_readme})
 
@@ -65,11 +65,11 @@ procheck_readme = f"/mavisp_templates/GENE_NAME/"\
 
 
 modules['structure_selection']["alphafold"].update({"script":alphafold_script,
-	                                               "readme":alphafold_readme})
+                                                   "readme":alphafold_readme})
 
 modules['structure_selection'].update({"trimmed_models":\
-	                                  {"script":filter_pdb_script,
-	                                   "readme":filter_pdb_readme}})
+                                      {"script":filter_pdb_script,
+                                       "readme":filter_pdb_readme}})
 
 modules['structure_selection']['pdbminer'].update({"readme":pdbminer_readme})
 
@@ -215,7 +215,7 @@ mutlist_readme = f"mavisp_templates/GENE_NAME/"\
                  f"cancermuts/readme.txt"
 
 modules.update({"mutlist_generation":{"script":mutlist_script,
-	                                  "readme":mutlist_readme}})
+                                      "readme":mutlist_readme}})
 
 saturation_mutlist_sh = "mavisp_templates/GENE_NAME/"\
                         "saturation_list/saturation_mutlist.py"
@@ -226,7 +226,7 @@ saturation_mutlist_py = "mavisp_templates/GENE_NAME/"\
 
 modules.update({"saturation_mutlist_generation":{"py":saturation_mutlist_py,
                                                  "sh":saturation_mutlist_sh,
-	                                             "readme":mutlist_readme}})
+                                                 "readme":mutlist_readme}})
 
 
 #--------------------------- Protein annotations ---------------------------#
@@ -237,7 +237,7 @@ domains_readme = f"mavisp_templates/GENE_NAME/"\
                  f"structure_selection/domain_annotations/readme.txt"
 
 modules.update({"domain_annotations":{"script":domains_script,
-	                                  "readme":domains_readme}})
+                                      "readme":domains_readme}})
 
 netphos_readme = f"mavisp_templates/GENE_NAME/"\
                  f"netphos/readme.txt"
@@ -326,13 +326,13 @@ allosigma4_readme   = f"mavisp_templates/GENE_NAME/long_range/"\
                       f"allosigma2/4.allosigma.filtering/readme.txt"
 
 modules.update({"allosigma":{"allosigma1":{"aminoacids":allosigma_aminoacid, 
-	                                       "readme":allosigma1_readme},
-	                         "allosigma2":{"script":allosigma_classify,
-	                                       "readme":allosigma2_readme},
-	                         "allosigma3":{"script":allosigma_heatmap,
-	                                       "readme":allosigma3_readme},
-	                         "allosigma4":{"script":allosigma_filtering,
-	                                       "readme":allosigma4_readme}}})
+                                           "readme":allosigma1_readme},
+                             "allosigma2":{"script":allosigma_classify,
+                                           "readme":allosigma2_readme},
+                             "allosigma3":{"script":allosigma_heatmap,
+                                           "readme":allosigma3_readme},
+                             "allosigma4":{"script":allosigma_filtering,
+                                           "readme":allosigma4_readme}}})
 
 df = pd.read_csv(config['input']['path'])
 
@@ -343,7 +343,6 @@ df['output_path_folder'] = rasp_path
 #Rosetta
 rosetta_path=modules['rosetta_relax']['rosetta_folder']
 df['output_rosetta_folder'] = rosetta_path
-
 df["trimmed"] = df["trimmed"].str.split("_")
 df_exploded = df.explode("trimmed")
 
@@ -364,36 +363,44 @@ modules['efoldmine'].update({"readme": efoldmine_readme})
  
 ##############################################################################
 
-                       			#Snakefile#
+                                   #Snakefile#
 
 ##############################################################################
 
 rule all:
     input:
         expand("{hugo_name}/structure_selection/"\
-        	   "domain_annotations/"\
-        	   "domains_mutlist.csv",       
-              hugo_name = df['protein'].str.upper()),
+                "original_model/",
+                zip,
+                hugo_name = df['protein'].str.upper(),
+                structure_source = df['structure_source']),
+
+        expand("{hugo_name}/structure_selection/"\
+               "domain_annotations/"\
+               "domains_mutlist.csv",       
+                zip,
+                hugo_name = df['protein'].str.upper(),
+                structure_source = df['structure_source']),
 
         expand("{hugo_name}/netphos/"\
-        	   "netphos.out",               
+               "netphos.out",               
               hugo_name = df['protein'].str.upper()),
 
         expand("{hugo_name}/interactome/"\
-        	   "hpc_atlas/{hugo_name}.out",       
+               "hpc_atlas/{hugo_name}.out",       
               hugo_name = df['protein'].str.upper()),
 
-    	expand("{hugo_name}/"\
-    		   "structure_selection/"\
-    		   "pdbminer/results/"\
-    		   "{uniprot_ac}/"\
-    		   "{uniprot_ac}_all.csv", 
+        expand("{hugo_name}/"\
+               "structure_selection/"\
+               "pdbminer/results/"\
+               "{uniprot_ac}/"\
+               "{uniprot_ac}_all.csv", 
               zip, 
               hugo_name = df['protein'].str.upper(),
-    		  uniprot_ac = df['uniprot_ac'].str.upper()),
+              uniprot_ac = df['uniprot_ac'].str.upper()),
 
         expand("{hugo_name}/demask/"\
-        	   "myquery_predictions.txt",   
+               "myquery_predictions.txt",   
                hugo_name = df['protein'].str.upper()),
 
         expand("{hugo_name}/alphamissense/"\
@@ -402,20 +409,24 @@ rule all:
 
         expand("{hugo_name}/"\
                "structure_selection/"\
-               "alphafold_db/",             
-               hugo_name = df['protein'].str.upper()),
+               "trimmed_model/",
+               zip,             
+               hugo_name = df['protein'].str.upper(),
+               structure_source = df['structure_source']),
 
         expand("{path}/"\
                "{research_field}/"\
-               "{hugo_name}/free/AF_{resrange}/model_v2/",
+               "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/",
                zip,
                resrange = df_exploded['trimmed'],
                hugo_name = df_exploded['protein'].str.lower(),
                path = df_exploded['output_path_folder'],
-               research_field = df_exploded['research_field']),
+               research_field = df_exploded['research_field'],
+               structure_source = df['structure_source'],
+               model = df['model']),
 
         expand("{hugo_name}/interactome/"\
-        	   "mentha2pdb/"\
+               "mentha2pdb/"\
                "{uniprot_ac}.csv",
                zip, 
                hugo_name = df['protein'].str.upper(), 
@@ -424,25 +435,29 @@ rule all:
         expand("{path}/"\
                "{research_field}/"\
                "{hugo_name}/free/"\
-               "AF_{resrange}/"\
-               "model_v2/ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb",           
+               "{structure_source}_{resrange}/"\
+               "{model}_model/ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb",           
                zip, 
                uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
                hugo_name = df_exploded['protein'],
                path = df_exploded['output_rosetta_folder'],
                resrange = df_exploded['trimmed'],
-               research_field = df_exploded['research_field']),
+               research_field = df_exploded['research_field'],
+               structure_source = df['structure_source'],
+               model = df['model']),
 
-        expand("{hugo_name}/ptm/AF2_{resrange}/mutatex/summary_stability.txt",
-            zip,
-            hugo_name = df_exploded['protein'],
-            resrange = df_exploded['trimmed']),
-
-        expand("{hugo_name}/ptm/AF2_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
+        expand("{hugo_name}/ptm/{structure_source}_{resrange}/mutatex/summary_stability.txt",
             zip,
             hugo_name = df_exploded['protein'],
             resrange = df_exploded['trimmed'],
-            uniprot_ac = df_exploded['uniprot_ac'].str.upper()),
+            structure_source = df['structure_source']),
+
+        expand("{hugo_name}/ptm/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
+            zip,
+            hugo_name = df_exploded['protein'],
+            resrange = df_exploded['trimmed'],
+            uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
+            structure_source = df['structure_source']),
 
         expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
             zip,
@@ -459,53 +474,65 @@ rule all:
                hugo_name=df['protein'].str.upper())
         
 
+
 ###################### Structure selection and trimming ######################
 
-rule Alphafold:
+rule structure_selection:
     output:
-        directory("{hugo_name}/structure_selection/alphafold_db/")
+        directory("{hugo_name}/structure_selection/original_model")
 
     run:
-        uniprot_ac = df.loc[df["protein"] == wildcards.hugo_name,
-                                             "uniprot_ac"].iloc[0]
-        dssp_exec=modules['structure_selection']['alphafold']['dssp_exec']
+            
+        pdb = df.loc[
+            (df['protein'] == wildcards.hugo_name),
+            'input_pdb'].iloc[0]
 
-        # Alphafold: Create the config.yaml file for the analysis 
+        if pd.isna(pdb):       
 
-        if not os.path.exists(str(output)):
-            os.makedirs(str(output))
-        data = {
-            "dssp_exec": dssp_exec,
-            "plddt_cutoff": 70,
-            "uniprot_ids": {
-                uniprot_ac: {
-                    "dir_name": wildcards.hugo_name.lower(),
-                    "version": "latest"
+            uniprot_ac = df.loc[df["protein"] == wildcards.hugo_name,
+                                                "uniprot_ac"].iloc[0]
+            dssp_exec=modules['structure_selection']['alphafold']['dssp_exec']
+
+            # Alphafold: Create the config.yaml file for the analysis 
+            
+            if not os.path.exists(str(output)):
+                os.makedirs(str(output))
+            data = {
+                "dssp_exec": dssp_exec,
+                "plddt_cutoff": 70,
+                "uniprot_ids": {
+                    uniprot_ac: {
+                        "dir_name": wildcards.hugo_name.lower(),
+                        "version": "latest"
+                    }
                 }
             }
-        }
 
-        # Specify the output YAML file path
-        file_path = "output.yaml"
+            # Specify the output YAML file path
+            file_path = "output.yaml"
 
-        with open(f"{output}/config_alphafolddb.yaml", "w") as f:
-            yaml.dump(data, f)
+            with open(f"{output}/config_alphafolddb.yaml", "w") as f:
+                yaml.dump(data, f)
 
-        # run alphafold module
+            # run alphafold module
 
-        readme=modules['structure_selection']['alphafold']['readme']
-        script=modules['structure_selection']['alphafold']['script']
-        shell("cd {output} && "
-              "cp ../../../{readme} . && "
-              "cp ../../../{script} . && "
-              "python get_alphafolddb_data.py -c config_alphafolddb.yaml")
+            readme=modules['structure_selection']['alphafold']['readme']
+            script=modules['structure_selection']['alphafold']['script']
+            shell("cd {output} && "
+                "cp ../../../{readme} . && "
+                "cp ../../../{script} . && "
+                "python get_alphafolddb_data.py -c config_alphafolddb.yaml")
+        else:
+            structure_folder = f'{output}/{wildcards.hugo_name.lower()}'
+            shell("mkdir -p {structure_folder}")
+            shell("cp {pdb} {structure_folder}")
 
 
 rule trim_model:
     input:
-        "{hugo_name}/structure_selection/alphafold_db/"
+        "{hugo_name}/structure_selection/original_model"
     output:
-        directory("{hugo_name}/structure_selection/trimmed_model/")
+        directory("{hugo_name}/structure_selection/trimmed_model")
     run:
 
         # list with all the residue ranges specified in the input file
@@ -519,7 +546,7 @@ rule trim_model:
         # list containing all the files in the folder
         files = os.listdir(input_files) 
 
-        # keep only the odb file
+        # keep only the pdb file
         file_pdb_list = [f for f in files if f.endswith(".pdb")] 
 
         # for every range specified in the input file create
@@ -528,11 +555,11 @@ rule trim_model:
         script=modules['structure_selection']['trimmed_models']['script']
         readme=modules['structure_selection']['trimmed_models']['readme']
         for i in trimmed_pdb_list:
-        	number_list = i.split("-")
-        	start = number_list[0]
-        	end = number_list[1]
-        	trimmed_pdb = f'{uniprot_ac}_{start}-{end}.pdb'
-        	shell("mkdir -p {output} &&"\
+            number_list = i.split("-")
+            start = number_list[0]
+            end = number_list[1]
+            trimmed_pdb = f'{uniprot_ac}_{start}-{end}.pdb'
+            shell("mkdir -p {output} &&"\
                   " python {script}"\
                       " {input_files}/{file_pdb_list[0]}"
                       " A"\
@@ -540,23 +567,21 @@ rule trim_model:
                       " {end}"\
                       " {wildcards.hugo_name}/structure_selection/"\
                       "trimmed_model/{trimmed_pdb} && "\
-                  "cp {script} {readme} {output} ")
+                      "cp {script} {readme} {output} ")
 
 rule pdbminer:
-	input:
-		"{hugo_name}/structure_selection/alphafold_db/"
-	output:
-		"{hugo_name}/structure_selection/pdbminer/results/"\
-		"{uniprot_ac}/{uniprot_ac}_all.csv"
-	shell:
-	    '''
-	    readme={modules[structure_selection][pdbminer][readme]}
-	    set +eu; {config[modules][structure_selection][pdbminer][pdbminer_env]}; set -eu
-	    mkdir -p {wildcards.hugo_name}/structure_selection/pdbminer/
+    output:
+        "{hugo_name}/structure_selection/pdbminer/results/"\
+        "{uniprot_ac}/{uniprot_ac}_all.csv"
+    shell:
+        '''
+        readme={modules[structure_selection][pdbminer][readme]}
+        set +eu; {config[modules][structure_selection][pdbminer][pdbminer_env]}; set -eu
+        mkdir -p {wildcards.hugo_name}/structure_selection/pdbminer/
         cd {wildcards.hugo_name}/structure_selection/pdbminer/ 
         cp ../../../$readme .
-	    PDBminer -g {wildcards.hugo_name} -u {wildcards.uniprot_ac} -f csv
-	    '''
+        PDBminer -g {wildcards.hugo_name} -u {wildcards.uniprot_ac} -f csv
+        '''
 
 rule pdbminer_complexes:
     input:
@@ -592,7 +617,7 @@ rule procheck:
     run:
         # Get path to the directory containing PDB files
         trimmed_pdb_dir = os.path.abspath(input.trimmed_pdb_dir)
-	procheck_env=modules['structure_selection']['procheck']
+        procheck_env=modules['structure_selection']['procheck']
         # List all PDB files in the trimmed_model directory
         pdb_files = [f for f in os.listdir(trimmed_pdb_dir) if f.endswith(".pdb")]
 
@@ -609,7 +634,7 @@ rule procheck:
 
             # Run PROCHECK for each PDB file
             shell(
-		"""
+        """
                 set +eu; {config[modules][structure_selection][procheck][procheck_env]}; set -eu
                 readme={modules[structure_selection][procheck][readme]}
                 cd {output_dir}
@@ -697,7 +722,7 @@ rule clinvar:
         clinvar_input.rename(columns={'protein' : 'gene',
                                       'ref_seq' : 'isoform'}, inplace=True)
         clinvar_input = clinvar_input[(clinvar_input['gene'] == \
-    		                           wildcards.hugo_name)]
+                                       wildcards.hugo_name)]
         clinvar_input.to_csv(os.path.join(wildcards.hugo_name,
                                           "clinvar_gene", 
                                           "gene.csv"),
@@ -826,16 +851,16 @@ rule cancermuts:
                                       ["cancermuts"]\
                                       ["Cosmic_database_path"]
         shell("cd {path}/ &&"\
-         	   " head -n 1 {cosmic_database_path} > header.txt &&"\
-         	   " grep -w {wildcards.hugo_name} \
+                " head -n 1 {cosmic_database_path} > header.txt &&"\
+                " grep -w {wildcards.hugo_name} \
                  {cosmic_database_path} > content.txt &&"\
-         	   " cat header.txt content.txt > \
+                " cat header.txt content.txt > \
                  COSMIC_ini.csv && rm header.txt content.txt")
 
         # copy the metatable plotting script in the folder
 
         shell("cd {path}/ &&"\
-         	  " cp ../mavisp_templates_final/plot.py .")
+               " cp ../mavisp_templates_final/plot.py .")
 
         #### run cancermuts depending on the input files availability ###
         env = modules["mutations_aggregation"]["cancermuts"]["source"]
@@ -959,7 +984,7 @@ rule mutlist:
 
         # path with the trimmed models
         trimmed_pdb_path = f"../structure_selection/"\
-                            f"trimmed_model/{wildcards.hugo_name.lower()}"
+                            f"trimmed_model/"
         script = modules['mutlist_generation']['script']
         readme = modules['mutlist_generation']['readme']
         shell("set +u && "\
@@ -1055,10 +1080,10 @@ rule netphos:
         path=f"{wildcards.hugo_name}/netphos"
         readme=modules['netphos']
         shell("mkdir -p {path} && cd {path} &&"\
-        	  " cp ../../{readme} . &&"\
-        	  " wget https://rest.uniprot.org/uniprotkb/"\
-        	  "{uniprot_ac}.fasta &&"\
-        	  " netphos {uniprot_ac}.fasta > netphos.out")
+              " cp ../../{readme} . &&"\
+              " wget https://rest.uniprot.org/uniprotkb/"\
+              "{uniprot_ac}.fasta &&"\
+              " netphos {uniprot_ac}.fasta > netphos.out")
 
 rule denovo_phospho:
     input:
@@ -1101,16 +1126,20 @@ rule ptm_stability:
     input:
         data=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                         f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
+                         f"free/stability/mutatex_runs/{wcs.structure_source}_" +\
+                         f"{df_exploded.loc[df_exploded['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]}/model_" +\
+                         f"{df.loc[df['protein'] == wcs.hugo_name, 'model'].iloc[0]}/saturation/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/results/mutation_ddgs/final_averages/",
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
+                        f"free/stability/mutatex_runs/{wcs.structure_source}_" +\
+                        f"{df_exploded.loc[df_exploded['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]}/model_" +\
+                        f"{df.loc[df['protein'] == wcs.hugo_name, 'model'].iloc[0]}/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb",
         mutlist_dir="{hugo_name}/cancermuts/"
     output:
-        summary="{hugo_name}/ptm/AF2_{resrange}/mutatex/summary_stability.txt",
+        summary="{hugo_name}/ptm/{structure_source}_{resrange}/mutatex/summary_stability.txt",
     run:
         mutlist = ""
         pattern = "mutlist_mutatex_P_\d{8}\.txt"
@@ -1123,7 +1152,11 @@ rule ptm_stability:
         shutil.copy(modules['mutations_aggregation']['ptm']['mutatex']['readme'], outdir)
         shutil.copy(modules['mutations_aggregation']['ptm']['mutatex']['script'], outdir)
         shutil.copy(modules['mutations_aggregation']['ptm']['mutatex']['mutlist'], outdir)
+        if os.path.islink(f"{outdir}/final_averages") or os.path.exists(f"{outdir}/final_averages"):
+            os.remove(f"{outdir}/final_averages") 
         os.symlink(input.data, f"{outdir}/final_averages")
+        if os.path.islink(f"{outdir}/{os.path.basename(input.pdb)}") or os.path.exists(f"{outdir}/{os.path.basename(input.pdb)}"):
+            os.remove(f"{outdir}/{os.path.basename(input.pdb)}")
         os.symlink(input.pdb,  f"{outdir}/{os.path.basename(input.pdb)}")
 
         shell(f"""cd {outdir} &&\
@@ -1132,11 +1165,12 @@ rule ptm_stability:
 
 rule ptm_sas:
     output:
-        rsa="{hugo_name}/ptm/AF2_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa"
+        rsa="{hugo_name}/ptm/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa"
     input:
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
-                        f"free/stability/mutatex_runs/AF_{wcs.resrange}/model_v3/saturation/" +\
+                        f"free/stability/mutatex_runs/{wcs.structure_source}_{wcs.resrange}/model_" +\
+                        f"{df.loc[df['protein'] == wcs.hugo_name, 'model'].iloc[0]}/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb"
     run:
@@ -1162,11 +1196,11 @@ rule demask_config:
         config = configparser.ConfigParser()
         config.add_section('demask')
         config.set('demask', 'blastp', modules['mutations_classifier']\
-        	                                  ['demask']\
-        	                                  ['blastp_path'])
+                                              ['demask']\
+                                              ['blastp_path'])
         config.set('demask', 'db', modules['mutations_classifier']\
-        	                              ['demask']\
-        	                              ['database_path'])
+                                          ['demask']\
+                                          ['database_path'])
         if not os.path.exists(f"{wildcards.hugo_name}/demask"):
             os.mkdir(f"{wildcards.hugo_name}/demask")
         shell("cp {readme} {wildcards.hugo_name}/demask && "\
@@ -1240,7 +1274,7 @@ rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
     output:
-        directory("{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v2/")
+        directory("{path}/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/")
     shell:
         """
         mkdir -p {output}
@@ -1263,7 +1297,7 @@ rule rosetta_relax:
     input:
         "{hugo_name}/structure_selection/trimmed_model/"
     output:
-        "{path}/{research_field}/{hugo_name}/free/AF_{resrange}/model_v2/"\
+        "{path}/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/"\
         "ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb"
     params:
         rosetta_module = modules['rosetta_relax']['rosetta_module'],
@@ -1274,10 +1308,10 @@ rule rosetta_relax:
     shell:
         """
         set +u; source {config[modules][rosetta_relax][rosetta_env]}; set -u && \
-        mkdir -p {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v2/ref2015_cartesian2020/ && \
+        mkdir -p {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.model}_model/ref2015_cartesian2020/ && \
         cp {input}/{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
-           {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v2/ref2015_cartesian2020/ && \
-        cd {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/AF_{wildcards.resrange}/model_v2/ref2015_cartesian2020/ && \
+           {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.model}_model/ref2015_cartesian2020/ && \
+        cd {config[modules][rosetta_relax][rosetta_folder]}/{wildcards.research_field}/{wildcards.hugo_name}/free/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.model}_model/ref2015_cartesian2020/ && \
         cp {params.mpi} . && \
         cp {params.readme} . && \
         cp {params.yaml} . && \
@@ -1306,7 +1340,7 @@ rule rosetta_relax:
 rule allosigma_1:
     output:
         directory("{hugo_name}/long_range/allosigma2/"\
-        	      "{uniprot_ac}_{resrange}/1.allosteric_signalling_map/")
+                  "{uniprot_ac}_{resrange}/1.allosteric_signalling_map/")
     run:
         # 1.allosigma_signalling_map
        
@@ -1318,14 +1352,14 @@ rule allosigma_1:
         readme = modules["allosigma"]["allosigma1"]["readme"]
 
         shell("mkdir -p {output}/ && \
-        	  cp {readme} {output} && \
-        	  cp {allosigma_file} {output}")		
+              cp {readme} {output} && \
+              cp {allosigma_file} {output}")		
 
 rule allosigma_2_3:
     input:
-    	directory("{hugo_name}/cancermuts"),
+        directory("{hugo_name}/cancermuts"),
         directory("{hugo_name}/long_range/allosigma2/"\
-        	      "{uniprot_ac}_{resrange}/1.allosteric_signalling_map/"),
+                  "{uniprot_ac}_{resrange}/1.allosteric_signalling_map/"),
         
 
     output:
@@ -1351,32 +1385,32 @@ rule allosigma_2_3:
         date=""
         directory=os.getcwd()
         for filename in os.listdir(input[0]):
-        	match=re.search(r'(_\d{8}\.)',filename)
-	        if match!= None:
-        		date=match.group()[1:-1]
+            match=re.search(r'(_\d{8}\.)',filename)
+            if match!= None:
+                date=match.group()[1:-1]
 
         classify=modules['allosigma']['allosigma2']['script']
         aminoacids=modules['allosigma']['allosigma1']['aminoacids']
         heatmap=modules['allosigma']['allosigma3']['script']
 
         shell("mkdir -p {output_dest} && \
-        	   mkdir -p {output_dest2} && \
-        	   cp {heatmap} {output_dest2} && \
-        	   cp {readme_2} {output_dest} && \
-        	   cp {readme_3} {output_dest2} && \
-        	   cp {input[0]}/mutlist_{date}.txt {output_dest}/muts.dat && \
-        	   cp {classify} {output_dest} && cp {aminoacids} {output_dest}")
+               mkdir -p {output_dest2} && \
+               cp {heatmap} {output_dest2} && \
+               cp {readme_2} {output_dest} && \
+               cp {readme_3} {output_dest2} && \
+               cp {input[0]}/mutlist_{date}.txt {output_dest}/muts.dat && \
+               cp {classify} {output_dest} && cp {aminoacids} {output_dest}")
 
         shell("cd {output_dest} &&  \
-        	  ./allosigma-classify \
-        	  -o {directory}/{output[0]} \
-        	  -c 5 muts.dat aminoacids.dat &&"\
-        	  " cd ../../../../../{output_dest2} && "\
-        	  "./allosigma-heatmap -x 10 \
-        	                       -y 40  \
-        	                       -f 6  \
-        	                       ../../1.allosteric_signalling_map/"\
-        	                     "{allosigma_file}  {directory}/{output[0]}") 
+              ./allosigma-classify \
+              -o {directory}/{output[0]} \
+              -c 5 muts.dat aminoacids.dat &&"\
+              " cd ../../../../../{output_dest2} && "\
+              "./allosigma-heatmap -x 10 \
+                                   -y 40  \
+                                   -f 6  \
+                                   ../../1.allosteric_signalling_map/"\
+                                 "{allosigma_file}  {directory}/{output[0]}") 
         # to add a checking step for the presence of the heatmaps--> 
         # no heatmaps if the ziop file is thre wrong one
 
@@ -1397,18 +1431,18 @@ rule allosigma4:
         filtering = modules['allosigma']['allosigma4']['script']
         readme = modules['allosigma']['allosigma4']['readme']
 
-		# 4.allosigma.filtering
+        # 4.allosigma.filtering
         shell("mkdir -p {output_dest4} && \
                cp {filtering} {output_dest4} &&\
                cp {readme} {output_dest4} && \
                cp {input[0]}/{wildcards.uniprot_ac}_{wildcards.resrange}.pdb\
                 {output_dest4} && cd {output_dest4} && "\
-		      "cp {directory}/{input[1]} {directory}/{input[2]} . && "\
-		      "touch {directory}/{output} && "\
-		      "./allosigma-filtering -s "\
-		      "{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
-		      -i up_mutations.tsv -t 2 -d 8 -a 20 && "\
-		      "./allosigma-filtering -s "\
-		      "{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
-		      -i down_mutations.tsv -t 2 -d 8 -a 20")
+              "cp {directory}/{input[1]} {directory}/{input[2]} . && "\
+              "touch {directory}/{output} && "\
+              "./allosigma-filtering -s "\
+              "{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
+              -i up_mutations.tsv -t 2 -d 8 -a 20 && "\
+              "./allosigma-filtering -s "\
+              "{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
+              -i down_mutations.tsv -t 2 -d 8 -a 20")
 '''
