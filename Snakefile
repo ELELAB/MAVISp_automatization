@@ -481,8 +481,7 @@ rule structure_selection:
     output:
         directory("{hugo_name}/structure_selection/original_model")
 
-    run: 
-        #shell("mkdir -p {wildcards.hugo_name}/structure_selection/original_model") 
+    run:
             
         pdb = df.loc[
             (df['protein'] == wildcards.hugo_name),
