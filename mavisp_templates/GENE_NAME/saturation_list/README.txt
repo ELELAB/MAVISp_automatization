@@ -14,4 +14,7 @@ module load python/3.10/modulefile
 
 bash do.sh UNIPROT_ID AA_RANGE
 
+N.B. if you have more domains remember to concatenate the saturation lists with cat and call 
+the final file saturation_mutlist.txt
+
 #python saturation_mutlist.py -a P51587 -r 3415-3418 -o BRCA2_saturation_mutlist.txt -es

@@ -743,7 +743,7 @@ rule saturation_list:
         "{hugo_name}/saturation_mutlist/saturation_mutlist.txt"
     params:
         ranges=lambda wcs: df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].tolist(),
-        uniprot=lambda wcs: df.loc[df['protein'] == wcs.hugo_name, 'uniprot_id'].tolist()[0]
+        uniprot_ac=lambda wcs: df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].tolist()[0]
     run:
         module_dir = os.path.join(wildcards.hugo_name, 'saturation_mutlist')
 
@@ -753,7 +753,7 @@ rule saturation_list:
         ranges = params.ranges[0]
         for r in ranges:
             shell(f"cd {module_dir} && "
-                  f"bash do.sh {params.uniprot} {r}")
+                  f"bash do.sh {params.uniprot_ac} {r}")
         shell(f"cd {module_dir} && "
               f"cat saturation_mutlist_* > saturation_mutlist.txt")
 
