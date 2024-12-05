@@ -26,7 +26,10 @@ print(seq.sequence)
 
 # add mutations from cBioPortal
 cb = cBioPortal()
-cb.add_mutations(seq, metadata=['cancer_type', 'cancer_study', 'genomic_mutations'])
+try:
+    cb.add_mutations(seq, metadata=['cancer_type', 'cancer_study', 'genomic_mutations'])
+except TypeError:
+    pass
 
 # add mutations from COSMIC
 cosmic = COSMIC(database_files=['COSMIC_ini.csv'],
