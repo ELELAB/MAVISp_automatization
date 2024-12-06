@@ -852,8 +852,7 @@ rule cancermuts:
                                       ["Cosmic_database_path"]
         shell("cd {path}/ &&"\
                 " head -n 1 {cosmic_database_path} > header.txt &&"\
-                " grep -w {wildcards.hugo_name} \
-                 {cosmic_database_path} > content.txt &&"\
+                " (grep -w {wildcards.hugo_name} {cosmic_database_path} > content.txt || true) &&"\
                 " cat header.txt content.txt > \
                  COSMIC_ini.csv && rm header.txt content.txt")
 
