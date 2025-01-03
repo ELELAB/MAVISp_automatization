@@ -422,8 +422,8 @@ rule all:
                hugo_name = df_exploded['protein'].str.lower(),
                path = df_exploded['output_path_folder'],
                research_field = df_exploded['research_field'],
-               structure_source = df['structure_source'],
-               model = df['model']),
+               structure_source = df_exploded['structure_source'],
+               model = df_exploded['model']),
 
         expand("{hugo_name}/interactome/"\
                "mentha2pdb/"\
@@ -450,14 +450,14 @@ rule all:
             zip,
             hugo_name = df_exploded['protein'],
             resrange = df_exploded['trimmed'],
-            structure_source = df['structure_source']),
+            structure_source = df_exploded['structure_source']),
 
         expand("{hugo_name}/ptm/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
             zip,
             hugo_name = df_exploded['protein'],
             resrange = df_exploded['trimmed'],
             uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
-            structure_source = df['structure_source']),
+            structure_source = df_exploded['structure_source']),
 
         expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
             zip,
