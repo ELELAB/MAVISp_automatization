@@ -1278,7 +1278,7 @@ rule rasp_workflow:
         """
         mkdir -p {output}
         cp {config[modules][rasp][readme]} {output}
-        cp {config[modules][rasp][script]} {output}        
+        cp {config[modules][rasp][script]} {output}
         pdb_name=$(ls {input}/*_{wildcards.resrange}.pdb | xargs basename)
         processed_pdb=$(ls {input}/*_{wildcards.resrange}_processed.pdb | xargs basename)
         cd {output}
@@ -1331,8 +1331,6 @@ rule rasp_workflow:
         # Activate conda environment
         set +u; source {config[modules][rasp][conda_activation]}
         conda activate {config[modules][rasp][rasp_conda_env]}; set -u
-
-        # Run RaSP workflow
         RaSP_workflow -i $pdb_name \
                       -r cpu \
                       -p /usr/local/envs/RaSP_workflow/RaSP_workflow/src/ \
