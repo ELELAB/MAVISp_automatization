@@ -1278,12 +1278,10 @@ rule rasp_workflow:
         """
         mkdir -p {output}
         cp {config[modules][rasp][readme]} {output}
-        cp {config[modules][rasp][script]} {output}
-        
+        cp {config[modules][rasp][script]} {output}        
         pdb_name=$(ls {input}/*_{wildcards.resrange}.pdb | xargs basename)
         processed_pdb=$(ls {input}/*_{wildcards.resrange}_processed.pdb | xargs basename)
-
-       cd {output}
+        cd {output}
 
         # Step 1: Add chain if missing
         add_chain() {{
