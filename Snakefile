@@ -1279,19 +1279,71 @@ rule rasp_workflow:
         mkdir -p {output}
         cp {config[modules][rasp][readme]} {output}
         cp {config[modules][rasp][script]} {output}
+        
         pdb_name=$(ls {input}/*_{wildcards.resrange}.pdb | xargs basename)
-        egrep -v '^(END|TER)' {input}/$pdb_name > {output}/$pdb_name
-        cd {output}
+        processed_pdb=$(ls {input}/*_{wildcards.resrange}_processed.pdb | xargs basename)
+
+       cd {output}
+
+        # Step 1: Add chain if missing
+        add_chain() {{
+            awk -v chain="A" '{{
+                if ($0 ~ /^ATOM/ || $0 ~ /^HETATM/) {{
+                    if (substr($0, 22, 1) == " ") {{
+                        print substr($0, 1, 21) chain substr($0, 23);
+                    }} else {{
+                        print $0;
+                    }}
+                }} else {{
+                    print $0;
+                }}
+            }}' "$pdb_name" > tmp_chain.pdb
+        }}
+
+        # Step 2: Remove solvent and hydrogen
+        remove_solvent_and_hydrogen() {{
+            pdb_element "$pdb_name" | pdb_delelem -H > tmp_noH.pdb
+        }}
+
+        # Step 3: Fix amino acid names
+        fix_amino_acid_names() {{
+            sed -E 's/HIE/HIS/g; s/HID/HIS/g; s/HIP/HIS/g; s/LYN/LYS/g; s/ASH/ASP/g; s/GLH/GLU/g; s/CYX/CYS/g' "$pdb_name" > tmp_fixed_names.pdb
+        }}
+
+        # Step 4: Remove ending lines
+        remove_end_lines() {{
+            awk '/^(ATOM|HETATM)/' "$pdb_name" > tmp_no_end_lines.pdb
+        }}
+
+        # Step 5: Pad the file
+        pad_file() {{
+            sed -E 's/.{{1,79}}$/&                                                                            /' "$pdb_name" | cut -c1-80 > "$processed_pdb"
+        }}
+
+        # Execute workflow
+        add_chain "$pdb_name"
+        remove_solvent_and_hydrogen tmp_chain.pdb
+        fix_amino_acid_names tmp_noH.pdb
+        remove_end_lines tmp_fixed_names.pdb
+        pad_file tmp_no_end_lines.pdb "$processed_pdb"
+
+        # Clean up
+        rm tmp_chain.pdb tmp_noH.pdb tmp_fixed_names.pdb tmp_no_end_lines.pdb
+
+        # Activate conda environment
         set +u; source {config[modules][rasp][conda_activation]}
         conda activate {config[modules][rasp][rasp_conda_env]}; set -u
-        RaSP_workflow -i $pdb_name\
+
+        # Run RaSP workflow
+        RaSP_workflow -i $pdb_name \
                       -r cpu \
                       -p /usr/local/envs/RaSP_workflow/RaSP_workflow/src/ \
                       -o . \
                       -n 4 \
-                      -c A 
+                      -c A
         RaSP_postprocess -i output/predictions/cavity_pred_*.csv
         """
+        
 rule rosetta_relax:
     input:
         "{hugo_name}/structure_selection/trimmed_model/"
