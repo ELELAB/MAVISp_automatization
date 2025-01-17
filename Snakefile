@@ -1279,8 +1279,12 @@ rule rasp_workflow:
         mkdir -p {output}
         cp {config[modules][rasp][readme]} {output}
         cp {config[modules][rasp][script]} {output}
+        
         pdb_name=$(ls {input}/*_{wildcards.resrange}.pdb | xargs basename)
-        processed_pdb=$(ls {input}/*_{wildcards.resrange}_processed.pdb | xargs basename)
+        processed_pdb=$(echo "$pdb_name" | sed 's/\.pdb$/_processed.pdb/')
+
+        cp {input}/"$pdb_name" {output}/"$pdb_name"
+
         cd {output}
 
         # Step 1: Add chain if missing
@@ -1331,7 +1335,9 @@ rule rasp_workflow:
         # Activate conda environment
         set +u; source {config[modules][rasp][conda_activation]}
         conda activate {config[modules][rasp][rasp_conda_env]}; set -u
-        RaSP_workflow -i $pdb_name \
+
+        # Run RaSP workflow
+        RaSP_workflow -i $processed_pdb \
                       -r cpu \
                       -p /usr/local/envs/RaSP_workflow/RaSP_workflow/src/ \
                       -o . \
@@ -1339,7 +1345,7 @@ rule rasp_workflow:
                       -c A
         RaSP_postprocess -i output/predictions/cavity_pred_*.csv
         """
-        
+
 rule rosetta_relax:
     input:
         "{hugo_name}/structure_selection/trimmed_model/"
