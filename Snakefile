@@ -1126,13 +1126,13 @@ rule ptm_stability:
         data=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
                          f"free/stability/mutatex_runs/{wcs.structure_source}_" +\
-                         f"{df_exploded.loc[df_exploded['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]}/model_" +\
+                         f"{wcs.resrange}/model_" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'model'].iloc[0]}/saturation/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/results/mutation_ddgs/final_averages/",
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
                         f"free/stability/mutatex_runs/{wcs.structure_source}_" +\
-                        f"{df_exploded.loc[df_exploded['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]}/model_" +\
+                        f"{wcs.resrange}/model_" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'model'].iloc[0]}/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb",
