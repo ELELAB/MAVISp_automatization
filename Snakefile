@@ -1278,7 +1278,6 @@ rule rasp_workflow:
         """
         mkdir -p {output}
         cp {config[modules][rasp][readme]} {output}
-        cp {config[modules][rasp][script]} {output}
         
         pdb_name=$(ls {input}/*_{wildcards.resrange}.pdb | xargs basename)
         processed_pdb=$(echo "$pdb_name" | sed 's/\.pdb$/_processed.pdb/')
@@ -1304,30 +1303,30 @@ rule rasp_workflow:
 
         # Step 2: Remove solvent and hydrogen
         remove_solvent_and_hydrogen() {{
-            pdb_element "$pdb_name" | pdb_delelem -H > tmp_noH.pdb
+            pdb_element tmp_chain.pdb | pdb_delelem -H > tmp_noH.pdb
         }}
 
         # Step 3: Fix amino acid names
         fix_amino_acid_names() {{
-            sed -E 's/HIE/HIS/g; s/HID/HIS/g; s/HIP/HIS/g; s/LYN/LYS/g; s/ASH/ASP/g; s/GLH/GLU/g; s/CYX/CYS/g' "$pdb_name" > tmp_fixed_names.pdb
+            sed -E 's/HIE/HIS/g; s/HID/HIS/g; s/HIP/HIS/g; s/LYN/LYS/g; s/ASH/ASP/g; s/GLH/GLU/g; s/CYX/CYS/g' tmp_noH.pdb > tmp_fixed_names.pdb
         }}
 
         # Step 4: Remove ending lines
         remove_end_lines() {{
-            awk '/^(ATOM|HETATM)/' "$pdb_name" > tmp_no_end_lines.pdb
+            awk '/^(ATOM|HETATM)/' tmp_fixed_names.pdb > tmp_no_end_lines.pdb
         }}
 
         # Step 5: Pad the file
         pad_file() {{
-            sed -E 's/.{{1,79}}$/&                                                                            /' "$pdb_name" | cut -c1-80 > "$processed_pdb"
+            sed -E 's/.{{1,79}}$/&                                                                            /' tmp_no_end_lines.pdb | cut -c1-80 > "$processed_pdb"
         }}
 
         # Execute workflow
         add_chain "$pdb_name"
-        remove_solvent_and_hydrogen tmp_chain.pdb
-        fix_amino_acid_names tmp_noH.pdb
-        remove_end_lines tmp_fixed_names.pdb
-        pad_file tmp_no_end_lines.pdb "$processed_pdb"
+        remove_solvent_and_hydrogen
+        fix_amino_acid_names
+        remove_end_lines
+        pad_file "$processed_pdb"
 
         # Clean up
         rm tmp_chain.pdb tmp_noH.pdb tmp_fixed_names.pdb tmp_no_end_lines.pdb
