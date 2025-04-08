@@ -29,7 +29,8 @@ cb = cBioPortal()
 try:
     cb.add_mutations(seq, metadata=['cancer_type', 'cancer_study', 'genomic_mutations'])
 except TypeError:
-    pass
+    print("WARNING: Skipping cBioPortal due to missing Entrez ID.")
+
 
 # add mutations from COSMIC
 cosmic = COSMIC(database_files=['COSMIC_ini.csv'],

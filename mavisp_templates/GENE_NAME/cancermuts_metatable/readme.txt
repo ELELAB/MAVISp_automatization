@@ -40,5 +40,8 @@ mv input.csv clinvar.csv
 # for instance:
 #     tsp -N 1 python pancancer_clinvar.py -p MAP1LC3B -i MLP3B_HUMAN -a Q9GZQ8 -c mutations_clinvar.csv -e LC3B_icope.csv LC3B_marinara.csv
 
+# In some cases, multiple entrez IDs can be found for one protein. This will not cause an error, but
+# no gene ID will be assigned and mutation retrieval from cBioPortal will be skipped.
+
 tsp -N 1 python pancancer_clinvar.py MAP1LC3B MLP3B_HUMAN
 
