@@ -471,8 +471,15 @@ rule all:
 
         expand("{hugo_name}/structure_selection/procheck/",
                zip,
-               hugo_name=df['protein'].str.upper())
+               hugo_name=df['protein'].str.upper()),
         
+	expand("{hugo_name}/simple_mode/collection_{structure_source}_{resrange}_{uniprot_ac}.done",
+       	    zip,
+       	    hugo_name = df_exploded['protein'].str.upper(),
+            structure_source = df_exploded['structure_source'],
+            resrange = df_exploded['trimmed'],
+            uniprot_ac = df_exploded['uniprot_ac'].str.upper())
+
 
 
 ###################### Structure selection and trimming ######################
@@ -1268,7 +1275,6 @@ rule alphamissense:
         """
 
 ############################## Calculations #################################
-
 rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
@@ -1373,7 +1379,6 @@ rule rosetta_relax:
                         -r {params.rosetta_module}\
                         -cs {params.mpi}
         """
-
 
 
 
@@ -1498,3 +1503,38 @@ rule allosigma4:
               "{wildcards.uniprot_ac}_{wildcards.resrange}.pdb \
               -i down_mutations.tsv -t 2 -d 8 -a 20")
 '''
+
+rule collect_outputs:
+    input:
+        clinvar_genes=lambda wcs: f"{wcs.hugo_name}/clinvar_gene/genes_output.csv",
+        ptm_stability=lambda wcs: f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{wcs.resrange}/mutatex/summary_stability.txt",
+        ptm_sas=lambda wcs: f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{wcs.resrange}/naccess/{wcs.uniprot_ac}_trimmed_model0_checked.rsa",
+        demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
+        alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz"
+    output:
+        temp("{hugo_name}/simple_mode/collection_{structure_source}_{resrange}_{uniprot_ac}.done")
+    params:
+        structure_source=lambda wcs: wcs.structure_source,
+        resrange=lambda wcs: wcs.resrange,
+        uniprot_ac=lambda wcs: wcs.uniprot_ac
+    shell:
+        """
+        mkdir -p {wildcards.hugo_name}/simple_mode/clinvar
+        cp {input.clinvar_genes} {wildcards.hugo_name}/simple_mode/clinvar/variants_output.csv
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/ptm
+        cp {input.ptm_stability} {wildcards.hugo_name}/simple_mode/ptm/summary_stability.txt
+        cp {input.ptm_sas} {wildcards.hugo_name}/simple_mode/ptm/sasa.rsa
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/sas
+        cp {input.ptm_sas} {wildcards.hugo_name}/simple_mode/sas/sasa.rsa
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/demask
+        cp {input.demask} {wildcards.hugo_name}/simple_mode/demask/myquery_predictions.txt
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/alphamissense
+        cp {input.alphamissense} {wildcards.hugo_name}/simple_mode/alphamissense/am.tsv.gz
+
+        touch {output}
+        """
+
