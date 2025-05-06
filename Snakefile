@@ -1275,7 +1275,6 @@ rule alphamissense:
         """
 
 ############################## Calculations #################################
-'''
 rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
@@ -1383,7 +1382,6 @@ rule rosetta_relax:
 
 
 
-'''
 '''
         expand("{hugo_name}/long_range/"\
                "allosigma2/"\
