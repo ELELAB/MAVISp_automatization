@@ -1275,6 +1275,7 @@ rule alphamissense:
         """
 
 ############################## Calculations #################################
+'''
 rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
@@ -1382,6 +1383,7 @@ rule rosetta_relax:
 
 
 
+'''
 '''
         expand("{hugo_name}/long_range/"\
                "allosigma2/"\
@@ -1510,7 +1512,8 @@ rule collect_outputs:
         ptm_stability=lambda wcs: f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{wcs.resrange}/mutatex/summary_stability.txt",
         ptm_sas=lambda wcs: f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{wcs.resrange}/naccess/{wcs.uniprot_ac}_trimmed_model0_checked.rsa",
         demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
-        alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz"
+        alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
+	cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/metatable_pancancer_{wcs.hugo_name}.csv"
     output:
         temp("{hugo_name}/simple_mode/collection_{structure_source}_{resrange}_{uniprot_ac}.done")
     params:
@@ -1534,6 +1537,9 @@ rule collect_outputs:
 
         mkdir -p {wildcards.hugo_name}/simple_mode/alphamissense
         cp {input.alphamissense} {wildcards.hugo_name}/simple_mode/alphamissense/am.tsv.gz
+	
+	mkdir -p {wildcards.hugo_name}/simple_mode/cancermuts
+	cp {input.cancermuts} {wildcards.hugo_name}/simple_mode/cancermuts/
 
         touch {output}
         """
