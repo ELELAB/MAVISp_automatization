@@ -345,7 +345,6 @@ rosetta_path=modules['rosetta_relax']['rosetta_folder']
 df['output_rosetta_folder'] = rosetta_path
 df["trimmed"] = df["trimmed"].str.split("_")
 df_exploded = df.explode("trimmed")
-
 #-------------------------------- Denovo phospho ------------------------------#
 
 
@@ -473,13 +472,14 @@ rule all:
                zip,
                hugo_name=df['protein'].str.upper()),
         
-	expand("{hugo_name}/simple_mode/collection_{structure_source}_{resrange}_{uniprot_ac}.done",
-       	    zip,
-       	    hugo_name = df_exploded['protein'].str.upper(),
-            structure_source = df_exploded['structure_source'],
-            resrange = df_exploded['trimmed'],
-            uniprot_ac = df_exploded['uniprot_ac'].str.upper())
-
+	expand("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done",
+       		zip,
+       		hugo_name = df_exploded['protein'].str.upper(),
+       		research_field = df_exploded['research_field'],
+       		structure_source = df_exploded['structure_source'],
+       		resrange = df_exploded['trimmed'],
+       		uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
+       		model = df_exploded['model'])
 
 
 ###################### Structure selection and trimming ######################
@@ -1275,6 +1275,7 @@ rule alphamissense:
         """
 
 ############################## Calculations #################################
+'''
 rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
@@ -1381,7 +1382,7 @@ rule rosetta_relax:
         """
 
 
-
+'''
 '''
         expand("{hugo_name}/long_range/"\
                "allosigma2/"\
@@ -1511,13 +1512,10 @@ rule collect_outputs:
         ptm_sas=lambda wcs: f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{wcs.resrange}/naccess/{wcs.uniprot_ac}_trimmed_model0_checked.rsa",
         demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
         alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
-	cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/metatable_pancancer_{wcs.hugo_name}.csv"
+        cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/",
+        structure_rasp=lambda wcs: f"/data/raw_data/computational_data/rasp_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/{wcs.structure_source}_{wcs.resrange}/{wcs.model}_model"
     output:
-        temp("{hugo_name}/simple_mode/collection_{structure_source}_{resrange}_{uniprot_ac}.done")
-    params:
-        structure_source=lambda wcs: wcs.structure_source,
-        resrange=lambda wcs: wcs.resrange,
-        uniprot_ac=lambda wcs: wcs.uniprot_ac
+        temp("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done")
     shell:
         """
         mkdir -p {wildcards.hugo_name}/simple_mode/clinvar
@@ -1537,8 +1535,11 @@ rule collect_outputs:
         cp {input.alphamissense} {wildcards.hugo_name}/simple_mode/alphamissense/am.tsv.gz
 	
 	mkdir -p {wildcards.hugo_name}/simple_mode/cancermuts
-	cp {input.cancermuts} {wildcards.hugo_name}/simple_mode/cancermuts/
-
+	cp {input.cancermuts}/metatable_pancancer_{wildcards.hugo_name}.csv {wildcards.hugo_name}/simple_mode/cancermuts/
+	
+        mkdir -p {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp
+        cp {input.structure_rasp}/output/predictions/post_processed_*.csv \
+        {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp/
+	
         touch {output}
         """
-
