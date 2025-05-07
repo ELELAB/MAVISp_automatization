@@ -1511,6 +1511,7 @@ rule collect_outputs:
         demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
         alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
         cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/",
+	efoldmine=lambda wcs: f"{wcs.hugo_name}/efoldmine/{wcs.uniprot_ac}.tabular",
 	structure_rasp=lambda wcs: f"/data/raw_data/computational_data/rasp_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/{wcs.structure_source}_{wcs.resrange}/{wcs.model}_model",
 	structure_foldx5=lambda wcs: f"/data/raw_data/computational_data/mutatex_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/mutatex_runs/{wcs.structure_source}_{wcs.resrange}/model_{wcs.model}/saturation/{wcs.uniprot_ac}_table/energies.csv"
     output:
@@ -1536,7 +1537,10 @@ rule collect_outputs:
 	mkdir -p {wildcards.hugo_name}/simple_mode/cancermuts
 	cp {input.cancermuts}/metatable_pancancer_{wildcards.hugo_name}.csv {wildcards.hugo_name}/simple_mode/cancermuts/
 	
-        mkdir -p {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp
+	mkdir -p {wildcards.hugo_name}/simple_mode/efoldmine
+	cp {input.efoldmine}    {wildcards.hugo_name}/simple_mode/efoldmine/        
+
+	mkdir -p {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp
         cp {input.structure_rasp}/output/predictions/post_processed_*.csv \
         {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp/
 	
