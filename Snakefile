@@ -479,8 +479,10 @@ rule all:
        		structure_source = df_exploded['structure_source'],
        		resrange = df_exploded['trimmed'],
        		uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
-       		model = df_exploded['model'])
-
+       		model = df_exploded['model']),
+        
+	expand("{hugo_name}/simple_mode/metadata.yaml",
+            hugo_name=df_exploded['protein'].str.upper()),
 
 ###################### Structure selection and trimming ######################
 
@@ -1550,3 +1552,40 @@ rule collect_outputs:
 
 	touch {output}
         """
+
+rule metadata:
+    output:
+        metadata = "{hugo_name}/simple_mode/metadata.yaml"
+    run:
+        import getpass
+        os.makedirs(os.path.dirname(output.metadata), exist_ok=True)
+        curator_map = {
+            'pablosanchezb': {
+                'full_name': 'Pablo Sanchez-Izquierdo',
+                'affiliation': ['DTU, Denmark', 'DCI, Denmark']
+            },
+        }
+        user = getpass.getuser()
+        entry = curator_map.get(user, {
+            'full_name': user,
+            'affiliation': ['<Your Affiliation>']
+        })
+
+        uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name, 'uniprot_ac'].iloc[0]
+        refseq_id = df.loc[df['protein'] == wildcards.hugo_name, 'ref_seq'].iloc[0]
+        structure_source = df.loc[df['protein'] == wildcards.hugo_name, 'structure_source'].iloc[0]
+        pdb_id = df.loc[df['protein'] == wildcards.hugo_name, 'input_pdb'].fillna('').iloc[0]
+
+        with open(output.metadata, 'w') as out:
+            out.write("curators:\n")
+            out.write(f"  {entry['full_name']}:\n")
+            out.write("    affiliation:\n")
+            for aff in entry['affiliation']:
+                out.write(f"      - {aff}\n")
+            out.write(f"uniprot_ac: {uniprot_ac}\n")
+            out.write(f"refseq_id: {refseq_id}\n")
+            out.write("allosigma_distance_cutoff: [ 15 ]\n")
+            out.write("review_status: 0\n")
+            out.write(f"structure_source: {structure_source}\n")
+            out.write("linker_design: False\n")
+            out.write(f"pdb_id: {pdb_id}\n")
