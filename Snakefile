@@ -471,7 +471,11 @@ rule all:
         expand("{hugo_name}/structure_selection/procheck/",
                zip,
                hugo_name=df['protein'].str.upper()),
-        
+
+        expand(["{hugo_name}/metadata/metadata.yaml",
+                "{hugo_name}/metadata/importing.yaml"],
+                hugo_name= df_exploded['protein'].str.upper()),
+	
 	expand("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done",
        		zip,
        		hugo_name = df_exploded['protein'].str.upper(),
@@ -479,10 +483,7 @@ rule all:
        		structure_source = df_exploded['structure_source'],
        		resrange = df_exploded['trimmed'],
        		uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
-       		model = df_exploded['model']),
-        
-	expand("{hugo_name}/simple_mode/metadata.yaml",
-            hugo_name=df_exploded['protein'].str.upper()),
+       		model = df_exploded['model'])
 
 ###################### Structure selection and trimming ######################
 
@@ -1505,6 +1506,80 @@ rule allosigma4:
               -i down_mutations.tsv -t 2 -d 8 -a 20")
 '''
 
+rule metadata:
+    output:
+        metadata  = "{hugo_name}/metadata/metadata.yaml",
+        importing = "{hugo_name}/metadata/importing.yaml"
+    run:
+        import getpass
+        from datetime import datetime
+
+        gene    = wildcards.hugo_name
+        meta_dir = os.path.dirname(output.metadata)
+        os.makedirs(meta_dir, exist_ok=True)
+
+        # ---- write metadata.yaml ----
+        curator_map = {
+            'pablosanchezb': {
+                'full_name': 'Pablo Sanchez-Izquierdo',
+                'affiliation': ['DTU, Denmark', 'DCI, Denmark']
+            },
+        }
+        user  = getpass.getuser()
+        entry = curator_map.get(user, {
+            'full_name': user,
+            'affiliation': ['<Your Affiliation>']
+        })
+
+        uniprot_ac       = df.loc[df['protein'] == gene, 'uniprot_ac'].iloc[0]
+        refseq_id        = df.loc[df['protein'] == gene, 'ref_seq'].iloc[0]
+        structure_source = df.loc[df['protein'] == gene, 'structure_source'].iloc[0]
+        pdb_id           = df.loc[df['protein'] == gene, 'input_pdb'].fillna('').iloc[0]
+	
+        with open(output.metadata, 'w') as out:
+            out.write("curators:\n")
+            out.write(f"  {entry['full_name']}:\n")
+            out.write("    affiliation:\n")
+            for aff in entry['affiliation']:
+                out.write(f"      - {aff}\n")
+            out.write(f"uniprot_ac: {uniprot_ac}\n")
+            out.write(f"refseq_id: {refseq_id}\n")
+            out.write("allosigma_distance_cutoff: [ 15 ]\n")
+            out.write("review_status: 0\n")
+            out.write(f"structure_source: {structure_source}\n")
+            out.write("linker_design: False\n")
+            out.write(f"pdb_id: {pdb_id}\n")
+
+        # ---- write importing.yaml ----
+        project  = df.loc[df['protein'] == gene, 'research_field'].iloc[0]
+        trimmed_list  = df.loc[df['protein'] == gene, 'trimmed'].iloc[0]
+        starting_list = [f"{structure_source}_{part}" for part in trimmed_list]
+
+        base_dir  = (
+            "/data/raw_data/computational_data/cancermuts_data/"
+            f"{project}/{gene.lower()}/pancancer_clinvar_saturation"
+        )
+        candidates = []
+        for name in os.listdir(base_dir):
+            path = os.path.join(base_dir, name)
+            if os.path.isdir(path):
+                try:
+                    dt = datetime.strptime(name, "%d%m%Y")
+                    candidates.append((dt, name))
+                except ValueError:
+                    pass
+        if not candidates:
+            raise ValueError(f"No valid date folders in {base_dir}")
+        date = max(candidates, key=lambda x: x[0])[1]
+
+        with open(output.importing, 'w') as out:
+            out.write(f"gene: {gene}\n")
+            out.write(f"project: {project}\n")
+            out.write(f"date: {date}\n")
+            out.write("cancermuts: pancancer\n")
+            for idx, st in enumerate(starting_list, 1):
+                out.write(f"starting_structure{idx}: {st}\n")
+
 rule collect_outputs:
     input:
         clinvar_genes=lambda wcs: f"{wcs.hugo_name}/clinvar_gene/genes_output.csv",
@@ -1513,9 +1588,9 @@ rule collect_outputs:
         demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
         alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
         cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/",
-	efoldmine=lambda wcs: f"{wcs.hugo_name}/efoldmine/{wcs.uniprot_ac}.tabular",
-	structure_rasp=lambda wcs: f"/data/raw_data/computational_data/rasp_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/{wcs.structure_source}_{wcs.resrange}/{wcs.model}_model",
-	structure_foldx5=lambda wcs: f"/data/raw_data/computational_data/mutatex_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/mutatex_runs/{wcs.structure_source}_{wcs.resrange}/model_{wcs.model}/saturation/{wcs.uniprot_ac}_table/energies.csv"
+        efoldmine=lambda wcs: f"{wcs.hugo_name}/efoldmine/{wcs.uniprot_ac}.tabular",
+        structure_rasp=lambda wcs: f"/data/raw_data/computational_data/rasp_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/{wcs.structure_source}_{wcs.resrange}/{wcs.model}_model",
+        structure_foldx5=lambda wcs: f"/data/raw_data/computational_data/mutatex_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/mutatex_runs/{wcs.structure_source}_{wcs.resrange}/model_{wcs.model}/saturation/{wcs.uniprot_ac}_table/energies.csv"
     output:
         temp("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done")
     shell:
@@ -1535,57 +1610,22 @@ rule collect_outputs:
 
         mkdir -p {wildcards.hugo_name}/simple_mode/alphamissense
         cp {input.alphamissense} {wildcards.hugo_name}/simple_mode/alphamissense/am.tsv.gz
-	
-	mkdir -p {wildcards.hugo_name}/simple_mode/cancermuts
-	cp {input.cancermuts}/metatable_pancancer_{wildcards.hugo_name}.csv {wildcards.hugo_name}/simple_mode/cancermuts/
-	
-	mkdir -p {wildcards.hugo_name}/simple_mode/efoldmine
-	cp {input.efoldmine}    {wildcards.hugo_name}/simple_mode/efoldmine/        
 
-	mkdir -p {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp
+        mkdir -p {wildcards.hugo_name}/simple_mode/cancermuts
+        cp {input.cancermuts}/metatable_pancancer_{wildcards.hugo_name}.csv {wildcards.hugo_name}/simple_mode/cancermuts/
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/efoldmine
+        cp {input.efoldmine}    {wildcards.hugo_name}/simple_mode/efoldmine/
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp
         cp {input.structure_rasp}/output/predictions/post_processed_*.csv \
         {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp/
-	
-	mkdir -p {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/foldx5
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/foldx5
         cp {input.structure_foldx5} \
         {wildcards.hugo_name}/simple_mode/structure/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/foldx5/energies.csv
-
+	
+        cp {wildcards.hugo_name}/metadata/metadata.yaml    {wildcards.hugo_name}/simple_mode/metadata.yaml
+        
 	touch {output}
-        """
-
-rule metadata:
-    output:
-        metadata = "{hugo_name}/simple_mode/metadata.yaml"
-    run:
-        import getpass
-        os.makedirs(os.path.dirname(output.metadata), exist_ok=True)
-        curator_map = {
-            'pablosanchezb': {
-                'full_name': 'Pablo Sanchez-Izquierdo',
-                'affiliation': ['DTU, Denmark', 'DCI, Denmark']
-            },
-        }
-        user = getpass.getuser()
-        entry = curator_map.get(user, {
-            'full_name': user,
-            'affiliation': ['<Your Affiliation>']
-        })
-
-        uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name, 'uniprot_ac'].iloc[0]
-        refseq_id = df.loc[df['protein'] == wildcards.hugo_name, 'ref_seq'].iloc[0]
-        structure_source = df.loc[df['protein'] == wildcards.hugo_name, 'structure_source'].iloc[0]
-        pdb_id = df.loc[df['protein'] == wildcards.hugo_name, 'input_pdb'].fillna('').iloc[0]
-
-        with open(output.metadata, 'w') as out:
-            out.write("curators:\n")
-            out.write(f"  {entry['full_name']}:\n")
-            out.write("    affiliation:\n")
-            for aff in entry['affiliation']:
-                out.write(f"      - {aff}\n")
-            out.write(f"uniprot_ac: {uniprot_ac}\n")
-            out.write(f"refseq_id: {refseq_id}\n")
-            out.write("allosigma_distance_cutoff: [ 15 ]\n")
-            out.write("review_status: 0\n")
-            out.write(f"structure_source: {structure_source}\n")
-            out.write("linker_design: False\n")
-            out.write(f"pdb_id: {pdb_id}\n")
+	"""
