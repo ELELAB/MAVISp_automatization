@@ -404,6 +404,10 @@ rule all:
         expand("{hugo_name}/simple_mode/demask/"\
                 "myquery_predictions.txt",
                hugo_name = df['protein'].str.upper()),
+        
+	expand("{hugo_name}/simple_mode/pfam/"\
+                "summary.csv",
+               hugo_name = df['protein'].str.upper()),
 
         expand("{hugo_name}/simple_mode/alphamissense/"\
                 "am.tsv.gz",
@@ -1084,7 +1088,8 @@ rule domains:
         directory("{hugo_name}/cancermuts/")
     output:
         "{hugo_name}/structure_selection/domain_annotations/"\
-        "domains_mutlist.csv"
+        "domains_mutlist.csv",
+	"{hugo_name}/simple_mode/pfam/summary.csv"
     run:
         uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
                                                 'uniprot_ac'].iloc[0]
@@ -1109,7 +1114,8 @@ rule domains:
                 " cp ../../../{readme} . &&"\
                 " ln -snf ../../cancermuts/{mutlist} mutlist.txt &&"\
                 " python ../../../{script} -u {uniprot_ac} -m mutlist.txt")
-
+	shell("mkdir -p {wildcards.hugo_name}/simple_mode/pfam/ &&"
+		"cp {wildcards.hugo_name}/structure_selection/domain_annotations/summary.csv {output[1]}")
 rule netphos:
      output:
          "{hugo_name}/netphos/netphos.out"
