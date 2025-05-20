@@ -381,9 +381,6 @@ rule all:
                 hugo_name = df['protein'].str.upper(),
                 structure_source = df['structure_source']),
 
-        expand("{hugo_name}/simple_mode/alphafold",
-                hugo_name  = df['protein'].str.upper()),
-
         expand("{hugo_name}/netphos/"\
                "netphos.out",
               hugo_name = df['protein'].str.upper()),
@@ -401,17 +398,13 @@ rule all:
               hugo_name = df['protein'].str.upper(),
               uniprot_ac = df['uniprot_ac'].str.upper()),
 
-        expand("{hugo_name}/simple_mode/demask/"\
-                "myquery_predictions.txt",
-               hugo_name = df['protein'].str.upper()),
-        
-	expand("{hugo_name}/simple_mode/pfam/"\
-                "summary.csv",
+        expand("{hugo_name}/demask/"\
+               "myquery_predictions.txt",
                hugo_name = df['protein'].str.upper()),
 
-        expand("{hugo_name}/simple_mode/alphamissense/"\
-                "am.tsv.gz",
-                hugo_name=df['protein'].str.upper()),
+        expand("{hugo_name}/alphamissense/"\
+               "am.tsv.gz",
+               hugo_name = df['protein'].str.upper()),
 
         expand("{hugo_name}/"\
                "structure_selection/"\
@@ -465,7 +458,7 @@ rule all:
             uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
             structure_source = df_exploded['structure_source']),
 
-        expand("{hugo_name}/simple_mode/efoldmine/{uniprot_ac}.tabular",
+        expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
             zip,
             hugo_name=df['protein'].str.upper(),
             uniprot_ac=df['uniprot_ac'].str.upper()),
@@ -479,22 +472,27 @@ rule all:
                zip,
                hugo_name=df['protein'].str.upper()),
 
-        expand(["{hugo_name}/simple_mode/metadata.yaml",
+        expand(["{hugo_name}/metadata/metadata.yaml",
                 "{hugo_name}/metadata/importing.yaml"],
                 hugo_name= df_exploded['protein'].str.upper()),
 
-        expand("{hugo_name}/simple_mode/mutation_list",
-                hugo_name = df_exploded['protein'].str.upper())
+        expand("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done",
+                zip,
+                hugo_name = df_exploded['protein'].str.upper(),
+                research_field = df_exploded['research_field'],
+                structure_source = df_exploded['structure_source'],
+                resrange = df_exploded['trimmed'],
+                uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
+                model = df_exploded['model'])
 
 ###################### Structure selection and trimming ######################
 
 rule structure_selection:
     output:
-        directory("{hugo_name}/structure_selection/original_model"),
-	directory("{hugo_name}/simple_mode/alphafold")
+        directory("{hugo_name}/structure_selection/original_model")
 
     run:
-	
+
         pdb = df.loc[
             (df['protein'] == wildcards.hugo_name),
             'input_pdb'].iloc[0]
@@ -507,8 +505,8 @@ rule structure_selection:
 
             # Alphafold: Create the config.yaml file for the analysis
 
-            if not os.path.exists(str(output[0])):
-                os.makedirs(str(output[0]))
+            if not os.path.exists(str(output)):
+                os.makedirs(str(output))
             data = {
                 "dssp_exec": dssp_exec,
                 "plddt_cutoff": 70,
@@ -523,25 +521,22 @@ rule structure_selection:
             # Specify the output YAML file path
             file_path = "output.yaml"
 
-            with open(f"{output[0]}/config_alphafolddb.yaml", "w") as f:
+            with open(f"{output}/config_alphafolddb.yaml", "w") as f:
                 yaml.dump(data, f)
 
             # run alphafold module
 
             readme=modules['structure_selection']['alphafold']['readme']
             script=modules['structure_selection']['alphafold']['script']
-            shell("cd {output[0]} && "
+            shell("cd {output} && "
                 "cp ../../../{readme} . && "
                 "cp ../../../{script} . && "
                 "python get_alphafolddb_data.py -c config_alphafolddb.yaml")
         else:
-            structure_folder = f'{output[0]}/{wildcards.hugo_name.lower()}'
+            structure_folder = f'{output}/{wildcards.hugo_name.lower()}'
             shell("mkdir -p {structure_folder}")
             shell("cp {pdb} {structure_folder}")
-	
-        os.makedirs(f"{wildcards.hugo_name}/simple_mode/alphafold", exist_ok=True)
-        shell(f"cp {output[0]}/{wildcards.hugo_name.lower()}/{uniprot_ac}.csv "
-            f"{wildcards.hugo_name}/simple_mode/alphafold/")
+
 
 rule trim_model:
     input:
@@ -713,8 +708,7 @@ rule hpc_atlas:
 
 rule efoldmine:
     output:
-        "{hugo_name}/efoldmine/{uniprot_ac}.tabular",
-        "{hugo_name}/simple_mode/efoldmine/{uniprot_ac}.tabular"
+        "{hugo_name}/efoldmine/{uniprot_ac}.tabular"
     shell:
         '''
         mkdir -p "{wildcards.hugo_name}/efoldmine/"
@@ -724,9 +718,6 @@ rule efoldmine:
         wget https://rest.uniprot.org/uniprotkb/{wildcards.uniprot_ac}.fasta
         {modules[efoldmine][environment]} &&
         b2bTools -i {wildcards.uniprot_ac}.fasta -t $(basename {output}) -o $(basename {output}) --efoldmine
-        cd ../../
-        mkdir -p {wildcards.hugo_name}/simple_mode/efoldmine
-        cp {output[0]} {output[1]}
         '''
 
 
@@ -734,8 +725,7 @@ rule efoldmine:
 
 rule clinvar:
     output:
-        "{hugo_name}/clinvar_gene/genes_output.csv",
-        "{hugo_name}/simple_mode/clinvar/variants_output.csv"
+        "{hugo_name}/clinvar_gene/genes_output.csv"
     run:
         # create the input for the clinvar.py script
         clinvar_input = df[['protein', 'ref_seq']]
@@ -756,10 +746,7 @@ rule clinvar:
             f"cp ../../{readme} . && "
             f"cp ../../{script} . && "
             f"cp ../../{bash} . && "
-            f"bash run.sh && "
-            "mkdir -p ../simple_mode/clinvar && "
-            "cp genes_output.csv ../simple_mode/clinvar/variants_output.csv")
-
+            f"bash run.sh")
 
 rule saturation_list:
     output:
@@ -974,10 +961,7 @@ rule mutlist:
         "{hugo_name}"+"/metatable_pancancer_{hugo_name}.csv"
 
     output:
-        directory("{hugo_name}/cancermuts"),
-        directory("{hugo_name}/simple_mode/mutation_list"),
-        "{hugo_name}/simple_mode/cancermuts/metatable_pancancer_{hugo_name}.csv",
-        "{hugo_name}/simple_mode/ptm/metatable.csv"
+        directory("{hugo_name}/cancermuts")
     run:
         # list with the ranges of the trimmed models to
         # obtain from the AF model
@@ -1015,8 +999,8 @@ rule mutlist:
         shell("set +u && "\
                 "{config[modules][mutations_aggregation][mutlist][source]} && "\
                 "set -u && "\
-                "mkdir -p {output[0]} &&"\
-                " cd {output[0]} &&"\
+                "mkdir -p {output} &&"\
+                " cd {output} &&"\
                 " cp ../../{input[0]}/*.pdb . &&"\
                 " cp ../../{script} . &&"\
                 " cp ../../{readme} . &&"\
@@ -1064,24 +1048,6 @@ rule mutlist:
                 "{final_path}/metatable_pancancer_{wildcards.hugo_name}.csv\
                 {wildcards.hugo_name}/cancermuts")
 
-        ######## copy cancermuts file in importing folders ##########
-
-        shell("mkdir -p {wildcards.hugo_name}/simple_mode/cancermuts && "
-            "cp {final_path}/metatable_pancancer_{wildcards.hugo_name}.csv "
-            "{wildcards.hugo_name}/simple_mode/cancermuts/")
-
-        shell("mkdir -p {wildcards.hugo_name}/simple_mode/ptm && "
-             "cp {final_path}/metatable_pancancer_{wildcards.hugo_name}.csv "
-             "{wildcards.hugo_name}/simple_mode/ptm/metatable.csv")
-
-        ######## build and copy mutlist with PMID header ########
-        raw_ml = os.path.join(wildcards.hugo_name, "cancermuts", f"mutlist_{date}.txt")
-        shell(
-            "mkdir -p {wildcards.hugo_name}/simple_mode/mutation_list && "
-            "awk 'BEGIN{{print \"mutation\\tPMID\"}} "
-            "{{print $0 \"\\thttps://doi.org/10.1101/2022.10.22.513328\"}}' "
-            f"{raw_ml} > {wildcards.hugo_name}/simple_mode/mutation_list/mutations_pmid_{date}.txt"
-        )
 
 rule domains:
     input:
@@ -1089,7 +1055,8 @@ rule domains:
     output:
         "{hugo_name}/structure_selection/domain_annotations/"\
         "domains_mutlist.csv",
-	"{hugo_name}/simple_mode/pfam/summary.csv"
+	"{hugo_name}/structure_selection/domain_annotations/"\
+        "summary.csv"
     run:
         uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
                                                 'uniprot_ac'].iloc[0]
@@ -1114,8 +1081,7 @@ rule domains:
                 " cp ../../../{readme} . &&"\
                 " ln -snf ../../cancermuts/{mutlist} mutlist.txt &&"\
                 " python ../../../{script} -u {uniprot_ac} -m mutlist.txt")
-	shell("mkdir -p {wildcards.hugo_name}/simple_mode/pfam/ &&"
-		"cp {wildcards.hugo_name}/structure_selection/domain_annotations/summary.csv {output[1]}")
+
 rule netphos:
      output:
          "{hugo_name}/netphos/netphos.out"
@@ -1184,7 +1150,7 @@ rule ptm_stability:
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb",
         mutlist_dir="{hugo_name}/cancermuts/"
     output:
-        summary="{hugo_name}/ptm/{structure_source}_{resrange}/mutatex/summary_stability.txt"
+        summary="{hugo_name}/ptm/{structure_source}_{resrange}/mutatex/summary_stability.txt",
     run:
         mutlist = ""
         pattern = "mutlist_mutatex_P_\d{8}\.txt"
@@ -1210,7 +1176,7 @@ rule ptm_stability:
 
 rule ptm_sas:
     output:
-        rsa="{hugo_name}/ptm/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
+        rsa="{hugo_name}/ptm/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa"
     input:
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
@@ -1282,8 +1248,7 @@ rule demask_prediction:
     input:
         "{hugo_name}/demask/myquery_homologs.a2m"
     output:
-        "{hugo_name}/demask/myquery_predictions.txt",
-        "{hugo_name}/simple_mode/demask/myquery_predictions.txt"
+        "{hugo_name}/demask/myquery_predictions.txt"
     params:
         n_threads = 4,
         uniprot_ac = lambda wcs: df.loc[df['protein'] == wcs.hugo_name,
@@ -1298,37 +1263,28 @@ rule demask_prediction:
         python3 -m demask.predict \
         -i myquery_homologs.a2m \
         -o myquery_predictions.txt
-        mkdir -p ../simple_mode/demask
-        cp myquery_predictions.txt \
-           ../simple_mode/demask/myquery_predictions.txt
         """
 
 rule alphamissense:
     output:
-        "{hugo_name}/alphamissense/am.tsv.gz",
-        "{hugo_name}/simple_mode/alphamissense/am.tsv.gz"
+        "{hugo_name}/alphamissense/am.tsv.gz"
     params:
         uniprot_ac = lambda wcs: df.loc[df['protein'] == wcs.hugo_name,
                                            'uniprot_ac'].iloc[0]
     shell:
         """
-        cd $(dirname {output[0]})
+        cd $(dirname {output})
         cp ../../{config[modules][mutations_classifier][alphamissense][readme]} .
         cp ../../{config[modules][mutations_classifier][alphamissense][script]} .
         bash do.sh {params.uniprot_ac}
-        cd ../../
-
-        mkdir -p {wildcards.hugo_name}/simple_mode/alphamissense
-        cp {output[0]} {output[1]}
         """
 
 ############################## Calculations #################################
-'''
 rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
     output:
-        directory("{path}/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/")
+        directory("{path}{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/")
     shell:
         """
         mkdir -p {output}
@@ -1399,7 +1355,6 @@ rule rasp_workflow:
                       -c A
         RaSP_postprocess -i output/predictions/cavity_pred_*.csv
         """
-
 rule rosetta_relax:
     input:
         "{hugo_name}/structure_selection/trimmed_model/"
@@ -1429,8 +1384,6 @@ rule rosetta_relax:
                         -cs {params.mpi}
         """
 
-
-'''
 '''
         expand("{hugo_name}/long_range/"\
                "allosigma2/"\
@@ -1555,15 +1508,14 @@ rule allosigma4:
 
 rule metadata:
     output:
-        "{hugo_name}/metadata/metadata.yaml",
-        "{hugo_name}/metadata/importing.yaml",
-        "{hugo_name}/simple_mode/metadata.yaml"
+        metadata  = "{hugo_name}/metadata/metadata.yaml",
+        importing = "{hugo_name}/metadata/importing.yaml"
     run:
         import getpass
         from datetime import datetime
 
         gene    = wildcards.hugo_name
-        meta_dir = os.path.dirname(output[0])
+        meta_dir = os.path.dirname(output.metadata)
         os.makedirs(meta_dir, exist_ok=True)
 
         # ---- write metadata.yaml ----
@@ -1584,7 +1536,7 @@ rule metadata:
         structure_source = df.loc[df['protein'] == gene, 'structure_source'].iloc[0]
         pdb_id           = df.loc[df['protein'] == gene, 'input_pdb'].fillna('').iloc[0]
 
-        with open(output[0], 'w') as out:
+        with open(output.metadata, 'w') as out:
             out.write("curators:\n")
             out.write(f"  {entry['full_name']}:\n")
             out.write("    affiliation:\n")
@@ -1597,9 +1549,6 @@ rule metadata:
             out.write(f"structure_source: {structure_source}\n")
             out.write("linker_design: False\n")
             out.write(f"pdb_id: {pdb_id}\n")
-
-        os.makedirs(os.path.dirname(output[2]), exist_ok=True)
-        shell("cp {output[0]} {output[2]}")
 
         # ---- write importing.yaml ----
         project  = df.loc[df['protein'] == gene, 'research_field'].iloc[0]
@@ -1623,11 +1572,78 @@ rule metadata:
             raise ValueError(f"No valid date folders in {base_dir}")
         date = max(candidates, key=lambda x: x[0])[1]
 
-        with open(output[1], 'w') as out:
+        with open(output.importing, 'w') as out:
             out.write(f"gene: {gene}\n")
             out.write(f"project: {project}\n")
             out.write(f"date: {date}\n")
             out.write("cancermuts: pancancer\n")
             for idx, st in enumerate(starting_list, 1):
                 out.write(f"starting_structure{idx}: {st}\n")
+
+rule collect_outputs:
+    input:
+        clinvar_genes=lambda wcs: f"{wcs.hugo_name}/clinvar_gene/genes_output.csv",
+        ptm_stability=lambda wcs: f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{wcs.resrange}/mutatex/summary_stability.txt",
+        ptm_sas=lambda wcs: f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{wcs.resrange}/naccess/{wcs.uniprot_ac}_trimmed_model0_checked.rsa",
+        demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
+        alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
+        cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/",
+        efoldmine=lambda wcs: f"{wcs.hugo_name}/efoldmine/{wcs.uniprot_ac}.tabular",
+        structure_rasp=lambda wcs: f"/data/raw_data/computational_data/rasp_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/{wcs.structure_source}_{wcs.resrange}/{wcs.model}_model",
+        structure_foldx5=lambda wcs: f"/data/raw_data/computational_data/mutatex_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/mutatex_runs/{wcs.structure_source}_{wcs.resrange}/model_{wcs.model}/saturation/{wcs.uniprot_ac}_table/energies.csv",
+	pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
+	alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/{wcs.hugo_name.lower()}/{wcs.uniprot_ac}.csv"
+    output:
+        temp("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done")
+    shell:
+        """
+        mkdir -p {wildcards.hugo_name}/simple_mode/clinvar
+        cp {input.clinvar_genes} {wildcards.hugo_name}/simple_mode/clinvar/variants_output.csv
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/ptm
+        cp {input.ptm_stability} {wildcards.hugo_name}/simple_mode/ptm/summary_stability.txt
+        cp {input.ptm_sas} {wildcards.hugo_name}/simple_mode/ptm/sasa.rsa
+	cp {input.cancermuts}/metatable_pancancer_{wildcards.hugo_name}.csv {wildcards.hugo_name}/simple_mode/ptm/metatable.csv
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/sas
+        cp {input.ptm_sas} {wildcards.hugo_name}/simple_mode/sas/sasa.rsa
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/demask
+        cp {input.demask} {wildcards.hugo_name}/simple_mode/demask/myquery_predictions.txt
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/alphamissense
+        cp {input.alphamissense} {wildcards.hugo_name}/simple_mode/alphamissense/am.tsv.gz
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/cancermuts
+        cp {input.cancermuts}/metatable_pancancer_{wildcards.hugo_name}.csv {wildcards.hugo_name}/simple_mode/cancermuts/
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/efoldmine
+        cp {input.efoldmine}    {wildcards.hugo_name}/simple_mode/efoldmine/
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp
+        cp {input.structure_rasp}/output/predictions/post_processed_*.csv \
+        {wildcards.hugo_name}/simple_mode/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp/
+
+        mkdir -p {wildcards.hugo_name}/simple_mode/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/foldx5
+        cp {input.structure_foldx5} \
+        {wildcards.hugo_name}/simple_mode/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/foldx5/energies.csv
+	
+        cp {wildcards.hugo_name}/metadata/metadata.yaml    {wildcards.hugo_name}/simple_mode/metadata.yaml
+
+	mkdir -p {wildcards.hugo_name}/simple_mode/pfam
+	cp {input.pfam} {wildcards.hugo_name}/simple_mode/pfam/summary.csv
+	
+	mkdir -p {wildcards.hugo_name}/simple_mode/alphafold
+	cp {input.alphafold} {wildcards.hugo_name}/simple_mode/alphafold/{wildcards.uniprot_ac}.csv
+	
+    	mkdir -p {wildcards.hugo_name}/simple_mode/mutation_list
+    	f=$(ls {wildcards.hugo_name}/cancermuts/mutlist_[0-9][0-9]*.txt \
+         	| grep -E '^.*/mutlist_[0-9]{{8}}\.txt$')
+    	b=$(basename "$f")
+    	awk 'BEGIN{{print "mutation\tPMID"}} {{print $0 "\thttps://doi.org/10.1101/2022.10.22.513328"}}' \
+        	"$f" \
+    	> {wildcards.hugo_name}/simple_mode/mutation_list/${{b/mutlist_/mutations_pmid_}}
+	
+	touch {output}
+        """
 
