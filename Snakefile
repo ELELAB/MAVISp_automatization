@@ -951,7 +951,6 @@ rule cancermuts:
                   " set -eu && python {script} -p {wildcards.hugo_name} \
                                                -i {uniprot_id} \
                                                -a {uniprot_ac}")
-
 ################ Mutlists generation and protein annotations ################
 
 rule mutlist:
@@ -1583,67 +1582,168 @@ rule metadata:
 rule collect_outputs:
     input:
         clinvar_genes=lambda wcs: f"{wcs.hugo_name}/clinvar_gene/genes_output.csv",
-        ptm_stability=lambda wcs: f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{wcs.resrange}/mutatex/summary_stability.txt",
-        ptm_sas=lambda wcs: f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{wcs.resrange}/naccess/{wcs.uniprot_ac}_trimmed_model0_checked.rsa",
+        ptm_stability = lambda wcs: [
+            f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{resrange}/mutatex/summary_stability.txt"
+            for resrange in df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]],
+        ptm_sas = lambda wcs: [
+            f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{resrange}/naccess/"
+            f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}"
+            f"_trimmed_model0_checked.rsa"
+            for resrange in df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]],
         demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
         alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
         cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/",
         efoldmine=lambda wcs: f"{wcs.hugo_name}/efoldmine/{wcs.uniprot_ac}.tabular",
-        structure_rasp=lambda wcs: f"/data/raw_data/computational_data/rasp_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/{wcs.structure_source}_{wcs.resrange}/{wcs.model}_model",
-        structure_foldx5=lambda wcs: f"/data/raw_data/computational_data/mutatex_data/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/mutatex_runs/{wcs.structure_source}_{wcs.resrange}/model_{wcs.model}/saturation/{wcs.uniprot_ac}_table/energies.csv",
-	pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
-	alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/{wcs.hugo_name.lower()}/{wcs.uniprot_ac}.csv"
+        structure_rasp=lambda wcs: [
+            f"/data/raw_data/computational_data/rasp_data/"
+            f"{wcs.research_field}/{wcs.hugo_name.lower()}/free/"
+            f"{wcs.structure_source}_{resrange}/{wcs.model}_model"
+            for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
+        structure_foldx5=lambda wcs: [
+            f"/data/raw_data/computational_data/mutatex_data/"
+            f"{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/"
+            f"mutatex_runs/{wcs.structure_source}_{resrange}/model_{wcs.model}/"
+            f"saturation/{wcs.uniprot_ac}_table/energies.csv"
+            for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
+        pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
+        alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/"
     output:
         temp("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done")
-    shell:
-        """
-        mkdir -p {wildcards.hugo_name}/simple_mode/clinvar
-        cp {input.clinvar_genes} {wildcards.hugo_name}/simple_mode/clinvar/variants_output.csv
+    run:
 
-        mkdir -p {wildcards.hugo_name}/simple_mode/ptm
-        cp {input.ptm_stability} {wildcards.hugo_name}/simple_mode/ptm/summary_stability.txt
-        cp {input.ptm_sas} {wildcards.hugo_name}/simple_mode/ptm/sasa.rsa
-	cp {input.cancermuts}/metatable_pancancer_{wildcards.hugo_name}.csv {wildcards.hugo_name}/simple_mode/ptm/metatable.csv
+        import glob
 
-        mkdir -p {wildcards.hugo_name}/simple_mode/sas
-        cp {input.ptm_sas} {wildcards.hugo_name}/simple_mode/sas/sasa.rsa
+        hn   = wildcards.hugo_name
+        out  = Path(hn) / "simple_mode"
+        out.mkdir(parents=True, exist_ok=True)
 
-        mkdir -p {wildcards.hugo_name}/simple_mode/demask
-        cp {input.demask} {wildcards.hugo_name}/simple_mode/demask/myquery_predictions.txt
+        # 1) clinvar
+        cdir = out / "clinvar"
+        cdir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.clinvar_genes, cdir / "variants_output.csv")
 
-        mkdir -p {wildcards.hugo_name}/simple_mode/alphamissense
-        cp {input.alphamissense} {wildcards.hugo_name}/simple_mode/alphamissense/am.tsv.gz
+        # 2) PTM stability
+        ptm_dir = out / "ptm"
+        ptm_dir.mkdir(parents=True, exist_ok=True)
+        with open(ptm_dir / "summary_stability.txt", "w") as fw:
+            for fn in input.ptm_stability:
+                fw.write(Path(fn).read_text())
 
-        mkdir -p {wildcards.hugo_name}/simple_mode/cancermuts
-        cp {input.cancermuts}/metatable_pancancer_{wildcards.hugo_name}.csv {wildcards.hugo_name}/simple_mode/cancermuts/
+        # 3) PTM sasa.rsa
+        rsa_files = sorted(input.ptm_sas,
+        key=lambda p: int(Path(p).parent.parent.name.split("_", 1)[1].split("-", 1)[1]))
+        first, last = rsa_files[0], rsa_files[-1]
+        sasa_out = ptm_dir / "sasa.rsa"
+        with open(first) as fh_first:
+            header = [next(fh_first) for _ in range(4)]
+        res_lines = []
+        for rsa in rsa_files:
+            with open(rsa) as fh:
+                for line in fh:
+                    if line.startswith("RES "):
+                        res_lines.append(line)
+        res_lines.sort(key=lambda l: int(l.split()[3]))
+        with open(last) as fh_last:
+            tail = fh_last.readlines()[-4:]
+        with open(sasa_out, "w") as fout:
+            fout.writelines(header)
+            fout.writelines(res_lines)
+            fout.writelines(tail)
+        # 4) PTM metatable
+        meta_src = Path(input.cancermuts) / f"metatable_pancancer_{hn}.csv"
+        shutil.copy(meta_src, ptm_dir / "metatable.csv")
 
-        mkdir -p {wildcards.hugo_name}/simple_mode/efoldmine
-        cp {input.efoldmine}    {wildcards.hugo_name}/simple_mode/efoldmine/
+        # 5) copy SAS into its own folder
+        sas_dir = out / "sas"
+        sas_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(sasa_out, sas_dir / "sasa.rsa")
 
-        mkdir -p {wildcards.hugo_name}/simple_mode/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp
-        cp {input.structure_rasp}/output/predictions/post_processed_*.csv \
-        {wildcards.hugo_name}/simple_mode/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/rasp/
+        # 6) demask
+        dem_dir = out / "demask"
+        dem_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.demask, dem_dir / "myquery_predictions.txt")
 
-        mkdir -p {wildcards.hugo_name}/simple_mode/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/foldx5
-        cp {input.structure_foldx5} \
-        {wildcards.hugo_name}/simple_mode/stability/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.structure_source}/model_{wildcards.model}/foldx5/energies.csv
-	
-        cp {wildcards.hugo_name}/metadata/metadata.yaml    {wildcards.hugo_name}/simple_mode/metadata.yaml
+        # 7) alphamissense
+        am_dir = out / "alphamissense"
+        am_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.alphamissense, am_dir / "am.tsv.gz")
 
-	mkdir -p {wildcards.hugo_name}/simple_mode/pfam
-	cp {input.pfam} {wildcards.hugo_name}/simple_mode/pfam/summary.csv
-	
-	mkdir -p {wildcards.hugo_name}/simple_mode/alphafold
-	cp {input.alphafold} {wildcards.hugo_name}/simple_mode/alphafold/{wildcards.uniprot_ac}.csv
-	
-    	mkdir -p {wildcards.hugo_name}/simple_mode/mutation_list
-    	f=$(ls {wildcards.hugo_name}/cancermuts/mutlist_[0-9][0-9]*.txt \
-         	| grep -E '^.*/mutlist_[0-9]{{8}}\.txt$')
-    	b=$(basename "$f")
-    	awk 'BEGIN{{print "mutation\tPMID"}} {{print $0 "\thttps://doi.org/10.1101/2022.10.22.513328"}}' \
-        	"$f" \
-    	> {wildcards.hugo_name}/simple_mode/mutation_list/${{b/mutlist_/mutations_pmid_}}
-	
-	touch {output}
-        """
+        # 8) cancermuts
+        cm_dir = out / "cancermuts"
+        cm_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(meta_src, cm_dir / meta_src.name)
+
+        # 9) efoldmine
+        ef_dir = out / "efoldmine"
+        ef_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.efoldmine, ef_dir / Path(input.efoldmine).name)
+
+        # 10) metadata.yaml
+        shutil.copy(Path(hn) / "metadata" / "metadata.yaml", out / "metadata.yaml")
+
+        # 11) pfam
+        pf_dir = out / "pfam"
+        pf_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.pfam, pf_dir / "summary.csv")
+
+        # 12) alphafold
+        af_dir = out / "alphafold"
+        af_dir.mkdir(parents=True, exist_ok=True)
+        lower = hn.lower()
+        shutil.copy(Path(input.alphafold) / lower / f"{wildcards.uniprot_ac}.csv",
+                    af_dir / f"{wildcards.uniprot_ac}.csv")
+
+        # 13) merge stability
+        ranges = sorted([Path(r).parent.name.split('_',1)[1] for r in input.structure_rasp],
+            key=lambda x: int(x.split('-',1)[0]))
+        merged_range = "_".join(ranges)
+        base = out / "stability" / f"{wildcards.structure_source}_{merged_range}" / wildcards.structure_source / f"model_{wildcards.model}"
+
+        # 14) rasp predictions
+        rasp_out = base / "rasp" / "post_processed.csv"
+        (rasp_out.parent).mkdir(parents=True, exist_ok=True)
+        rasp_files = []
+        for r in input.structure_rasp:
+            rasp_files += list((Path(r) / "output" / "predictions").glob("post_processed_*.csv"))
+        rasp_files = sorted(rasp_files)
+        with open(rasp_out, "w") as fout:
+            header_written = False
+            for fp in rasp_files:
+                lines = fp.read_text().splitlines(keepends=True)
+                if not header_written:
+                    fout.write(lines[0])
+                    header_written = True
+                fout.writelines(lines[1:])
+
+	# 15) foldx5 energies
+        fx_out = base / "foldx5" / "energies.csv"
+        (fx_out.parent).mkdir(parents=True, exist_ok=True)
+        fx_files = sorted(Path(f) for f in input.structure_foldx5)
+        fx_lines = []
+        header = None
+        for fx in fx_files:
+            lines = Path(fx).read_text().splitlines(keepends=True)
+            if header is None:
+                header = lines[0]
+            fx_lines.extend(lines[1:])  # drop each file’s header
+        fx_lines.sort(key=lambda l: int(l.split(",")[2]))
+        fx_out.parent.mkdir(parents=True, exist_ok=True)
+        with open(fx_out, "w") as fout:
+            fout.write(header)
+            fout.writelines(fx_lines)
+
+        # 16) mutation_list
+        ml_dir = out / "mutation_list"
+        ml_dir.mkdir(parents=True, exist_ok=True)
+        all_ml = glob.glob(f"{hn}/cancermuts/mutlist_*.txt")
+        pat   = re.compile(r"mutlist_[0-9]{8}\.txt$")
+        fpath = next(p for p in all_ml if pat.search(p))
+        basename = Path(fpath).name.replace("mutlist_", "mutations_pmid_")
+        with open(fpath) as fi, open(ml_dir / basename, "w") as fo:
+            fo.write("mutation\tPMID\n")
+            for line in fi:
+                fo.write(f"{line.rstrip()}\thttps://doi.org/10.1101/2022.10.22.513328\n")
+
+        # 17) touch the done‐file
+        Path(output[0]).touch()
 
