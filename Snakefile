@@ -769,7 +769,7 @@ rule saturation_list:
                   f"bash do.sh {params.uniprot_ac} {r}")
         shell(f"cd {module_dir} && "
               f"cat saturation_mutlist_* > saturation_mutlist.txt")
-'''
+
 rule cancermuts:
     input:
         clinvar_output="{hugo_name}/clinvar_gene/genes_output.csv",
@@ -954,7 +954,7 @@ rule cancermuts:
                   " set -eu && python {script} -p {wildcards.hugo_name} \
                                                -i {uniprot_id} \
                                                -a {uniprot_ac}")
-'''
+
 ################ Mutlists generation and protein annotations ################
 
 rule mutlist:
@@ -1283,7 +1283,6 @@ rule alphamissense:
         """
 
 ############################## Calculations #################################
-'''
 rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
@@ -1387,7 +1386,6 @@ rule rosetta_relax:
                         -r {params.rosetta_module}\
                         -cs {params.mpi}
         """
-'''
 
 '''
         expand("{hugo_name}/long_range/"\
@@ -1540,11 +1538,15 @@ rule metadata:
         refseq_id        = df.loc[df['protein'] == gene, 'ref_seq'].iloc[0]
         structure_source = df.loc[df['protein'] == gene, 'structure_source'].iloc[0]
         pdb_id           = df.loc[df['protein'] == gene, 'input_pdb'].fillna('').iloc[0]
+	curator_name 	 = df.loc[df['protein'] == gene, 'curator_name'].iloc[0]
+	raw_affils   	 = df.loc[df['protein'] == gene, 'affiliation'].iloc[0]
 
-        metadata_dict = {
+	affiliations = [a.strip() for a in raw_affils.split(';')]
+        
+	metadata_dict = {
             'curators': {
-                entry['full_name']: {
-                    'affiliation': entry['affiliation']
+                curator_name: {
+                    'affiliation': affiliations
                 }
             },
             'uniprot_ac': uniprot_ac,

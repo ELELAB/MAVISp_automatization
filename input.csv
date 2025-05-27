@@ -1,3 +1,3 @@
-protein,uniprot_ac,uniprot_id,trimmed,ref_seq,research_field,input_pdb,structure_source,model
-APC,P25054,APC_HUMAN,1-5,NP_000029,tf,APC_1-238.pdb,EXPR,v1
-CRX,O43186,CRX_HUMAN,36-104,NP_000545,tf,,AF,v3
+protein,uniprot_ac,uniprot_id,trimmed,ref_seq,research_field,input_pdb,structure_source,model,curator_name,affiliation
+APC,P25054,APC_HUMAN,1-5,NP_000029,tf,APC_1-238.pdb,EXPR,v1,Pablo Sanchez-Izquierdo,"DTU, Denmark; DCI, Denmark"
+CRX,O43186,CRX_HUMAN,36-104,NP_000545,tf,,AF,v3,Pablo Sanchez-Izquierdo,"DTU, Denmark; DCI, Denmark"
