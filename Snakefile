@@ -1541,19 +1541,22 @@ rule metadata:
         structure_source = df.loc[df['protein'] == gene, 'structure_source'].iloc[0]
         pdb_id           = df.loc[df['protein'] == gene, 'input_pdb'].fillna('').iloc[0]
 
-        with open(output.metadata, 'w') as out:
-            out.write("curators:\n")
-            out.write(f"  {entry['full_name']}:\n")
-            out.write("    affiliation:\n")
-            for aff in entry['affiliation']:
-                out.write(f"      - {aff}\n")
-            out.write(f"uniprot_ac: {uniprot_ac}\n")
-            out.write(f"refseq_id: {refseq_id}\n")
-            out.write("allosigma_distance_cutoff: [ 15 ]\n")
-            out.write("review_status: 0\n")
-            out.write(f"structure_source: {structure_source}\n")
-            out.write("linker_design: False\n")
-            out.write(f"pdb_id: {pdb_id}\n")
+        metadata_dict = {
+            'curators': {
+                entry['full_name']: {
+                    'affiliation': entry['affiliation']
+                }
+            },
+            'uniprot_ac': uniprot_ac,
+            'refseq_id': refseq_id,
+            'allosigma_distance_cutoff': [15],
+            'review_status': 0,
+            'structure_source': structure_source,
+            'linker_design': False,
+            'pdb_id': pdb_id,
+        }
+        with open(output.metadata, 'w') as fh:
+            yaml.safe_dump(metadata_dict, fh, sort_keys=False)
 
         # ---- write importing.yaml ----
         project  = df.loc[df['protein'] == gene, 'research_field'].iloc[0]
@@ -1577,13 +1580,17 @@ rule metadata:
             raise ValueError(f"No valid date folders in {base_dir}")
         date = max(candidates, key=lambda x: x[0])[1]
 
-        with open(output.importing, 'w') as out:
-            out.write(f"gene: {gene}\n")
-            out.write(f"project: {project}\n")
-            out.write(f"date: {date}\n")
-            out.write("cancermuts: pancancer\n")
-            for idx, st in enumerate(starting_list, 1):
-                out.write(f"starting_structure{idx}: {st}\n")
+        importing_dict = {
+            'gene': gene,
+            'project': project,
+            'date': date,
+            'cancermuts': 'pancancer',
+        }
+        for idx, st in enumerate(starting_list, 1):
+            importing_dict[f'starting_structure{idx}'] = st
+
+        with open(output.importing, 'w') as fh:
+            yaml.safe_dump(importing_dict, fh, sort_keys=False)
 
 rule collect_outputs:
     input:
