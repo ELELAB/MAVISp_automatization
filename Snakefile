@@ -7,6 +7,9 @@ import configparser
 import yaml
 import urllib
 from Bio.Data import IUPACData
+import glob
+import getpass
+from datetime import datetime
 
 def mutation_converter(x):
     return f"p.{IUPACData.protein_letters_1to3.get(x[0])}{x[1:-1]}\
@@ -766,7 +769,7 @@ rule saturation_list:
                   f"bash do.sh {params.uniprot_ac} {r}")
         shell(f"cd {module_dir} && "
               f"cat saturation_mutlist_* > saturation_mutlist.txt")
-
+'''
 rule cancermuts:
     input:
         clinvar_output="{hugo_name}/clinvar_gene/genes_output.csv",
@@ -951,6 +954,7 @@ rule cancermuts:
                   " set -eu && python {script} -p {wildcards.hugo_name} \
                                                -i {uniprot_id} \
                                                -a {uniprot_ac}")
+'''
 ################ Mutlists generation and protein annotations ################
 
 rule mutlist:
@@ -1279,6 +1283,7 @@ rule alphamissense:
         """
 
 ############################## Calculations #################################
+'''
 rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
@@ -1382,6 +1387,7 @@ rule rosetta_relax:
                         -r {params.rosetta_module}\
                         -cs {params.mpi}
         """
+'''
 
 '''
         expand("{hugo_name}/long_range/"\
@@ -1610,9 +1616,6 @@ rule collect_outputs:
     output:
         temp("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done")
     run:
-
-        import glob
-
         hn   = wildcards.hugo_name
         out  = Path(hn) / "simple_mode"
         out.mkdir(parents=True, exist_ok=True)
@@ -1706,6 +1709,7 @@ rule collect_outputs:
         for r in input.structure_rasp:
             rasp_files += list((Path(r) / "output" / "predictions").glob("post_processed_*.csv"))
         rasp_files = sorted(rasp_files)
+
         with open(rasp_out, "w") as fout:
             header_written = False
             for fp in rasp_files:
@@ -1718,7 +1722,9 @@ rule collect_outputs:
 	# 15) foldx5 energies
         fx_out = base / "foldx5" / "energies.csv"
         (fx_out.parent).mkdir(parents=True, exist_ok=True)
+
         fx_files = sorted(Path(f) for f in input.structure_foldx5)
+
         fx_lines = []
         header = None
         for fx in fx_files:
@@ -1726,7 +1732,9 @@ rule collect_outputs:
             if header is None:
                 header = lines[0]
             fx_lines.extend(lines[1:])  # drop each file’s header
+
         fx_lines.sort(key=lambda l: int(l.split(",")[2]))
+
         fx_out.parent.mkdir(parents=True, exist_ok=True)
         with open(fx_out, "w") as fout:
             fout.write(header)
