@@ -1,0 +1,26 @@
+
+ +----------<<<  P  R  O  C  H  E  C  K     S  U  M  M  A  R  Y  >>>----------+
+ |                                                                            |
+ | /data/user/pablosanchezb/devel/MAVISp_automatizatio   2.0  A    5 residues |
+ |                                                                            |
+ | Ramachandran plot:  100.0% core    0.0% allow    0.0% gener    0.0% disall |
+ |                                                                            |
+ | All Ramachandrans:    0 labelled residues (out of   3)                     |
+ | Chi1-chi2 plots:      0 labelled residues (out of   1)                     |
+ | Main-chain params:    6 better     0 inside      0 worse                   |
+ | Side-chain params:    5 better     0 inside      0 worse                   |
+ |                                                                            |
++| Residue properties: Max.deviation:     3.1              Bad contacts:    0 |
+ |                     Bond len/angle:    1.6    Morris et al class:  1  1  1 |
+ |                                                                            |
++| G-factors           Dihedrals:  -0.64  Covalent:   0.40    Overall:  -0.11 |
+ |                                                                            |
+ | M/c bond lengths:100.0% within limits   0.0% highlighted                   |
+ | M/c bond angles: 100.0% within limits   0.0% highlighted                   |
+ |                                                                            |
+
+ *** Program bplot terminated with error. See log file:  bplot.log
+
+ +----------------------------------------------------------------------------+
+   + May be worth investigating further.  * Worth investigating further.
+

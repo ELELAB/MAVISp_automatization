@@ -1,0 +1,15 @@
+-in:ignore_unrecognized_res true
+-in:file:fullatom true
+-out:prefix relax_
+-out:file:scorefile scorefile.sc
+-out:file:scorefile_format text
+-out:level 300
+-out:chname true
+-out:chtimestamp true
+-out:save_times true
+-run:checkpoint true
+-run:version true
+-run:ignore_zero_occupancy false
+-parser:protocol /home/pablosanchezb/.cache/Python-Eggs/RosettaDDGPrediction-0.0.1-py3.10.egg-tmp/RosettaDDGPrediction/RosettaScripts/Cartddg2020_relax.xml
+-parser:script_vars repeats=4 scfname=ref2015_cart
+-in:file:s /data/user/pablosanchezb/devel/MAVISp_automatization/example/rosetta_data/tf/APC/free/PDB_1-5/v1_model/ref2015_cartesian2020/P25054_1-5.pdb

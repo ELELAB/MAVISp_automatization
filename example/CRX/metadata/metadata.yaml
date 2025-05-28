@@ -1,0 +1,13 @@
+curators:
+  Pablo Sanchez-Izquierdo:
+    affiliation:
+    - DTU, Denmark
+    - DCI, Denmark
+uniprot_ac: O43186
+refseq_id: NP_000545
+allosigma_distance_cutoff:
+- 15
+review_status: 0
+structure_source: AF2
+linker_design: false
+pdb_id: ''

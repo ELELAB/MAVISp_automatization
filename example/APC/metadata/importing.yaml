@@ -1,0 +1,5 @@
+gene: APC
+project: tf
+date: '02122024'
+cancermuts: pancancer
+starting_structure1: PDB_1-5
