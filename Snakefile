@@ -8,7 +8,6 @@ import yaml
 import urllib
 from Bio.Data import IUPACData
 import glob
-import getpass
 from datetime import datetime
 
 def mutation_converter(x):
@@ -1516,41 +1515,32 @@ rule metadata:
         metadata  = "{hugo_name}/metadata/metadata.yaml",
         importing = "{hugo_name}/metadata/importing.yaml"
     run:
-        import getpass
-        from datetime import datetime
-
         gene    = wildcards.hugo_name
         meta_dir = os.path.dirname(output.metadata)
         os.makedirs(meta_dir, exist_ok=True)
 
         # ---- write metadata.yaml ----
-        curator_map = {
-            'pablosanchezb': {
-                'full_name': 'Pablo Sanchez-Izquierdo',
-                'affiliation': ['DTU, Denmark', 'DCI, Denmark']
-            },
-        }
-        user  = getpass.getuser()
-        entry = curator_map.get(user, {
-            'full_name': user,
-            'affiliation': ['<Your Affiliation>']
-        })
 
         uniprot_ac       = df.loc[df['protein'] == gene, 'uniprot_ac'].iloc[0]
         refseq_id        = df.loc[df['protein'] == gene, 'ref_seq'].iloc[0]
         structure_source = df.loc[df['protein'] == gene, 'structure_source'].iloc[0]
         pdb_id           = df.loc[df['protein'] == gene, 'input_pdb'].fillna('').iloc[0]
-	curator_name 	 = df.loc[df['protein'] == gene, 'curator_name'].iloc[0]
-	raw_affils   	 = df.loc[df['protein'] == gene, 'affiliation'].iloc[0]
+        raw_names	 = df.loc[df['protein'] == gene, 'curator_name'].iloc[0]
+	raw_affils       = df.loc[df['protein'] == gene, 'affiliation'].iloc[0]
 
-	affiliations = [a.strip() for a in raw_affils.split(';')]
-        
-	metadata_dict = {
-            'curators': {
-                curator_name: {
-                    'affiliation': affiliations
-                }
-            },
+        names_list  = [n.strip() for n in raw_names.split("_")  if n.strip()]
+        affils_list = [a.strip() for a in raw_affils.split("_") if a.strip()]
+
+        if len(names_list) != len(affils_list):
+            raise ValueError(f"Number of curator_name entries ({len(names_list)}) "
+                             f"does not match number of affiliation entries ({len(affils_list)}).")
+        curators_dict = {}
+        for name, raw_a in zip(names_list, affils_list):
+            person_affils = [x.strip() for x in raw_a.split(";") if x.strip()]
+            curators_dict[name] = {"affiliation": person_affils}
+
+        metadata_dict = {
+            'curators': curators_dict,
             'uniprot_ac': uniprot_ac,
             'refseq_id': refseq_id,
             'allosigma_distance_cutoff': [15],
@@ -1566,11 +1556,8 @@ rule metadata:
         project  = df.loc[df['protein'] == gene, 'research_field'].iloc[0]
         trimmed_list  = df.loc[df['protein'] == gene, 'trimmed'].iloc[0]
         starting_list = [f"{structure_source}_{part}" for part in trimmed_list]
-
-        base_dir  = (
-            "/data/raw_data/computational_data/cancermuts_data/"
-            f"{project}/{gene.lower()}/pancancer_clinvar_saturation"
-        )
+        cancermuts_path = config["modules"]["mutations_aggregation"]["cancermuts"]["folder_name"]
+        base_dir = os.path.join(cancermuts_path, project, gene.lower(), "pancancer_clinvar_saturation")
         candidates = []
         for name in os.listdir(base_dir):
             path = os.path.join(base_dir, name)
@@ -1621,7 +1608,8 @@ rule collect_outputs:
             f"saturation/{wcs.uniprot_ac}_table/energies.csv"
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
         pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
-        alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/"
+        alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/",
+        metadata = lambda wcs: f"{wcs.hugo_name}/metadata/metadata.yaml"
     output:
         temp("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done")
     run:
