@@ -497,7 +497,15 @@ rule structure_selection:
         directory("{hugo_name}/structure_selection/original_model")
 
     run:
+        # Validate that structure_source is one of the allowed keys
 
+        allowed_sources = {"AFDB", "AF3", "AF2", "PDB", "Mod"}
+        src = df.loc[df["protein"] == wildcards.hugo_name, "structure_source"].iloc[0]
+        if src not in allowed_sources:
+            raise ValueError(f"Invalid structure_source '{src}' for gene {wildcards.hugo_name}. "
+                             f"Allowed values are: {allowed_sources!r}")
+
+        # Decide between “use an existing PDB file” vs. “run AlphaFold fetch”
         pdb = df.loc[
             (df['protein'] == wildcards.hugo_name),
             'input_pdb'].iloc[0]
@@ -963,7 +971,6 @@ rule mutlist:
         "{hugo_name}/structure_selection/trimmed_model/",
         f"{modules['mutations_aggregation']['cancermuts']['folder_name']}"+
         "{hugo_name}"+"/metatable_pancancer_{hugo_name}.csv"
-
     output:
         directory("{hugo_name}/cancermuts")
     run:
@@ -1000,7 +1007,8 @@ rule mutlist:
                             f"trimmed_model/"
         script = modules['mutlist_generation']['script']
         readme = modules['mutlist_generation']['readme']
-        shell("set +u && "\
+        metatable = os.path.abspath(input[1])
+	shell("set +u && "\
                 "{config[modules][mutations_aggregation][mutlist][source]} && "\
                 "set -u && "\
                 "mkdir -p {output} &&"\
@@ -1008,7 +1016,7 @@ rule mutlist:
                 " cp ../../{input[0]}/*.pdb . &&"\
                 " cp ../../{script} . &&"\
                 " cp ../../{readme} . &&"\
-                " python get_mutlists.py -m {input[1]}"\
+                " python get_mutlists.py -m {metatable}"\
                                 " -d {ren}"\
                                 " -M"\
                                 " -R"\
@@ -1169,10 +1177,10 @@ rule ptm_stability:
         shutil.copy(modules['mutations_aggregation']['ptm']['mutatex']['mutlist'], outdir)
         if os.path.islink(f"{outdir}/final_averages") or os.path.exists(f"{outdir}/final_averages"):
             os.remove(f"{outdir}/final_averages")
-        os.symlink(input.data, f"{outdir}/final_averages")
+        os.symlink(os.path.abspath(input.data), f"{outdir}/final_averages")
         if os.path.islink(f"{outdir}/{os.path.basename(input.pdb)}") or os.path.exists(f"{outdir}/{os.path.basename(input.pdb)}"):
             os.remove(f"{outdir}/{os.path.basename(input.pdb)}")
-        os.symlink(input.pdb,  f"{outdir}/{os.path.basename(input.pdb)}")
+        os.symlink(os.path.abspath(input.pdb),  f"{outdir}/{os.path.basename(input.pdb)}")
 
         shell(f"""cd {outdir} &&\
                   bash run_ddgs.sh {os.path.basename(input.pdb)} {mutlist}
@@ -1388,6 +1396,7 @@ rule rosetta_relax:
                         -r {params.rosetta_module}\
                         -cs {params.mpi}
         """
+
 '''
         expand("{hugo_name}/long_range/"\
                "allosigma2/"\
