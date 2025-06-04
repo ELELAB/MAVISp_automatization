@@ -30,20 +30,20 @@ modules:
             Cosmic_database_path: /data/databases/cosmic-v96/CosmicMutantExport.tsv
             saturation: true
             ELM_connections_per_run: 1
-            folder_name: /data/user/pablosanchezb/devel/MAVISp_automatization/example/cancermuts_data/
+            folder_name: cancermuts_data
         mutlist:
             source: . /usr/local/envs/cancermuts/bin/activate
         mutatex:
-            repository: /data/user/pablosanchezb/devel/MAVISp_automatization/example/mutatex_data/
+            repository: mutatex_data
     rasp:
         conda_activation: /usr/local/miniconda3/bin/activate
         rasp_conda_env: /usr/local/envs/RaSP_workflow
-        output_path_folder: /data/user/pablosanchezb/devel/MAVISp_automatization/example/rasp_data/
+        output_path_folder: rasp_data
         folder_name: rasp
     rosetta_relax:
         rosetta_env: /usr/local/envs/rosettaddgprediction/bin/activate
         rosetta_module: /usr/local/rosetta-2022.11/
-        rosetta_folder:  /data/user/pablosanchezb/devel/MAVISp_automatization/example/rosetta_data/
+        rosetta_folder:  rosetta_data
         rosetta_template: /data/raw_data/computational_data/rosetta_data/mavisp_templates/stability/ref2015_cartesian2020
     efoldmine:
         environment: set +eu && . /usr/local/envs/efoldmine/bin/activate && set -eu
