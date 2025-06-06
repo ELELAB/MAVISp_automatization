@@ -802,8 +802,8 @@ rule cancermuts:
         for f in os.listdir('.'):
             filepath = os.path.join(".", f)
             if os.path.isfile(filepath):
-                if f.startswith(wildcards.hugo_name) or\
-                   f.startswith(wildcards.hugo_name.lower()) and\
+                if (f.startswith(wildcards.hugo_name) or\
+                   f.startswith(wildcards.hugo_name.lower())) and\
                    f.endswith(".txt"):
                     shell("mkdir -p {wildcards.hugo_name}/"\
                                     "external_mutation_lists/")
@@ -1520,6 +1520,8 @@ rule allosigma4:
 '''
 
 rule metadata:
+    input:
+        directory("{hugo_name}/cancermuts")
     output:
         metadata  = "{hugo_name}/metadata/metadata.yaml",
         importing = "{hugo_name}/metadata/importing.yaml"
@@ -1534,8 +1536,8 @@ rule metadata:
         refseq_id        = df.loc[df['protein'] == gene, 'ref_seq'].iloc[0]
         structure_source = df.loc[df['protein'] == gene, 'structure_source'].iloc[0]
         pdb_id           = df.loc[df['protein'] == gene, 'input_pdb'].fillna('').iloc[0]
-        raw_names	 = df.loc[df['protein'] == gene, 'curator_name'].iloc[0]
-	raw_affils       = df.loc[df['protein'] == gene, 'affiliation'].iloc[0]
+        raw_names        = df.loc[df['protein'] == gene, 'curator_name'].iloc[0]
+        raw_affils       = df.loc[df['protein'] == gene, 'affiliation'].iloc[0]
 
         names_list  = [n.strip() for n in raw_names.split("_")  if n.strip()]
         affils_list = [a.strip() for a in raw_affils.split("_") if a.strip()]
