@@ -1,0 +1,209 @@
+#!/usr/bin/env python
+# coding=utf-8
+
+# Copyright (C) 2023 Pablo Sánchez-Izquierdo <sanizbe.pablo@gmail.com>
+# Danish Cancer Society
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Obtention of how mutations affect phospho sites in a desired protein
+
+import os
+import sys
+import pathlib
+from pathlib import Path
+import yaml
+import pandas as pd
+import numpy as np
+from Bio import SeqIO
+from Bio.Seq import MutableSeq, Seq
+from Bio.SeqRecord import SeqRecord
+
+# Load the config.yaml file
+configfile: "config.yaml"
+
+# Define the input variables
+mutlist = Path(config["mutlist"])
+fasta_file = Path(config["fasta_file"])
+output_directory = Path(config["output_directory"])
+
+# Get the list of mutations from the file
+mutations = [line.strip() for line in open(mutlist)]
+mutations.append('WT')
+
+# Define a function to process a CSV file and merge it into the aggregated data
+def process_csv(file, data_frame):
+    df = pd.read_csv(file)
+    file_name = Path(file).stem
+    parts = file_name.split("_")
+    mutation_info = parts[1]
+
+    df = df[['restype', 'resnum', 'kinase', 'score']]
+    df = df.rename(columns={"score": mutation_info})
+
+    if data_frame.empty:
+        data_frame = df
+    else:
+        data_frame = pd.merge(data_frame, df, on=['restype', 'resnum', 'kinase'], how='outer')
+
+    return data_frame
+
+# Define the rule to generate the mutated fasta files
+rule all:
+    input:
+        output_directory / "aggregated_output.csv",
+        output_directory / "aggregated_filtered_output.csv"
+
+# Define the rule to run the script to mutate the fasta file
+rule mutate_fasta:
+    input:
+        fasta_file
+    output:
+        output_directory / "{fasta_file}_{mut}.fasta"
+    run:
+        mutation = wildcards.mut
+
+        # Read sequence from the fasta file using Bio.SeqIO
+        records = list(SeqIO.parse(input[0], "fasta"))
+
+        # Check if there is only one sequence in the file
+        if len(records) != 1:
+            print(f"Error: {len(records)} sequences found in {input[0]}. Only one sequence is expected.")
+            sys.exit(1)
+
+        record = records[0]
+
+        # Apply the specific mutation to the sequence or handle the wild-type case
+        if mutation == 'WT':
+            mutated_seq = record.seq
+            mutation_info = " (Wild-Type)"
+        else:
+            if mutation[0] == record.seq[int(mutation[1:-1]) - 1]:
+                # Convert Seq to MutableSeq
+                mutated_seq = MutableSeq(record.seq)
+                mutated_seq[int(mutation[1:-1]) - 1] = mutation[-1]
+
+                # Convert MutableSeq back to Seq
+                mutated_seq = Seq(mutated_seq)
+                mutation_info = f" MUTATION={mutation}"
+            else:
+                print(f"Error: the wild-type residue in the requested mutation {mutation} and the wild-type residue in the sequence do not correspond")
+                sys.exit(1)
+
+        # Create a new SeqRecord for the mutated sequence
+        mutated_record = SeqRecord(mutated_seq, id=record.id + mutation_info, description=record.description)
+
+        # Write the mutated sequence to the output file using Bio.SeqIO
+        with open(output[0], "w") as outfile:
+            SeqIO.write(mutated_record, outfile, "fasta")
+
+# Define the rule to run netphos on the mutated fasta files
+rule run_netphos:
+    input:
+        output_directory / "{fasta_file}_{mut}.fasta"
+    output:
+        output_directory / "{fasta_file}_{mut}_netphos.txt"
+    shell:
+        "netphos {input} > {output}"
+
+# Define the rule to process netphos outputs into CSV files
+rule process_and_filter_netphos:
+    input:
+        output_directory / "{fasta_file}_{mut}_netphos.txt"
+    output:
+        full_file = output_directory / "{fasta_file}_{mut}_output.csv",
+        filtered_file = output_directory / "{fasta_file}_{mut}_filtered_output.csv"
+    run:
+
+        data = []
+        data_filtered = []
+
+        with open(input[0], "r") as infile:
+            for line in infile:
+                if line.startswith("#"):
+                    parts = line.strip().split()
+                    if len(parts) == 8 and len(parts[2]) > 0 and parts[2].isdigit():
+                        residue_number = int(parts[2])
+                        if parts[7] == "YES" and float(parts[5]) > 0.5:
+                            data_filtered.append({
+                                "restype": parts[3],
+                                "resnum": residue_number,
+                                "kinase": parts[6],
+                                "score": float(parts[5]),
+                            })
+                        data.append({
+                            "restype": parts[3],
+                            "resnum": residue_number,
+                            "kinase": parts[6],
+                            "score": float(parts[5]),
+                        })
+
+        df = pd.DataFrame(data)
+        df.to_csv(output.full_file, index=False)
+
+        df_filtered = pd.DataFrame(data_filtered)
+        df_filtered.to_csv(output.filtered_file, index=False)
+
+
+# Define the rule to aggregate the data from csv filtered files
+rule aggregate_output:
+    input:
+        full_files = expand(output_directory / "{fasta_file}_{mut}_output.csv", fasta_file=pathlib.Path(fasta_file).stem, mut=mutations),
+        filtered_files = expand(output_directory / "{fasta_file}_{mut}_filtered_output.csv", fasta_file=pathlib.Path(fasta_file).stem, mut=mutations)
+    output:
+        output_directory / "aggregated_output.csv",
+        output_directory / "aggregated_filtered_output.csv"
+    run:
+        aggregated_data = pd.DataFrame()
+        aggregated_data_filtered = pd.DataFrame()
+
+        # Process the full and filtered CSV files using the defined function
+        for full_file, filtered_file in zip(input.full_files, input.filtered_files):
+            aggregated_data = process_csv(full_file, aggregated_data)
+            aggregated_data_filtered = process_csv(filtered_file, aggregated_data_filtered)
+
+        aggregated_data_NA = aggregated_data_filtered[aggregated_data_filtered.iloc[:, 3:].isna().any(axis=1)]
+
+        aggregated_data_diffscore = aggregated_data_filtered[~aggregated_data_filtered.index.isin(aggregated_data_NA.index)
+                & (aggregated_data_filtered.iloc[:, 3:].nunique(axis=1) > 1)]
+
+        aggregated_data_filtered = pd.concat([aggregated_data_NA, aggregated_data_diffscore], ignore_index=True)
+
+        all_data = [aggregated_data, aggregated_data_filtered]
+
+        for i, data in enumerate(all_data):
+            # Sort data by 'resnum'
+            all_data[i] = all_data[i].sort_values(by='resnum')
+
+            # Reset index
+            all_data[i] = all_data[i].reset_index(drop=True)
+
+            # Remove duplicated columns
+            all_data[i] = all_data[i].loc[:, ~all_data[i].columns.duplicated()]
+
+            # Define the column order
+            column_order = ['restype', 'resnum', 'kinase'] + sorted(all_data[i].columns[3:],
+                key=lambda col: int(''.join(filter(str.isdigit, col))) if any(char.isdigit() for char in col) else float('inf'))
+
+            # Reorder columns
+            all_data[i] = all_data[i][column_order]
+
+        # Unpack the list back into individual variables
+        aggregated_data, aggregated_data_filtered = all_data
+
+        output_file_path = os.path.join(output_directory, "aggregated_output.csv")
+        filtered_output_file_path = os.path.join(output_directory, "aggregated_filtered_output.csv")
+
+        aggregated_data.to_csv(output_file_path, index=False)
+        aggregated_data_filtered.to_csv(filtered_output_file_path, index=False)

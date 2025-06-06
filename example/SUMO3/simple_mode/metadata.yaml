@@ -1,0 +1,17 @@
+curators:
+  Elena Papaleo:
+    affiliation:
+    - DTU, Denmark
+    - DCI, Denmark
+  Pablo Sanchez-Izquierdo:
+    affiliation:
+    - DTU, Denmark
+    - DCI, Denmark
+uniprot_ac: P55854
+refseq_id: NP_008867
+allosigma_distance_cutoff:
+- 15
+review_status: 0
+structure_source: PDB
+linker_design: false
+pdb_id: SUMO3_12-90.pdb

@@ -1,0 +1,5 @@
+#Change the inputs with the right name of your fasta_file, mutlist and also the desired output directory
+
+mutlist: "mutlist.txt"
+fasta_file: "P61769.fasta"
+output_directory: "results"

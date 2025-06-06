@@ -1,0 +1,8 @@
+#Remember to fill in the info below
+#results from https://opm.phar.umich.edu/ppm_server3_cgopm
+- date-of-run: 24-03-2023
+- input_structure:atg9a_36-522.B99990093.oriented.pdb
+- assembly: homo-trimer
+- membrane_type: plasma membrane(mammalian)
+- curvature: yes
+
