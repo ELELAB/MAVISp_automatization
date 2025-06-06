@@ -1,7 +1,0 @@
-2025-05-28 14:22:50,065 - INFO - PDBminer is starting
-2025-05-28 14:22:50,068 - INFO - input file created based on hugo name and uniprot id, file name: input_file.csv
-2025-05-28 14:22:50,068 - INFO - Pipeline is starting
-2025-05-28 14:22:52,570 - WARNING - The Alphafold Database returned an error for the request of P25054.
-2025-05-28 14:22:52,573 - WARNING - AlphaFold database returned an error for P25054. This may indicate that there are no structure for P25054 in the Alphafold Database.
-2025-05-28 14:24:04,871 - INFO - total runtime: 0:01:14.806381
-2025-05-28 14:24:04,872 - INFO - PDBminer has finished.

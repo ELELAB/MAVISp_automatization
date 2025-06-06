@@ -1,3 +1,3 @@
 protein,uniprot_ac,uniprot_id,trimmed,ref_seq,research_field,input_pdb,structure_source,model,curator_name,affiliation
 CRX,O43186,CRX_HUMAN,36-104,NP_000545,tf,,AF2,v3,Elena Papaleo_Pablo Sanchez-Izquierdo,"DTU, Denmark; DCI, Denmark_DTU, Denmark; DCI, Denmark"
-APC,P25054,APC_HUMAN,1-5,NP_000029,tf,APC_1-238.pdb,PDB,v1,Elena Papaleo_Pablo Sanchez-Izquierdo,"DTU, Denmark; DCI, Denmark_DTU, Denmark; DCI, Denmark"
+SUMO3,P55854,SUMO3_HUMAN,12-90,NP_008867,elegant,SUMO3_12-90.pdb,PDB,v3,Elena Papaleo_Pablo Sanchez-Izquierdo,"DTU, Denmark; DCI, Denmark_DTU, Denmark; DCI, Denmark"
