@@ -779,8 +779,8 @@ rule cancermuts:
         for f in os.listdir('.'):
             filepath = os.path.join(".", f)
             if os.path.isfile(filepath):
-                if f.startswith(wildcards.hugo_name) or\
-                   f.startswith(wildcards.hugo_name.lower()) and\
+                if (f.startswith(wildcards.hugo_name) or\
+                   f.startswith(wildcards.hugo_name.lower())) and\
                    f.endswith(".txt"):
                     shell("mkdir -p {wildcards.hugo_name}/"\
                                     "external_mutation_lists/")
