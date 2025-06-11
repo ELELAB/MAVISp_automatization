@@ -1292,7 +1292,6 @@ rule alphamissense:
         """
 
 ############################## Calculations #################################
-
 rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
@@ -1396,7 +1395,6 @@ rule rosetta_relax:
                         -r {params.rosetta_module}\
                         -cs {params.mpi}
         """
-
 '''
         expand("{hugo_name}/long_range/"\
                "allosigma2/"\
@@ -1554,7 +1552,8 @@ rule metadata:
             'curators': curators_dict,
             'uniprot_ac': uniprot_ac,
             'refseq_id': refseq_id,
-            'allosigma_distance_cutoff': [15],
+            'allosigma_distance_cutoff': [5.5],
+	    'allosigma_distance_mode': 'atomic_contacts',
             'review_status': 0,
             'structure_source': structure_source,
             'linker_design': False,
@@ -1633,14 +1632,20 @@ rule collect_outputs:
         cdir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.clinvar_genes, cdir / "variants_output.csv")
 
-        # 2) PTM stability
-        ptm_dir = out / "ptm"
-        ptm_dir.mkdir(parents=True, exist_ok=True)
-        with open(ptm_dir / "summary_stability.txt", "w") as fw:
-            for fn in input.ptm_stability:
-                fw.write(Path(fn).read_text())
+	# 2) PTM stability
+	ptm_dir = out / "ptm"
+	ptm_dir.mkdir(parents=True, exist_ok=True)        
 
-        # 3) PTM sasa.rsa
+	stability_contents = []
+        for fn in input.ptm_stability:
+            if Path(fn).stat().st_size > 0:
+                stability_contents.append(Path(fn).read_text())
+
+        if stability_contents:
+            with open(ptm_dir / "summary_stability.txt", "w") as fw:
+                fw.writelines(stability_contents)
+
+	# 3) PTM sasa.rsa
         rsa_files = sorted(input.ptm_sas,
         key=lambda p: int(Path(p).parent.parent.name.split("_", 1)[1].split("-", 1)[1]))
         first, last = rsa_files[0], rsa_files[-1]
@@ -1660,7 +1665,8 @@ rule collect_outputs:
             fout.writelines(header)
             fout.writelines(res_lines)
             fout.writelines(tail)
-        # 4) PTM metatable
+        
+	# 4) PTM metatable
         meta_src = Path(input.cancermuts) / f"metatable_pancancer_{hn}.csv"
         shutil.copy(meta_src, ptm_dir / "metatable.csv")
 
