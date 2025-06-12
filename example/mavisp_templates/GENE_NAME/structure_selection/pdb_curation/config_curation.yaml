@@ -1,0 +1,45 @@
+# Paths to the pdb_fromcif and db_splitchain executables
+pdb_fromcif_exec: "pdb_fromcif"
+pdb_splitchain_exec: "pdb_splitchain"
+
+# Path to the pdb4amber executable
+pdb4amber_exec: "pdb4amber"
+
+# Path to the pdb2fasta executable
+pdb2fasta_exec: "scripts/pdb2fasta2020"
+
+# Path to the Clustal Omega executable for the alignments
+clustalo_exec: "/usr/src/clustal-omega-1.2.4/src/clustalo"
+
+# UniProt IDs of the sequences of interest
+uniprot_ids: !!seq ["Q96CV9","Q9GZQ8"]
+
+# PDB IDs of the structures of interest mapped to:
+#
+# - Whether their PDB or mmCIF file should be used
+#   for cryo-EM structures sometimes only the mmCIF
+#   files are available).
+#
+# - The experimental method used to solve them.
+#   "nmr_onemodel" means only one conformer was
+#   submitted and therefore there is no need to
+#   extract the first model from the original
+#   PDB file.
+#
+# - A list of residues (residue names) to be removed
+#   from the PDB.
+#
+# - Each of their chains mapped to the UniProt
+#   ID of the protein they refer to (DNA strands
+#   are therefore excluded).
+pdb_ids:
+
+    2LUE:
+      file_types: !!seq ["pdb", "mmcif"]
+      exp_method: "nmr"
+      res_to_remove: !!seq ["HOH"]
+      chain2uniprot:
+        # LC3B
+        A: "Q9GZQ8"
+        # OPTN
+        B: "Q96CV9"
