@@ -11,7 +11,8 @@ uniprot_ac: P55854
 refseq_id: NP_008867
 allosigma_distance_cutoff:
 - 5.5
-allosigma_distance_mode: atomic_contacts
+allosigma_distance_mode:
+- atomic_contacts
 review_status: 0
 structure_source: PDB
 linker_design: false

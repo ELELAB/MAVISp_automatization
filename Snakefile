@@ -1553,7 +1553,7 @@ rule metadata:
             'uniprot_ac': uniprot_ac,
             'refseq_id': refseq_id,
             'allosigma_distance_cutoff': [5.5],
-	    'allosigma_distance_mode': 'atomic_contacts',
+	    'allosigma_distance_mode': ['atomic_contacts'],
             'review_status': 0,
             'structure_source': structure_source,
             'linker_design': False,

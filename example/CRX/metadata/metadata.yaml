@@ -11,7 +11,8 @@ uniprot_ac: O43186
 refseq_id: NP_000545
 allosigma_distance_cutoff:
 - 5.5
-allosigma_distance_mode: atomic_contacts
+allosigma_distance_mode:
+- atomic_contacts
 review_status: 0
 structure_source: AF2
 linker_design: false
