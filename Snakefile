@@ -1531,7 +1531,7 @@ rule metadata:
         # ---- write metadata.yaml ----
 
         uniprot_ac       = df.loc[df['protein'] == gene, 'uniprot_ac'].iloc[0]
-        refseq_id        = df.loc[df['protein'] == gene, 'ref_seq'].iloc[0]
+        refseq_id        = df.loc[df['protein'] == gene, 'ref_seq'].fillna('').iloc[0]
         structure_source = df.loc[df['protein'] == gene, 'structure_source'].iloc[0]
         pdb_id           = df.loc[df['protein'] == gene, 'input_pdb'].fillna('').iloc[0]
         raw_names        = df.loc[df['protein'] == gene, 'curator_name'].iloc[0]
