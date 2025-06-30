@@ -1658,7 +1658,7 @@ rule collect_outputs:
                 for line in fh:
                     if line.startswith("RES "):
                         res_lines.append(line)
-        res_lines.sort(key=lambda l: int(l[9:13].strip()))
+        res_lines.sort(key=lambda l: int(l.split()[3]))
         with open(last) as fh_last:
             tail = fh_last.readlines()[-4:]
         with open(sasa_out, "w") as fout:
