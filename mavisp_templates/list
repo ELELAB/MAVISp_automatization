@@ -10,6 +10,9 @@
 ./GENE_NAME/interactome/mentha2pdb/do.sh
 ./GENE_NAME/interactome/mentha2pdb/mentha2pdb.py
 ./GENE_NAME/interactome/mentha2pdb/readme.txt
+./GENE_NAME/interactome/string2pdb
+./GENE_NAME/interactome/string2pdb/string2pdb
+./GENE_NAME/interactome/string2pdb/readme.txt
 ./GENE_NAME/netphos
 ./GENE_NAME/netphos/readme.txt
 ./GENE_NAME/cancermuts

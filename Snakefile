@@ -41,6 +41,17 @@ modules['interactome']['mentha2pdb'].update({"script":mentha_script,
                                              "bash":mentha_bash})
 modules['interactome']['hpc_atlas'].update({"readme":hpc_atlas_readme})
 
+
+
+string_script = f"mavisp_templates/GENE_NAME/interactome/"\
+                f"string2pdb/string2pdb"
+string_readme=  f"mavisp_templates/GENE_NAME/interactome/"\
+                f"string2pdb/readme.txt"
+
+modules['interactome'].update({"string2pdb":\
+                                {"script":string_script,
+                                "readme":string_readme}})
+
 #--------------------------- Structure Selection ---------------------------#
 
 alphafold_script = f"mavisp_templates/GENE_NAME/"\
@@ -435,7 +446,14 @@ rule all:
                zip,
                hugo_name = df['protein'].str.upper(),
                uniprot_ac = df['uniprot_ac'].str.upper()),
-
+        
+        expand("{hugo_name}/interactome/"\
+               "string2pdb/"\
+               "{uniprot_ac}_string_interactors.csv",
+               zip,
+               hugo_name = df['protein'].str.upper(),
+               uniprot_ac = df['uniprot_ac'].str.upper()),
+        
         expand("{path}/"\
                "{research_field}/"\
                "{hugo_name}/free/"\
@@ -700,6 +718,21 @@ rule mentha2pdb:
               -af ${{Huri_Humap}}\
               -ec 0.2
        '''
+
+rule string2pdb:
+    output:
+        "{hugo_name}/interactome/string2pdb/{uniprot_ac}_string_interactors.csv"
+    shell:
+        '''
+        mkdir -p {wildcards.hugo_name}/interactome/string2pdb/
+        readme={modules[interactome][string2pdb][readme]}
+        script={modules[interactome][string2pdb][script]}
+        cd {wildcards.hugo_name}/interactome/string2pdb/
+        cp  ../../../${{readme}} .
+        cp  ../../../${{script}} .
+        ./string2pdb {wildcards.uniprot_ac}
+
+        '''
 
 rule hpc_atlas:
     output:
