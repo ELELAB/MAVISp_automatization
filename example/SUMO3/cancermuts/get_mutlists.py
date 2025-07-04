@@ -40,6 +40,12 @@ def get_day(metatable):
     
     return time.strftime("%d%m%Y", t_obj)
 
+def keep_curated_mutations(row_value):
+        # Split the string by commas and strip whitespace
+        sources = [s.strip() for s in row_value.split(',')]
+        # Keep the row if at least one substring does not contain 'saturation'
+        return any(source and 'saturation' not in source for source in sources)
+
 def pdb_dict(pdb_file):
     '''The functions reads the pdb file and returns
     a dictionary {resnum : resname}.'''
@@ -61,7 +67,7 @@ def pdb_dict(pdb_file):
     
     return pdb_dict
 
-def check_WT(metatable, pdb_dict, error_file):
+def check_WT(metatable, pdb_dict, error_file,exclude_sanity_check):
     '''The function compares the wt residue of the metatable
     and of the pdb and returns a filtered metatable not including
     the rows with unmatched wt residues. Furthermore, it creates
@@ -74,21 +80,28 @@ def check_WT(metatable, pdb_dict, error_file):
     # Check pdb range and cancermuts metatable range
     # to be correspondent
     if metatable['wt_pdb'].isnull().values.any():
-        log.error('Please check the residue range in the pdb(s) and ' \
-                   'the range used in cancermuts correspond. \n' \
-                   'Inconsistencies found. Exiting...')
-        sys.exit(1)
+        if not exclude_sanity_check:
+            log.error('Please check the residue range in the pdb(s) and ' \
+                       'the range used in cancermuts correspond. \n' \
+                       'Inconsistencies found. Exiting...')
+            sys.exit(1)
+        else:
+            log.error('The residue range in the pdb(s) and ' \
+                      'the range used in cancermuts does not'\
+                      'correspond. This is probably due to the' \
+                      'presence of missing residues in the pdb file \n' \
+                      'The sanity check on the pdb file has been removed,'\
+                      'so the mutation lists will be generated anyway.')
+
 
     # Create dataframe containing the unmatched residues
     error_df = metatable.loc[~(metatable['wt_3L'].str.upper() == metatable['wt_pdb'])].drop_duplicates(subset = ['wt_3L', 'aa_position', 'wt_pdb']).copy()
     
     # If the error dataframe contains unmatches
-    if not error_df.empty:
+    if not exclude_sanity_check and not error_df.empty:
 
         # Print warning
         number = error_df.shape[0]
-        log.warning(f'{number} unmatched WT residue(s) found. ' \
-                    f'See {error_file} for details.')
         
         # Rename columns
         dict_names = {'wt_3L': 'wt_metatable', 'aa_position': 'resnum'}
@@ -99,24 +112,19 @@ def check_WT(metatable, pdb_dict, error_file):
 
         # Save error file (cancermuts_wt, position, pdb_wt)
         error_df.to_csv(error_file, index = False, columns = ['wt_metatable', 'resnum', 'wt_pdb'])
+
+        log.error(f'{number} unmatched WT residue(s) found. ' \
+                  f'See {error_file} for details. Exiting...')
+        sys.exit(1)
     else:
         # Print info that no unmatched residues have been found
-        log.info('All the WT residues match correctly.')
+        if not exclude_sanity_check:
+            log.info('All the WT residues match correctly.')
 
     checked_df = metatable.loc[(metatable['wt_3L'].str.upper() == metatable['wt_pdb'])].copy()
     checkef_df = checked_df.drop(columns = 'wt_pdb')
 
     return checked_df
-
-def oneletter_format(dataframe, day):
-    '''Mutation format: wt position mut (e.g., A75C)'''
-    
-    #Add mutation column
-    dataframe['mutation'] = dataframe['ref_aa'] + \
-                            dataframe["aa_position"].astype(str) + \
-                            dataframe["alt_aa"]
-    
-    return dataframe['mutation'].to_csv(f'mutlist_{day}.txt', header=None, index=None)
 
 def mutatex_format(dataframe, chain, day):
     '''Mutation format: wt chain position mut (e.g., AA75C)'''
@@ -270,6 +278,16 @@ def main():
                         required = True,
                         help = p_helpstr)
 
+    s_helpstr = "Remove the sanity check on the consistency of"\
+                " positions and residues between the provided"\
+                " PDB file and the input metatable."
+
+    parser.add_argument("-s", "--exclude_sanity_check",
+                        action = "store_true",
+                        default = False,
+                        required = False,
+                        help = s_helpstr)
+
     mutatex_helpstr = "Generate mutatex mutlist"
     parser.add_argument("-M", "--mutatex",
                         action = 'store_true',
@@ -289,6 +307,15 @@ def main():
     parser.add_argument("-C", "--cabsflex",
                         action = 'store_true',
                         help = cabsflex_helpstr)
+
+    exclude_saturation_helpstr = "Generate a filtered"\
+                      " mutation list excluding "\
+                      " those only present in the"\
+                      " saturation mutagenesis list"
+
+    parser.add_argument("-S", "--exclude_saturation",
+                        action = 'store_true',
+                        help = exclude_saturation_helpstr)
 
     date_helpstr = "Date in DDMMYYYY added to the output file names " \
                    "(default: day of the cancermuts run)"
@@ -334,11 +361,21 @@ def main():
     filtered_df['mut_3L'] = filtered_df['alt_aa'].apply(seq3) 
     
     # Check WT residues
-    input_df = check_WT(filtered_df, pdb_dictionary, 'wt.err')
+    input_df = check_WT(filtered_df, pdb_dictionary, 'wt.err',args.exclude_sanity_check)
     
     # Generate one letter mutlist 
-    oneletter_format(input_df, date)
-    
+    output = f'mutlist_{date}.txt'
+
+    input_df['mutation'] = input_df['ref_aa'] + \
+                           input_df["aa_position"].astype(str) + \
+                           input_df["alt_aa"]
+    input_df['mutation'].to_csv(output, header=None, index=None)
+
+    if args.exclude_saturation:
+        output = f'curated_mutlist_{date}.txt'
+        curated_input_df = input_df[input_df['sources'].apply(keep_curated_mutations)]
+        curated_input_df['mutation'].to_csv(output, header=None, index=None)
+
     # Generate mutatex mutlist
     if args.mutatex:
         mutatex_format(input_df, args.chain, date)
