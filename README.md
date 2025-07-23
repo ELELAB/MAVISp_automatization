@@ -181,6 +181,8 @@ The pipeline automates the following steps for each entry in the input CSV file,
 - **Retrieving interactors from the Mentha database**: Information about experimentally validated interactors collected in the Mentha and database is retrieved and organized in a CSV file, 
   along with information about possible PDB IDs and associated PMID references. Each interactor is assigned a score indicating the certainty of the interaction. The output is stored in the "interactome/mentha2pdb" path.
 
+- **Retrieving interactors from the STRING database**: Interactors are extracted from the physical subnetwork of STRING, keeping only those with a score > 0.15 and supported by either curated database annotations or experimental data. Available PDBs of the retrieved complexes are included. Output is stored in "interactome/string2pdb".
+
 - **Retrieving interactors from the hpc-atlas database**: Interactor information collected in the hpc-atlas database is retrieved and organized into a txt file. The file is stored in the 
   "interactome/hpc_atlas" path.
 
@@ -264,19 +266,22 @@ BLM
 │   │   ├── BLM.out
 │   │   ├── HPC-Atlas_gene.txt → /data/databases/hpc_atlas/HPC-Atlas_gene.txt
 │   │   └── readme.txt
-│   └── mentha2pdb
-│       ├── 2023-04-17 → /data/databases/mentha-20230417/2023-04-17
-│       ├── P54132.csv
-│       ├── inputs_afmulti
-│       │   └── BLM
-│       │       ├── AIPL1
-│       │       │   └── input.fasta
-│       │       ├── APBB1
-│       │       │   └── input.fasta
-│       │       └── … (etc.)
-│       ├── mentha2pdb.py
+│   ├── mentha2pdb
+│   │   ├── 2023-04-17 → /data/databases/mentha-20230417/2023-04-17
+│   │   ├── P54132.csv
+│   │   ├── inputs_afmulti
+│   │   │   └── BLM
+│   │   │       ├── AIPL1
+│   │   │       │   └── input.fasta
+│   │   │       ├── APBB1
+│   │   │       │   └── input.fasta
+│   │   │       └── … (etc.)
+│   │   ├── mentha2pdb.py
+│   │   ├── readme.txt
+│   │   └── target_uniprot_ac.txt
+│   └── string2pdb
+│       ├── P54132_string_interactors.csv      
 │       ├── readme.txt
-│       └── target_uniprot_ac.txt
 │
 ├── netphos
 │   ├── P54132.fasta
