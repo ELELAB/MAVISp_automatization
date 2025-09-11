@@ -446,14 +446,14 @@ rule all:
                zip,
                hugo_name = df['protein'].str.upper(),
                uniprot_ac = df['uniprot_ac'].str.upper()),
-        
+
         expand("{hugo_name}/interactome/"\
                "string2pdb/"\
                "{uniprot_ac}_string_interactors.csv",
                zip,
                hugo_name = df['protein'].str.upper(),
                uniprot_ac = df['uniprot_ac'].str.upper()),
-        
+
         expand("{path}/"\
                "{research_field}/"\
                "{hugo_name}/free/"\
@@ -899,18 +899,6 @@ rule cancermuts:
                                    sep=";",
                                    index=False)
 
-        ###################  mutation lists from COSMIC #################
-
-         # Get the mutation related to a specific protein from COSMIC
-         # database
-        cosmic_database_path = modules["mutations_aggregation"]\
-                                      ["cancermuts"]\
-                                      ["Cosmic_database_path"]
-        shell("cd {path}/ &&"\
-                " head -n 1 {cosmic_database_path} > header.txt &&"\
-                " (grep -w {wildcards.hugo_name} {cosmic_database_path} > content.txt || true) &&"\
-                " cat header.txt content.txt > \
-                 COSMIC_ini.csv && rm header.txt content.txt")
 
         # copy the metatable plotting script in the folder
 
@@ -1667,7 +1655,7 @@ rule collect_outputs:
 
 	# 2) PTM stability
 	ptm_dir = out / "ptm"
-	ptm_dir.mkdir(parents=True, exist_ok=True)        
+	ptm_dir.mkdir(parents=True, exist_ok=True)
 
 	stability_contents = []
         for fn in input.ptm_stability:
@@ -1698,7 +1686,7 @@ rule collect_outputs:
             fout.writelines(header)
             fout.writelines(res_lines)
             fout.writelines(tail)
-        
+
 	# 4) PTM metatable
         meta_src = Path(input.cancermuts) / f"metatable_pancancer_{hn}.csv"
         shutil.copy(meta_src, ptm_dir / "metatable.csv")
@@ -1802,4 +1790,3 @@ rule collect_outputs:
 
         # 17) touch the done‐file
         Path(output[0]).touch()
-
