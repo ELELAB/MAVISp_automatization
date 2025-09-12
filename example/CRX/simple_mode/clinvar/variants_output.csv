@@ -1,4 +1,9 @@
 variant_id;variant_name;genomic_annotation;gene_name;interpretation;condition;number_of_stars
+4007112;NM_000554.6(CRX):c.389A>C (p.Asp130Ala);GRCh38,NC_000019.10:g.47839456A>C GRCh37,NC_000019.9:g.48342713A>C;CRX;Uncertain significance;Inborn genetic diseases;1
+4007111;NM_000554.6(CRX):c.847A>T (p.Met283Leu);GRCh38,NC_000019.10:g.47839914A>T GRCh37,NC_000019.9:g.48343171A>T;CRX;Uncertain significance;Inborn genetic diseases;1
+4007110;NM_000554.6(CRX):c.657C>G (p.Asp219Glu);GRCh38,NC_000019.10:g.47839724C>G GRCh37,NC_000019.9:g.48342981C>G;CRX;Uncertain significance;Inborn genetic diseases;1
+4007108;NM_000554.6(CRX):c.131C>T (p.Thr44Ile);GRCh38,NC_000019.10:g.47836273C>T GRCh37,NC_000019.9:g.48339530C>T;CRX;Uncertain significance;Inborn genetic diseases;1
+3903121;NM_000554.6(CRX):c.150A>C (p.Gln50His);GRCh38,NC_000019.10:g.47836292A>C GRCh37,NC_000019.9:g.48339549A>C;CRX;Uncertain significance;not provided;1
 3836544;NM_000554.6(CRX):c.581C>T (p.Thr194Ile);GRCh38,NC_000019.10:g.47839648C>T GRCh37,NC_000019.9:g.48342905C>T;CRX;Uncertain significance;Inborn genetic diseases;1
 3779180;NM_000554.6(CRX):c.113A>G (p.Lys38Arg);GRCh38,NC_000019.10:g.47836255A>G GRCh37,NC_000019.9:g.48339512A>G;CRX;Uncertain significance;Cone-rod dystrophy 2;1
 3760995;NM_000554.6(CRX):c.418G>C (p.Asp140His);GRCh38,NC_000019.10:g.47839485G>C GRCh37,NC_000019.9:g.48342742G>C;CRX;Uncertain significance;Leber congenital amaurosis 7;1
@@ -21,7 +26,7 @@ variant_id;variant_name;genomic_annotation;gene_name;interpretation;condition;nu
 3077686;NM_000554.6(CRX):c.373C>T (p.Pro125Ser);GRCh38,NC_000019.10:g.47839440C>T GRCh37,NC_000019.9:g.48342697C>T;CRX;Uncertain significance;Cone-rod dystrophy 2,Inborn genetic diseases;2
 3028508;NM_000554.6(CRX):c.761C>T (p.Ser254Leu);GRCh38,NC_000019.10:g.47839828C>T GRCh37,NC_000019.9:g.48343085C>T;CRX;Uncertain significance;Retinal dystrophy;1
 3028504;NM_000554.6(CRX):c.340G>T (p.Ala114Ser);GRCh38,NC_000019.10:g.47839407G>T GRCh37,NC_000019.9:g.48342664G>T;CRX;Uncertain significance;Retinal dystrophy;1
-2947663;NM_000554.6(CRX):c.37G>C (p.Val13Leu);GRCh38,NC_000019.10:g.47834480G>C GRCh37,NC_000019.9:g.48337737G>C;CRX;Uncertain significance;Leber congenital amaurosis 7;1
+2947663;NM_000554.6(CRX):c.37G>C (p.Val13Leu);GRCh38,NC_000019.10:g.47834480G>C GRCh37,NC_000019.9:g.48337737G>C;CRX;Conflicting classifications of pathogenicity;Cone-rod dystrophy 2,not specified;1
 2944941;NM_000554.6(CRX):c.586G>T (p.Ala196Ser);GRCh38,NC_000019.10:g.47839653G>T GRCh37,NC_000019.9:g.48342910G>T;CRX;Uncertain significance;Leber congenital amaurosis 7;1
 2942140;NM_000554.6(CRX):c.628T>G (p.Ser210Ala);GRCh38,NC_000019.10:g.47839695T>G GRCh37,NC_000019.9:g.48342952T>G;CRX;Uncertain significance;Cone-rod dystrophy 2;1
 2939319;NM_000554.6(CRX):c.784A>G (p.Ser262Gly);GRCh38,NC_000019.10:g.47839851A>G GRCh37,NC_000019.9:g.48343108A>G;CRX;Uncertain significance;Leber congenital amaurosis 7;1
@@ -105,13 +110,13 @@ variant_id;variant_name;genomic_annotation;gene_name;interpretation;condition;nu
 1051600;NM_000554.6(CRX):c.841A>G (p.Asn281Asp);GRCh38,NC_000019.10:g.47839908A>G GRCh37,NC_000019.9:g.48343165A>G;CRX;Uncertain significance;Cone-rod dystrophy 2;1
 1051454;NM_000554.6(CRX):c.439C>T (p.Pro147Ser);GRCh38,NC_000019.10:g.47839506C>T GRCh37,NC_000019.9:g.48342763C>T;CRX;Uncertain significance;Cone-rod dystrophy 2;1
 1047499;NM_000554.6(CRX):c.127C>A (p.Arg43Ser);GRCh38,NC_000019.10:g.47836269C>A GRCh37,NC_000019.9:g.48339526C>A;CRX;Uncertain significance;Cone-rod dystrophy 2;1
-1041530;NM_000554.6(CRX):c.22G>C (p.Gly8Arg);GRCh38,NC_000019.10:g.47834465G>C GRCh37,NC_000019.9:g.48337722G>C;CRX;Likely benign;Leber congenital amaurosis 7;1
+1041530;NM_000554.6(CRX):c.22G>C (p.Gly8Arg);GRCh38,NC_000019.10:g.47834465G>C GRCh37,NC_000019.9:g.48337722G>C;CRX;Conflicting classifications of pathogenicity;Inborn genetic diseases,Leber congenital amaurosis 7;1
 1039633;NM_000554.6(CRX):c.593C>T (p.Ala198Val);GRCh38,NC_000019.10:g.47839660C>T GRCh37,NC_000019.9:g.48342917C>T;CRX;Uncertain significance;Leber congenital amaurosis 7;1
 1038809;NM_000554.6(CRX):c.262A>G (p.Lys88Glu);GRCh38,NC_000019.10:g.47839329A>G GRCh37,NC_000019.9:g.48342586A>G;CRX;Uncertain significance;Cone-rod dystrophy 2;1
 1037944;NM_000554.6(CRX):c.713C>A (p.Ser238Tyr);GRCh38,NC_000019.10:g.47839780C>A GRCh37,NC_000019.9:g.48343037C>A;CRX;Uncertain significance;Cone-rod dystrophy 2;1
 1024649;NM_000554.6(CRX):c.626G>A (p.Gly209Glu);GRCh38,NC_000019.10:g.47839693G>A GRCh37,NC_000019.9:g.48342950G>A;CRX;Uncertain significance;Cone-rod dystrophy 2;1
 1023327;NM_000554.6(CRX):c.11A>G (p.Tyr4Cys);GRCh38,NC_000019.10:g.47834454A>G GRCh37,NC_000019.9:g.48337711A>G;CRX;Uncertain significance;Leber congenital amaurosis 7,not provided;2
-1020865;NM_000554.6(CRX):c.263A>G (p.Lys88Arg);GRCh38,NC_000019.10:g.47839330A>G GRCh37,NC_000019.9:g.48342587A>G;CRX;Conflicting classifications of pathogenicity;Cone-rod dystrophy 2,Cone-rod dystrophy 2,Retinitis pigmentosa,not provided;1
+1020865;NM_000554.6(CRX):c.263A>G (p.Lys88Arg);GRCh38,NC_000019.10:g.47839330A>G GRCh37,NC_000019.9:g.48342587A>G;CRX;Conflicting classifications of pathogenicity;Cone-rod dystrophy 2,Leber congenital amaurosis 7,Retinitis pigmentosa,not provided;1
 1018735;NM_000554.6(CRX):c.485T>C (p.Ile162Thr);GRCh38,NC_000019.10:g.47839552T>C GRCh37,NC_000019.9:g.48342809T>C;CRX;Uncertain significance;Leber congenital amaurosis 7;1
 1011387;NM_000554.6(CRX):c.740C>T (p.Ala247Val);GRCh38,NC_000019.10:g.47839807C>T GRCh37,NC_000019.9:g.48343064C>T;CRX;Uncertain significance;Cone-rod dystrophy 2;1
 981463;NM_000554.6(CRX):c.29A>G (p.His10Arg);GRCh38,NC_000019.10:g.47834472A>G GRCh37,NC_000019.9:g.48337729A>G;CRX;Uncertain significance;Usher syndrome;1
@@ -135,14 +140,14 @@ variant_id;variant_name;genomic_annotation;gene_name;interpretation;condition;nu
 866884;NM_000554.6(CRX):c.684_685delinsAA (p.Leu229Ile);GRCh38,NC_000019.10:g.47839751_47839752delinsAA GRCh37,NC_000019.9:g.48343008_48343009delinsAA;CRX;Uncertain significance;Cone-rod dystrophy 2,Retinal dystrophy;2
 866266;NM_000554.6(CRX):c.873G>T (p.Gln291His);GRCh38,NC_000019.10:g.47839940G>T GRCh37,NC_000019.9:g.48343197G>T;CRX;Uncertain significance;Leber congenital amaurosis 7,Retinal dystrophy;2
 865803;NM_000554.6(CRX):c.239A>G (p.Glu80Gly);GRCh38,NC_000019.10:g.47836381A>G GRCh37,NC_000019.9:g.48339638A>G;CRX;Pathogenic;Retinal dystrophy;1
-864383;NM_000554.6(CRX):c.118C>T (p.Arg40Trp);GRCh38,NC_000019.10:g.47836260C>T GRCh37,NC_000019.9:g.48339517C>T;CRX;Pathogenic/Likely pathogenic;Cone-rod dystrophy 2,Cone-rod dystrophy 2,Retinal dystrophy,not provided;2
+864383;NM_000554.6(CRX):c.118C>T (p.Arg40Trp);GRCh38,NC_000019.10:g.47836260C>T GRCh37,NC_000019.9:g.48339517C>T;CRX;Pathogenic/Likely pathogenic;Cone-rod dystrophy 2,Leber congenital amaurosis 7,Retinal dystrophy,Retinitis pigmentosa,not provided;2
 859372;NM_000554.6(CRX):c.491G>A (p.Ser164Asn);GRCh38,NC_000019.10:g.47839558G>A GRCh37,NC_000019.9:g.48342815G>A;CRX;Uncertain significance;Cone-rod dystrophy 2,Inborn genetic diseases;2
 859152;NM_000554.6(CRX):c.464C>T (p.Thr155Met);GRCh38,NC_000019.10:g.47839531C>T GRCh37,NC_000019.9:g.48342788C>T;CRX;Uncertain significance;Cone-rod dystrophy 2,Inborn genetic diseases;2
 853189;NM_000554.6(CRX):c.8C>T (p.Ala3Val);GRCh38,NC_000019.10:g.47834451C>T GRCh37,NC_000019.9:g.48337708C>T;CRX;Uncertain significance;CRX-related disorder,Cone-rod dystrophy 2,Retinal dystrophy;2
-766776;NM_000554.6(CRX):c.367A>G (p.Thr123Ala);GRCh38,NC_000019.10:g.47839434A>G GRCh37,NC_000019.9:g.48342691A>G;CRX;Likely benign;Leber congenital amaurosis 7;1
+766776;NM_000554.6(CRX):c.367A>G (p.Thr123Ala);GRCh38,NC_000019.10:g.47839434A>G GRCh37,NC_000019.9:g.48342691A>G;CRX;Conflicting classifications of pathogenicity;Cone-rod dystrophy 2,Inborn genetic diseases;1
 636021;NM_000554.6(CRX):c.684G>C (p.Gln228His);GRCh38,NC_000019.10:g.47839751G>C GRCh37,NC_000019.9:g.48343008G>C;CRX;Uncertain significance;Leber congenital amaurosis 7,Retinitis pigmentosa;1
-636019;NM_000554.6(CRX):c.127C>T (p.Arg43Cys);GRCh38,NC_000019.10:g.47836269C>T GRCh37,NC_000019.9:g.48339526C>T;CRX;Pathogenic;Cone-rod dystrophy,Leber congenital amaurosis 7;1
-560444;NM_000554.6(CRX):c.205C>T (p.Arg69Cys);GRCh38,NC_000019.10:g.47836347C>T GRCh37,NC_000019.9:g.48339604C>T;CRX;Pathogenic/Likely pathogenic;Leber congenital amaurosis 7,Retinal dystrophy,Retinitis pigmentosa;2
+636019;NM_000554.6(CRX):c.127C>T (p.Arg43Cys);GRCh38,NC_000019.10:g.47836269C>T GRCh37,NC_000019.9:g.48339526C>T;CRX;Pathogenic;Cone-rod dystrophy,Cone-rod dystrophy 2,Leber congenital amaurosis 7;2
+560444;NM_000554.6(CRX):c.205C>T (p.Arg69Cys);GRCh38,NC_000019.10:g.47836347C>T GRCh37,NC_000019.9:g.48339604C>T;CRX;Pathogenic/Likely pathogenic;Leber congenital amaurosis 7,Retinal dystrophy,Retinitis pigmentosa,not provided;2
 546387;NM_000554.6(CRX):c.568C>T (p.Pro190Ser);GRCh38,NC_000019.10:g.47839635C>T GRCh37,NC_000019.9:g.48342892C>T;CRX;Uncertain significance;Retinal dystrophy,not provided;1
 498899;NM_000554.6(CRX):c.332A>G (p.Gln111Arg);GRCh38,NC_000019.10:g.47839399A>G GRCh37,NC_000019.9:g.48342656A>G;CRX;Uncertain significance;Leber congenital amaurosis 7,not provided;2
 452003;NM_000554.6(CRX):c.269G>A (p.Arg90Gln);GRCh38,NC_000019.10:g.47839336G>A GRCh37,NC_000019.9:g.48342593G>A;CRX;Conflicting classifications of pathogenicity;Cone-rod dystrophy 2,not provided;1
@@ -165,9 +170,9 @@ variant_id;variant_name;genomic_annotation;gene_name;interpretation;condition;nu
 99604;NM_000554.6(CRX):c.365G>A (p.Gly122Asp);GRCh38,NC_000019.10:g.47839432G>A GRCh37,NC_000019.9:g.48342689G>A;CRX;Benign/Likely benign;Central core myopathy,Cone-rod dystrophy 2,Leber congenital amaurosis 7,Leber congenital amaurosis 7,Retinal dystrophy,Retinitis pigmentosa,not provided,not specified;2
 99602;NM_000554.6(CRX):c.335C>T (p.Ala112Val);GRCh38,NC_000019.10:g.47839402C>T GRCh37,NC_000019.9:g.48342659C>T;CRX;Uncertain significance;Cone-rod dystrophy 2,Retinal dystrophy,not provided;2
 99599;NM_000554.6(CRX):c.238G>A (p.Glu80Lys);GRCh38,NC_000019.10:g.47836380G>A GRCh37,NC_000019.9:g.48339637G>A;CRX;Pathogenic;Leber congenital amaurosis 7,maculopathy,not provided;1
-99597;NM_000554.6(CRX):c.196G>A (p.Val66Ile);GRCh38,NC_000019.10:g.47836338G>A GRCh37,NC_000019.9:g.48339595G>A;CRX;Benign/Likely benign;Cone-rod dystrophy 2,Cone-rod dystrophy 2,Leber congenital amaurosis 1,Leber congenital amaurosis 7,Retinal dystrophy,Retinitis pigmentosa,not provided,not specified;2
+99597;NM_000554.6(CRX):c.196G>A (p.Val66Ile);GRCh38,NC_000019.10:g.47836338G>A GRCh37,NC_000019.9:g.48339595G>A;CRX;Benign/Likely benign;Cone-rod dystrophy 2,Leber congenital amaurosis 1,Leber congenital amaurosis 7,Leber congenital amaurosis 7,Retinal dystrophy,Retinitis pigmentosa,not provided,not specified;2
 99596;NM_000554.6(CRX):c.166G>A (p.Ala56Thr);GRCh38,NC_000019.10:g.47836308G>A GRCh37,NC_000019.9:g.48339565G>A;CRX;Likely pathogenic;Leber congenital amaurosis 7,not provided;1
 7422;NM_000554.6(CRX):c.268C>T (p.Arg90Trp);GRCh38,NC_000019.10:g.47839335C>T GRCh37,NC_000019.9:g.48342592C>T;CRX;Pathogenic/Likely pathogenic;Leber congenital amaurosis 7,Leber congenital amaurosis 7,Retinal dystrophy,not provided;2
-7421;NM_000554.6(CRX):c.122G>A (p.Arg41Gln);GRCh38,NC_000019.10:g.47836264G>A GRCh37,NC_000019.9:g.48339521G>A;CRX;Pathogenic/Likely pathogenic;CRX-related disorder,Cone-rod dystrophy 2,Inborn genetic diseases,Leber congenital amaurosis 7,Retinal dystrophy,not provided;2
+7421;NM_000554.6(CRX):c.122G>A (p.Arg41Gln);GRCh38,NC_000019.10:g.47836264G>A GRCh37,NC_000019.9:g.48339521G>A;CRX;Pathogenic/Likely pathogenic;CRX-related disorder,Cone-rod dystrophy,Cone-rod dystrophy 2,Inborn genetic diseases,Leber congenital amaurosis 7,Retinal dystrophy,not provided;2
 7418;NM_000554.6(CRX):c.121C>T (p.Arg41Trp);GRCh38,NC_000019.10:g.47836263C>T GRCh37,NC_000019.9:g.48339520C>T;CRX;Pathogenic/Likely pathogenic;Cone-rod dystrophy,Cone-rod dystrophy 2,Leber congenital amaurosis 7,Retinal dystrophy,Retinitis pigmentosa,not provided;2
 7416;NM_000554.6(CRX):c.239A>C (p.Glu80Ala);GRCh38,NC_000019.10:g.47836381A>C GRCh37,NC_000019.9:g.48339638A>C;CRX;Pathogenic;Cone-rod dystrophy 2,Leber congenital amaurosis 7,not provided;2
