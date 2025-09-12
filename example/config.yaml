@@ -3,8 +3,8 @@ input:
 modules:
     interactome:
         mentha2pdb:
-            database_date: 2024-03-04
-            database_path: /data/databases/mentha-20240304
+            database_date: 2025-04-28
+            database_path: /data/databases/mentha-20250428
             AF_Huri_path:  /data/databases/AF_Huri_HuMAP/summary/HuRI.csv
             AF_HuMAP_path: /data/databases/AF_Huri_HuMAP/summary/humap.csv
             AF_Huri_HuMAP_path: /data/databases/AF_Huri_HuMAP
@@ -19,15 +19,14 @@ modules:
             procheck_env: export prodir=/usr/local/procheck && export PATH=$PATH:$prodir
     mutations_classifier:
         demask:
-            source: /usr/local/envs/demask/demask_env/bin/activate 
+            source: /usr/local/envs/demask/demask_env/bin/activate
             database_path: /data/databases/uniref90demask/uniref90demask
             blastp_path: /usr/local/blast_plus-2.13.0/bin/blastp
         alphamissense:
-            database_path: /data/databases/alphamissense/AlphaMissense_aa_substitutions.tsv.gz 
+            database_path: /data/databases/alphamissense/AlphaMissense_aa_substitutions.tsv.gz
     mutations_aggregation:
         cancermuts:
             source: /usr/local/envs/cancermuts/bin/activate
-            Cosmic_database_path: /data/databases/cosmic-v96/CosmicMutantExport.tsv
             saturation: true
             ELM_connections_per_run: 1
             folder_name: cancermuts_data/
