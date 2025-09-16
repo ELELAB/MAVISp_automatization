@@ -7,12 +7,12 @@ Cancer Systems Biology, Health and Technology Department, Section for Bioinforma
 ## Introduction
 
 MAVISp_automatization is a Snakemake pipeline that has been designed to automate the various steps involved in the mavisp framework. With this pipeline, users are able to perform the following tasks automatically: 
-- genaration of metadata relative to each protein and the curator,
+- generation of metadata relative to each protein and the curator,
 - mutations aggregation, 
 - retrieval and trimming of PDB models from AplphaFold ,
 - retrieval information of all available PDBs in the Protein Data Bank, 
 - filtering of mutation lists for further calculations,
-- retrieval information about interactors through two different databases,  
+- retrieval and aggregation information about interactors through two different databases,  
 - protein phosphorylation prediction,
 - RaSP calculation,
 - classification of mutations occurring in protein sequence through different approaches,
@@ -186,6 +186,8 @@ The pipeline automates the following steps for each entry in the input CSV file,
 - **Retrieving interactors from the hpc-atlas database**: Interactor information collected in the hpc-atlas database is retrieved and organized into a txt file. The file is stored in the 
   "interactome/hpc_atlas" path.
 
+- **Aggregating retrieved interaction data**: Interactors that have been extracted from STRING or Mentha, along with the structures of their complexes with the target protein obtained from PDBminer or PDBMiner_coplexes tools are aggregated in a single csv file. Output is stored in "interactome/aggregate".
+
 - **Mutation classification using the Demask approach**: The uniprot fasta file, automatically retrieved by the pipeline, is provided to the Demask software to obtain a classification for 
   every possible mutation at each sequence position. The output is stored in the "demask" folder.
 
@@ -279,10 +281,13 @@ BLM
 │   │   ├── mentha2pdb.py
 │   │   ├── readme.txt
 │   │   └── target_uniprot_ac.txt
-│   └── string2pdb
-│       ├── P54132_string_interactors.csv      
+│   ├── string2pdb
+│   │   ├── P54132_string_interactors.csv      
+│   │   ├── readme.txt
+│   └── aggregate
+│       ├── P54132_aggregated.csv
 │       ├── readme.txt
-│
+│       └── aggregate
 ├── netphos
 │   ├── P54132.fasta
 │   ├── netphos.out

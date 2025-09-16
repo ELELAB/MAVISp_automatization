@@ -26,7 +26,7 @@ modules:
             database_path: /data/databases/alphamissense/AlphaMissense_aa_substitutions.tsv.gz
     mutations_aggregation:
         cancermuts:
-            source: /usr/local/envs/cancermuts/bin/activate
+            source: /data/user/acampo/MAVISp_cosmic_update/cancermuts_env/bin/activate
             saturation: true
             ELM_connections_per_run: 1
             folder_name: cancermuts_data/

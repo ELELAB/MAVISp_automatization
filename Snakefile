@@ -41,8 +41,6 @@ modules['interactome']['mentha2pdb'].update({"script":mentha_script,
                                              "bash":mentha_bash})
 modules['interactome']['hpc_atlas'].update({"readme":hpc_atlas_readme})
 
-
-
 string_script = f"mavisp_templates/GENE_NAME/interactome/"\
                 f"string2pdb/string2pdb"
 string_readme=  f"mavisp_templates/GENE_NAME/interactome/"\
@@ -51,6 +49,15 @@ string_readme=  f"mavisp_templates/GENE_NAME/interactome/"\
 modules['interactome'].update({"string2pdb":\
                                 {"script":string_script,
                                 "readme":string_readme}})
+
+aggregate_script = f"mavisp_templates/GENE_NAME/interactome/"\
+                   f"aggregate/aggregate"
+aggregate_readme=  f"mavisp_templates/GENE_NAME/interactome/"\
+                   f"aggregate/readme.txt"
+
+modules['interactome'].update({"aggregate":\
+                                {"script":aggregate_script,
+                                "readme":aggregate_readme}})
 
 #--------------------------- Structure Selection ---------------------------#
 
@@ -506,7 +513,14 @@ rule all:
                 structure_source = df_exploded['structure_source'],
                 resrange = df_exploded['trimmed'],
                 uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
-                model = df_exploded['model'])
+                model = df_exploded['model']),
+
+        expand("{hugo_name}/interactome/"\
+               "aggregate/"\
+               "{uniprot_ac}_aggregated.csv",
+               zip,
+               hugo_name = df['protein'].str.upper(),
+               uniprot_ac = df['uniprot_ac'].str.upper())
 
 ###################### Structure selection and trimming ######################
 
@@ -731,7 +745,29 @@ rule string2pdb:
         cp  ../../../${{readme}} .
         cp  ../../../${{script}} .
         ./string2pdb {wildcards.uniprot_ac}
+        '''
 
+rule aggregate:
+    input:
+        pdbminer_output="{hugo_name}/structure_selection/pdbminer/results/{uniprot_ac}/{uniprot_ac}_all.csv",
+        pdbminer_complexes_output="{hugo_name}/structure_selection/pdbminer_complexes/{uniprot_ac}_filtered.csv",
+        string2pdb_output="{hugo_name}/interactome/string2pdb/{uniprot_ac}_string_interactors.csv",
+        mentha2pdb_output="{hugo_name}/interactome/mentha2pdb/{uniprot_ac}.csv"
+    output:
+        "{hugo_name}/interactome/aggregate/{uniprot_ac}_aggregated.csv"
+    shell:
+        '''
+        mkdir -p {wildcards.hugo_name}/interactome/aggregate/
+        readme={modules[interactome][aggregate][readme]}
+        script={modules[interactome][aggregate][script]}
+        cd {wildcards.hugo_name}/interactome/aggregate/
+        cp  ../../../${{readme}} .
+        cp  ../../../${{script}} .
+        ./aggregate \
+        -m ../../../{input.mentha2pdb_output} \
+        -s ../../../{input.string2pdb_output} \
+        -p ../../../{input.pdbminer_output} \
+        -c ../../../{input.pdbminer_complexes_output}
         '''
 
 rule hpc_atlas:
