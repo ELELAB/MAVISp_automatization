@@ -12,7 +12,7 @@ MAVISp_automatization is a Snakemake pipeline that has been designed to automate
 - retrieval and trimming of PDB models from AplphaFold ,
 - retrieval information of all available PDBs in the Protein Data Bank, 
 - filtering of mutation lists for further calculations,
-- retrieval and aggregation information about interactors through two different databases,  
+- retrieval and aggregation of interaction information through two different databases,  
 - protein phosphorylation prediction,
 - RaSP calculation,
 - classification of mutations occurring in protein sequence through different approaches,
