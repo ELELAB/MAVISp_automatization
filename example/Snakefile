@@ -412,15 +412,6 @@ rule all:
                "hpc_atlas/{hugo_name}.out",
               hugo_name = df['protein'].str.upper()),
 
-        expand("{hugo_name}/"\
-               "structure_selection/"\
-               "pdbminer/results/"\
-               "{uniprot_ac}/"\
-               "{uniprot_ac}_all.csv",
-              zip,
-              hugo_name = df['protein'].str.upper(),
-              uniprot_ac = df['uniprot_ac'].str.upper()),
-
         expand("{hugo_name}/demask/"\
                "myquery_predictions.txt",
                hugo_name = df['protein'].str.upper()),
@@ -446,20 +437,6 @@ rule all:
                research_field = df_exploded['research_field'],
                structure_source = df_exploded['structure_source'],
                model = df_exploded['model']),
-
-        expand("{hugo_name}/interactome/"\
-               "mentha2pdb/"\
-               "{uniprot_ac}.csv",
-               zip,
-               hugo_name = df['protein'].str.upper(),
-               uniprot_ac = df['uniprot_ac'].str.upper()),
-
-        expand("{hugo_name}/interactome/"\
-               "string2pdb/"\
-               "{uniprot_ac}_string_interactors.csv",
-               zip,
-               hugo_name = df['protein'].str.upper(),
-               uniprot_ac = df['uniprot_ac'].str.upper()),
 
         expand("{path}/"\
                "{research_field}/"\
@@ -492,11 +469,6 @@ rule all:
             zip,
             hugo_name=df['protein'].str.upper(),
             uniprot_ac=df['uniprot_ac'].str.upper()),
-
-        expand("{hugo_name}/structure_selection/pdbminer_complexes/{uniprot_ac}_filtered.csv",
-            zip,
-            hugo_name = df['protein'].str.upper(),
-            uniprot_ac = df['uniprot_ac'].str.upper()),
 
         expand("{hugo_name}/structure_selection/procheck/",
                zip,

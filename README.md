@@ -93,8 +93,8 @@ input:
 modules:
     interactome:
         mentha2pdb:
-            database_date: 2024-03-04
-            database_path: /data/databases/mentha-20240304
+            database_date: 2025-04-28
+            database_path: /data/databases/mentha-2025-04-28
             AF_Huri_path:  /data/databases/AF_Huri_HuMAP/summary/HuRI.csv
             AF_HuMAP_path: /data/databases/AF_Huri_HuMAP/summary/humap.csv
             AF_Huri_HuMAP_path: /data/databases/AF_Huri_HuMAP
@@ -269,7 +269,7 @@ BLM
 │   │   ├── HPC-Atlas_gene.txt → /data/databases/hpc_atlas/HPC-Atlas_gene.txt
 │   │   └── readme.txt
 │   ├── mentha2pdb
-│   │   ├── 2023-04-17 → /data/databases/mentha-20230417/2023-04-17
+│   │   ├── 2025-04-28 → /data/databases/mentha-20250428/2025-04-28
 │   │   ├── P54132.csv
 │   │   ├── inputs_afmulti
 │   │   │   └── BLM
