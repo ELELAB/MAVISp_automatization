@@ -13,6 +13,9 @@
 ./GENE_NAME/interactome/string2pdb
 ./GENE_NAME/interactome/string2pdb/string2pdb
 ./GENE_NAME/interactome/string2pdb/readme.txt
+./GENE_NAME/interactome/aggregate/
+./GENE_NAME/interactome/aggregate/aggregate
+./GENE_NAME/interactome/aggregate/readme.txt
 ./GENE_NAME/netphos
 ./GENE_NAME/netphos/readme.txt
 ./GENE_NAME/cancermuts

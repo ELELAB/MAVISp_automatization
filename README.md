@@ -7,12 +7,12 @@ Cancer Systems Biology, Health and Technology Department, Section for Bioinforma
 ## Introduction
 
 MAVISp_automatization is a Snakemake pipeline that has been designed to automate the various steps involved in the mavisp framework. With this pipeline, users are able to perform the following tasks automatically: 
-- genaration of metadata relative to each protein and the curator,
+- generation of metadata relative to each protein and the curator,
 - mutations aggregation, 
 - retrieval and trimming of PDB models from AplphaFold ,
 - retrieval information of all available PDBs in the Protein Data Bank, 
 - filtering of mutation lists for further calculations,
-- retrieval information about interactors through two different databases,  
+- retrieval and aggregation of interaction information through two different databases,  
 - protein phosphorylation prediction,
 - RaSP calculation,
 - classification of mutations occurring in protein sequence through different approaches,
@@ -93,8 +93,8 @@ input:
 modules:
     interactome:
         mentha2pdb:
-            database_date: 2024-03-04
-            database_path: /data/databases/mentha-20240304
+            database_date: 2025-04-28
+            database_path: /data/databases/mentha-20250428
             AF_Huri_path:  /data/databases/AF_Huri_HuMAP/summary/HuRI.csv
             AF_HuMAP_path: /data/databases/AF_Huri_HuMAP/summary/humap.csv
             AF_Huri_HuMAP_path: /data/databases/AF_Huri_HuMAP
@@ -186,6 +186,8 @@ The pipeline automates the following steps for each entry in the input CSV file,
 - **Retrieving interactors from the hpc-atlas database**: Interactor information collected in the hpc-atlas database is retrieved and organized into a txt file. The file is stored in the 
   "interactome/hpc_atlas" path.
 
+- **Aggregating retrieved interaction data**: Interactors that have been extracted from STRING or Mentha, along with the structures of their complexes with the target protein obtained from PDBminer or PDBMiner_coplexes tools are aggregated in a single csv file. Output is stored in "interactome/aggregate".
+
 - **Mutation classification using the Demask approach**: The uniprot fasta file, automatically retrieved by the pipeline, is provided to the Demask software to obtain a classification for 
   every possible mutation at each sequence position. The output is stored in the "demask" folder.
 
@@ -267,7 +269,7 @@ BLM
 │   │   ├── HPC-Atlas_gene.txt → /data/databases/hpc_atlas/HPC-Atlas_gene.txt
 │   │   └── readme.txt
 │   ├── mentha2pdb
-│   │   ├── 2023-04-17 → /data/databases/mentha-20230417/2023-04-17
+│   │   ├── 2025-04-28 → /data/databases/mentha-20250428/2025-04-28
 │   │   ├── P54132.csv
 │   │   ├── inputs_afmulti
 │   │   │   └── BLM
@@ -279,10 +281,13 @@ BLM
 │   │   ├── mentha2pdb.py
 │   │   ├── readme.txt
 │   │   └── target_uniprot_ac.txt
-│   └── string2pdb
-│       ├── P54132_string_interactors.csv      
+│   ├── string2pdb
+│   │   ├── P54132_string_interactors.csv      
+│   │   ├── readme.txt
+│   └── aggregate
+│       ├── P54132_aggregated.csv
 │       ├── readme.txt
-│
+│       └── aggregate
 ├── netphos
 │   ├── P54132.fasta
 │   ├── netphos.out
