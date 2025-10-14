@@ -497,6 +497,17 @@ rule all:
 ###################### Structure selection and trimming ######################
 
 rule structure_selection:
+    input:
+        mutatex_pdb=lambda w: (
+            f"{modules['mutations_aggregation']['mutatex']['repository']}/"
+            f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'research_field'].iloc[0]}/"
+            f"{w.hugo_name.lower()}/free/stability/mutatex_input_preparation/"
+            f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'structure_source'].iloc[0]}_"
+            f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'trimmed'].iloc[0][0]}/"
+            f"model_{df.loc[df['protein'].str.upper() == w.hugo_name, 'model'].iloc[0]}/"
+            f"saturation/"
+            f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'uniprot_ac'].iloc[0].upper()}.pdb"
+        )
     output:
         directory("{hugo_name}/structure_selection/original_model")
 
@@ -524,13 +535,20 @@ rule structure_selection:
 
             if not os.path.exists(str(output)):
                 os.makedirs(str(output))
+
+            # copy MutateX PDB into the working dir expected by the script
+            gene_lc = wildcards.hugo_name.lower()
+            protein_dir = f"{output}/{gene_lc}"
+            if not os.path.exists(protein_dir):
+                os.makedirs(protein_dir)
+            shell("cp {input.mutatex_pdb} {protein_dir}/{uniprot_ac}.pdb")
+
             data = {
                 "dssp_exec": dssp_exec,
                 "plddt_cutoff": 70,
                 "uniprot_ids": {
                     uniprot_ac: {
-                        "dir_name": wildcards.hugo_name.lower(),
-                        "version": "latest"
+                        "dir_name": wildcards.hugo_name.lower()
                     }
                 }
             }
@@ -541,7 +559,7 @@ rule structure_selection:
             with open(f"{output}/config_alphafolddb.yaml", "w") as f:
                 yaml.dump(data, f)
 
-            # run alphafold module
+            # run alphafold module (script now reads local PDB and does not download)
 
             readme=modules['structure_selection']['alphafold']['readme']
             script=modules['structure_selection']['alphafold']['script']
@@ -553,7 +571,6 @@ rule structure_selection:
             structure_folder = f'{output}/{wildcards.hugo_name.lower()}'
             shell("mkdir -p {structure_folder}")
             shell("cp {pdb} {structure_folder}")
-
 
 rule trim_model:
     input:
