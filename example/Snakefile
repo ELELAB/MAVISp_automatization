@@ -251,12 +251,15 @@ modules.update({"saturation_mutlist_generation":{"py":saturation_mutlist_py,
 
 #--------------------------- Protein annotations ---------------------------#
 
-domains_script = f"mavisp_templates/GENE_NAME/"\
-                 f"structure_selection/domain_annotations/get_domains.py"
+domains_script     = f"mavisp_templates/GENE_NAME/"\
+                     f"structure_selection/domain_annotations/get_domains.py"
+domains_script_ted = f"mavisp_templates/GENE_NAME/"\
+                     f"structure_selection/domain_annotations/ted_api.py"
 domains_readme = f"mavisp_templates/GENE_NAME/"\
                  f"structure_selection/domain_annotations/readme.txt"
 
 modules.update({"domain_annotations":{"script":domains_script,
+                                      "script_ted":domains_script_ted,
                                       "readme":domains_readme}})
 
 netphos_readme = f"mavisp_templates/GENE_NAME/"\
@@ -400,6 +403,13 @@ rule all:
         expand("{hugo_name}/structure_selection/"\
                "domain_annotations/"\
                "domains_mutlist.csv",
+                zip,
+                hugo_name = df['protein'].str.upper(),
+                structure_source = df['structure_source']),
+
+        expand("{hugo_name}/structure_selection/"\
+               "domain_annotations/"\
+               "results.csv",
                 zip,
                 hugo_name = df['protein'].str.upper(),
                 structure_source = df['structure_source']),
@@ -1094,10 +1104,12 @@ rule domains:
     input:
         directory("{hugo_name}/cancermuts/")
     output:
-        "{hugo_name}/structure_selection/domain_annotations/"\
+        "{hugo_name}/structure_selection/domain_annotations/"
         "domains_mutlist.csv",
-	"{hugo_name}/structure_selection/domain_annotations/"\
-        "summary.csv"
+	"{hugo_name}/structure_selection/domain_annotations/"
+        "summary.csv",
+        "{hugo_name}/structure_selection/domain_annotations/"
+        "results.csv"
     run:
         uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
                                                 'uniprot_ac'].iloc[0]
@@ -1106,22 +1118,23 @@ rule domains:
         # date obtained in the mutlist rule
         mutlist = ""
         pattern = "mutlist_\d{8}\.txt"
-        script  = modules['domain_annotations']['script']
-        readme  = modules['domain_annotations']['readme']
+        script      = modules['domain_annotations']['script']
+        script_ted  = modules['domain_annotations']['script_ted']
+        readme      = modules['domain_annotations']['readme']
         for filename in os.listdir(str(input)):
             if re.match(pattern,filename):
                 mutlist = filename
 
         # run the script for the domain module
 
-        shell("mkdir -p {wildcards.hugo_name}/structure_selection/"\
-                        "domain_annotations/ &&"\
-                " cd {wildcards.hugo_name}/structure_selection/"\
-                "domain_annotations/ && "\
-                " cp ../../../{script} . &&"\
-                " cp ../../../{readme} . &&"\
-                " ln -snf ../../cancermuts/{mutlist} mutlist.txt &&"\
-                " python ../../../{script} -u {uniprot_ac} -m mutlist.txt")
+        shell("""mkdir -p {wildcards.hugo_name}/structure_selection/domain_annotations/ 
+                cd {wildcards.hugo_name}/structure_selection/domain_annotations/
+                cp ../../../{script} .
+                cp ../../../{script_ted} .
+                cp ../../../{readme} .
+                ln -snf ../../cancermuts/{mutlist} mutlist.txt
+                python ../../../{script} -u {uniprot_ac} -m mutlist.txt
+                python ../../../{script_ted} -id {uniprot_ac}""")
 
 rule netphos:
      output:
