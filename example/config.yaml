@@ -5,8 +5,8 @@ modules:
         mentha2pdb:
             database_date: 2025-04-28
             database_path: /data/databases/mentha-20250428
-            AF_Huri_path:  /data/databases/AF_Huri_HuMAP/summary/HuRI.csv
-            AF_HuMAP_path: /data/databases/AF_Huri_HuMAP/summary/humap.csv
+            AF_Huri_path: /data/databases/AF_Huri_HuMAP/summary/huri_upac.csv
+            AF_HuMAP_path: /data/databases/AF_Huri_HuMAP/summary/humap_upac.csv
             AF_Huri_HuMAP_path: /data/databases/AF_Huri_HuMAP
         hpc_atlas:
             database_path: /data/databases/hpc_atlas/HPC-Atlas_gene.txt
