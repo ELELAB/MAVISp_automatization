@@ -726,7 +726,7 @@ rule string2pdb:
         cd {wildcards.hugo_name}/interactome/string2pdb/
         cp  ../../../${{readme}} .
         cp  ../../../${{script}} .
-        ./string2pdb {wildcards.uniprot_ac}
+        ./string2pdb -a {wildcards.uniprot_ac}
         '''
 
 rule aggregate:
