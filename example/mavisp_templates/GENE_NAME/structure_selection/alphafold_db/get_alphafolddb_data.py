@@ -34,11 +34,6 @@ def get_dssp_dataframe(pdb_file, dssp_location):
         ss = dssp[residue][2]
         ss_list.append("-" if ss == "P" else ss)
     
-    #repare "P" with "-": 
-    for i in range(len(ss_list)):
-        if ss_list[i] == "P":
-            ss_list[i] = "-"
-            
     #create df:
     df = pd.DataFrame({"chain":chain_list,"resnum":pos_list,"secstruc":ss_list})
     

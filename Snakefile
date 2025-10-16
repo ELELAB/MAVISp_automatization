@@ -1380,7 +1380,6 @@ rule alphamissense:
         """
 
 ############################## Calculations #################################
-'''
 rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/original_model/",
@@ -1484,7 +1483,6 @@ rule rosetta_relax:
                         -r {params.rosetta_module}\
                         -cs {params.mpi}
         """
-'''
 '''
         expand("{hugo_name}/long_range/"\
                "allosigma2/"\
