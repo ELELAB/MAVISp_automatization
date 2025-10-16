@@ -30,8 +30,9 @@ def get_dssp_dataframe(pdb_file, dssp_location):
     #get secondary structure for each residue
     for residue in list(dssp.keys()):
         chain_list.append(residue[0])
-        pos_list.append(dssp[residue][0])
-        ss_list.append(dssp[residue][2])
+        pos_list.append(residue[1][1])
+        ss = dssp[residue][2]
+        ss_list.append("-" if ss == "P" else ss)
     
     #repare "P" with "-": 
     for i in range(len(ss_list)):

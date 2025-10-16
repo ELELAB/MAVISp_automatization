@@ -400,6 +400,10 @@ rule all:
                 hugo_name = df['protein'].str.upper(),
                 structure_source = df['structure_source']),
 
+        expand("{hugo_name}/structure_selection/aggregated/{uniprot_ac}.csv",
+               hugo_name = df['protein'].str.upper(),
+               uniprot_ac= df['uniprot_ac'].str.upper()),
+
         expand("{hugo_name}/structure_selection/"\
                "domain_annotations/"\
                "domains_mutlist.csv",
@@ -430,12 +434,6 @@ rule all:
                "am.tsv.gz",
                hugo_name = df['protein'].str.upper()),
 
-        expand("{hugo_name}/"\
-               "structure_selection/"\
-               "trimmed_model/",
-               zip,
-               hugo_name = df['protein'].str.upper(),
-               structure_source = df['structure_source']),
 
         expand("{path}/"\
                "{research_field}/"\
@@ -508,120 +506,151 @@ rule all:
 
 rule structure_selection:
     input:
-        mutatex_pdb=lambda w: (
-            f"{modules['mutations_aggregation']['mutatex']['repository']}/"
-            f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'research_field'].iloc[0]}/"
-            f"{w.hugo_name.lower()}/free/stability/mutatex_input_preparation/"
-            f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'structure_source'].iloc[0]}_"
-            f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'trimmed'].iloc[0][0]}/"
-            f"model_{df.loc[df['protein'].str.upper() == w.hugo_name, 'model'].iloc[0]}/"
-            f"saturation/"
-            f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'uniprot_ac'].iloc[0].upper()}.pdb"
+        mutatex_trimmed=lambda w: (
+            [
+                f"{modules['mutations_aggregation']['mutatex']['repository']}/"
+                f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'research_field'].iloc[0]}/"
+                f"{w.hugo_name.lower()}/free/stability/mutatex_input_preparation/"
+                f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'structure_source'].iloc[0]}_{res}/"
+                f"model_{df.loc[df['protein'].str.upper() == w.hugo_name, 'model'].iloc[0]}/"
+                f"saturation/"
+                f"{df.loc[df['protein'].str.upper() == w.hugo_name, 'uniprot_ac'].iloc[0].upper()}_trimmed.pdb"
+                for res in (
+                    df.loc[df['protein'].str.upper() == w.hugo_name, 'trimmed'].iloc[0]
+                    if isinstance(df.loc[df['protein'].str.upper() == w.hugo_name, 'trimmed'].iloc[0], (list, tuple))
+                    else [df.loc[df['protein'].str.upper() == w.hugo_name, 'trimmed'].iloc[0]]
+                )
+            ]
+            if pd.isna(df.loc[df['protein'].str.upper() == w.hugo_name, 'input_pdb'].iloc[0])
+            else []
         )
     output:
         directory("{hugo_name}/structure_selection/original_model")
 
     run:
-        # Validate that structure_source is one of the allowed keys
-
+        # ---------------- Validation ---------------- #
         allowed_sources = {"AFDB", "AF3", "AF2", "PDB", "Mod"}
         src = df.loc[df["protein"] == wildcards.hugo_name, "structure_source"].iloc[0]
         if src not in allowed_sources:
-            raise ValueError(f"Invalid structure_source '{src}' for gene {wildcards.hugo_name}. "
-                             f"Allowed values are: {allowed_sources!r}")
+            raise ValueError(
+                f"Invalid structure_source '{src}' for gene {wildcards.hugo_name}. "
+                f"Allowed values are: {allowed_sources!r}"
+            )
 
-        # Decide between “use an existing PDB file” vs. “run AlphaFold fetch”
-        pdb = df.loc[
-            (df['protein'] == wildcards.hugo_name),
-            'input_pdb'].iloc[0]
+        # ---------------- Basic vars ---------------- #
+        gene_lc    = wildcards.hugo_name.lower()
+        uniprot_ac = df.loc[df["protein"] == wildcards.hugo_name, "uniprot_ac"].iloc[0].upper()
+        rf         = df.loc[df["protein"] == wildcards.hugo_name, "research_field"].iloc[0]
+        ss         = df.loc[df["protein"] == wildcards.hugo_name, "structure_source"].iloc[0]
+        model      = df.loc[df["protein"] == wildcards.hugo_name, "model"].iloc[0]
+        dssp_exec  = modules['structure_selection']['alphafold']['dssp_exec']
+        pdb_external = df.loc[(df['protein'] == wildcards.hugo_name), 'input_pdb'].iloc[0]
 
-        if pd.isna(pdb):
+        # resranges list
+        trimmed_col  = df.loc[df['protein'] == wildcards.hugo_name, 'trimmed'].iloc[0]
+        trimmed_list = trimmed_col if isinstance(trimmed_col, (list, tuple)) else [trimmed_col]
 
-            uniprot_ac = df.loc[df["protein"] == wildcards.hugo_name,
-                                                "uniprot_ac"].iloc[0]
-            dssp_exec=modules['structure_selection']['alphafold']['dssp_exec']
+        # ---------------- Layout roots ---------------- #
+        root_dir = f"{output}"  
+        shell("mkdir -p {root_dir}")
 
-            # Alphafold: Create the config.yaml file for the analysis
+        # scripts in root_dir 
+        readme = modules['structure_selection']['alphafold']['readme']
+        script = modules['structure_selection']['alphafold']['script']
+        shell("cd {root_dir} && cp -f ../../../{readme} . && cp -f ../../../{script} .")
 
-            if not os.path.exists(str(output)):
-                os.makedirs(str(output))
+        script_trim = modules['structure_selection']['trimmed_models']['script']
+        readme_trim = modules['structure_selection']['trimmed_models']['readme']
+        shell("cp -f {script_trim} {root_dir}/filter_pdb.py && cp -f {readme_trim} {root_dir}/readme.txt")
 
-            # copy MutateX PDB into the working dir expected by the script
-            gene_lc = wildcards.hugo_name.lower()
-            protein_dir = f"{output}/{gene_lc}"
-            if not os.path.exists(protein_dir):
-                os.makedirs(protein_dir)
-            shell("cp {input.mutatex_pdb} {protein_dir}/{uniprot_ac}.pdb")
+        # ---------------- Per-resrange processing ---------------- #
+        for resrange in trimmed_list:
+            work_dir = f"{root_dir}/{gene_lc}_{resrange}"
+            gene_dir = f"{work_dir}/{gene_lc}"          
+            shell("mkdir -p {gene_dir}")
 
-            data = {
+            if pd.isna(pdb_external):
+                # Use MutateX pre-trimmed PDB for this region
+                mutatex_trimmed = (
+                    f"{modules['mutations_aggregation']['mutatex']['repository']}/"
+                    f"{rf}/{gene_lc}/free/stability/mutatex_input_preparation/"
+                    f"{ss}_{resrange}/model_{model}/saturation/{uniprot_ac}_trimmed.pdb"
+                )
+                if not os.path.exists(mutatex_trimmed):
+                    raise FileNotFoundError(
+                        f"Missing MutateX trimmed PDB for {wildcards.hugo_name} {resrange}: {mutatex_trimmed}"
+                    )
+                # Stage for script under <WD>/<gene_lc>/<UNIPROT>.pdb
+                shell("cp {mutatex_trimmed} {gene_dir}/{uniprot_ac}.pdb")
+                # Also drop the region PDB in original_model root for your layout
+                shell("cp {mutatex_trimmed} {root_dir}/{uniprot_ac}_{resrange}.pdb")
+            else:
+                # External PDB → trim to this region, stage for script, and copy region PDB to root_dir
+                start, end = str(resrange).split("-")
+                shell("cp {pdb_external} {gene_dir}/{uniprot_ac}.pdb && "
+                      "python {script_trim} {gene_dir}/{uniprot_ac}.pdb A {start} {end} "
+                      "{work_dir}/{uniprot_ac}_{resrange}.pdb && "
+                      "cp {work_dir}/{uniprot_ac}_{resrange}.pdb {root_dir}/{uniprot_ac}_{resrange}.pdb && "
+                      "mv {work_dir}/{uniprot_ac}_{resrange}.pdb {gene_dir}/{uniprot_ac}.pdb")
+
+            # Per-region config; script reads <WD>/<gene_lc>/<UNIPROT>.pdb
+            cfg = {
                 "dssp_exec": dssp_exec,
                 "plddt_cutoff": 70,
-                "uniprot_ids": {
-                    uniprot_ac: {
-                        "dir_name": wildcards.hugo_name.lower()
-                    }
-                }
+                "uniprot_ids": { uniprot_ac: { "dir_name": gene_lc } }
             }
+            with open(f"{work_dir}/config_alphafolddb.yaml", "w") as f:
+                yaml.safe_dump(cfg, f)
 
-            # Specify the output YAML file path
-            file_path = "output.yaml"
+            # Run analysis in this resrange WD
+            shell("cd {work_dir} && python ../get_alphafolddb_data.py -c config_alphafolddb.yaml")
 
-            with open(f"{output}/config_alphafolddb.yaml", "w") as f:
-                yaml.dump(data, f)
+            # Keep per-region CSV in original_model root for aggregation
+            shell("cp {gene_dir}/{uniprot_ac}.csv {root_dir}/{uniprot_ac}_{resrange}.csv")
 
-            # run alphafold module (script now reads local PDB and does not download)
 
-            readme=modules['structure_selection']['alphafold']['readme']
-            script=modules['structure_selection']['alphafold']['script']
-            shell("cd {output} && "
-                "cp ../../../{readme} . && "
-                "cp ../../../{script} . && "
-                "python get_alphafolddb_data.py -c config_alphafolddb.yaml")
-        else:
-            structure_folder = f'{output}/{wildcards.hugo_name.lower()}'
-            shell("mkdir -p {structure_folder}")
-            shell("cp {pdb} {structure_folder}")
-
-rule trim_model:
+rule aggregate_structure_selection_csvs:
     input:
-        "{hugo_name}/structure_selection/original_model"
+        directory("{hugo_name}/structure_selection/original_model")
     output:
-        directory("{hugo_name}/structure_selection/trimmed_model")
+        "{hugo_name}/structure_selection/aggregated/{uniprot_ac}.csv"
     run:
 
-        # list with all the residue ranges specified in the input file
-        trimmed_pdb_list=df.loc[df['protein'] == wildcards.hugo_name,\
-                                                'trimmed'].iloc[0]
+        root_dir = input[0]  
+        agg_dir  = os.path.dirname(output[0])
+        os.makedirs(agg_dir, exist_ok=True)
 
-        uniprot_ac  = df.loc[df['protein'] == wildcards.hugo_name,\
-                                                'uniprot_ac'].iloc[0]
-        input_files = f'{input}/{wildcards.hugo_name.lower()}' # path of the pdb files
+        # collect *all* csv files in the input directory
+        all_csvs = sorted(glob.glob(os.path.join(root_dir, "*.csv")))
+        if not all_csvs:
+            raise FileNotFoundError(f"No CSV files found under {root_dir}")
 
-        # list containing all the files in the folder
-        files = os.listdir(input_files)
+        expected_cols = ["chain", "resnum", "resname", "pLDDT", "secstruc"]
+        dfs = []
 
-        # keep only the pdb file
-        file_pdb_list = [f for f in files if f.endswith(".pdb")]
+        for f in all_csvs:
+            try:
+                df_i = pd.read_csv(f)
+            except Exception:
+                continue  
 
-        # for every range specified in the input file create
-        # the corresponding trimmed pdb file
+            if set(df_i.columns) >= set(expected_cols):
+                # select/reshape to exact column order
+                df_i = df_i[expected_cols]
+                dfs.append(df_i)
 
-        script=modules['structure_selection']['trimmed_models']['script']
-        readme=modules['structure_selection']['trimmed_models']['readme']
-        for i in trimmed_pdb_list:
-            number_list = i.split("-")
-            start = number_list[0]
-            end = number_list[1]
-            trimmed_pdb = f'{uniprot_ac}_{start}-{end}.pdb'
-            shell("mkdir -p {output} &&"\
-                  " python {script}"\
-                      " {input_files}/{file_pdb_list[0]}"
-                      " A"\
-                      " {start}"\
-                      " {end}"\
-                      " {wildcards.hugo_name}/structure_selection/"\
-                      "trimmed_model/{trimmed_pdb} && "\
-                      "cp {script} {readme} {output} ")
+        if not dfs:
+            raise ValueError(f"No CSVs with expected columns {expected_cols} found in {root_dir}")
+
+        out_df = pd.concat(dfs, ignore_index=True)
+
+        if "chain" in out_df.columns and "resnum" in out_df.columns:
+            out_df = out_df.sort_values(by=["chain", "resnum"], kind="mergesort")
+
+        # ensure exact column order
+        out_df = out_df[expected_cols]
+
+        out_df.to_csv(output[0], index=False)
 
 rule pdbminer:
     output:
@@ -662,7 +691,7 @@ rule pdbminer_complexes:
 
 rule procheck:
     input:
-        trimmed_pdb_dir="{hugo_name}/structure_selection/trimmed_model/"  # The directory containing the PDB files
+        trimmed_pdb_dir="{hugo_name}/structure_selection/original_model/"  # The directory containing the PDB files
     output:
         directory("{hugo_name}/structure_selection/procheck/")  # The directory for the output .sum files
     params:
@@ -1024,7 +1053,7 @@ rule cancermuts:
 
 rule mutlist:
     input:
-        "{hugo_name}/structure_selection/trimmed_model/",
+        "{hugo_name}/structure_selection/original_model/",
         f"{modules['mutations_aggregation']['cancermuts']['folder_name']}"+
         "{hugo_name}"+"/metatable_pancancer_{hugo_name}.csv"
     output:
@@ -1060,7 +1089,7 @@ rule mutlist:
 
         # path with the trimmed models
         trimmed_pdb_path = f"../structure_selection/"\
-                            f"trimmed_model/"
+                            f"original_model/"
         script = modules['mutlist_generation']['script']
         readme = modules['mutlist_generation']['readme']
         metatable = os.path.abspath(input[1])
@@ -1351,9 +1380,10 @@ rule alphamissense:
         """
 
 ############################## Calculations #################################
+'''
 rule rasp_workflow:
     input:
-        lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/trimmed_model/",
+        lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/original_model/",
     output:
         directory("{path}{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/")
     shell:
@@ -1428,7 +1458,7 @@ rule rasp_workflow:
         """
 rule rosetta_relax:
     input:
-        "{hugo_name}/structure_selection/trimmed_model/"
+        "{hugo_name}/structure_selection/original_model/"
     output:
         "{path}/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/"\
         "ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb"
@@ -1454,6 +1484,7 @@ rule rosetta_relax:
                         -r {params.rosetta_module}\
                         -cs {params.mpi}
         """
+'''
 '''
         expand("{hugo_name}/long_range/"\
                "allosigma2/"\
@@ -1545,7 +1576,7 @@ rule allosigma_2_3:
 
 rule allosigma4:
     input:
-        directory("{hugo_name}/structure_selection/trimmed_model/"),
+        directory("{hugo_name}/structure_selection/original_model/"),
         "{hugo_name}/long_range/allosigma2/{uniprot_ac}_{resrange}/"\
         "3.allosigma_heatmap/all/up_mutations.tsv",
         "{hugo_name}/long_range/allosigma2/{uniprot_ac}_{resrange}/"\
@@ -1677,7 +1708,7 @@ rule collect_outputs:
             f"saturation/{wcs.uniprot_ac}_table/energies.csv"
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
         pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
-        alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/",
+        alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/aggregated/{wcs.uniprot_ac}.csv",
         metadata = lambda wcs: f"{wcs.hugo_name}/metadata/metadata.yaml"
     output:
         temp("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done")
@@ -1763,8 +1794,7 @@ rule collect_outputs:
         shutil.copy(input.pfam, pf_dir / "summary.csv")
 
         # 12) alphafold
-        af_src_dir = Path(input.alphafold) / wildcards.hugo_name.lower()
-        af_csv     = af_src_dir / f"{wildcards.uniprot_ac}.csv"
+        af_csv = Path(input.alphafold) 
         if af_csv.is_file():
                 af_dir = out / "alphafold"
                 af_dir.mkdir(parents=True, exist_ok=True)
