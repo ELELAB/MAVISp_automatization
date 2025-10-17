@@ -12,5 +12,3 @@ uniprot_ids:
     # Name of the directory (created in the current
     # working directory) where to save the data
     dir_name: "pole"
-    # Version of the AlphaFoldDB structure, use "latest" or int of version
-    version: "latest"

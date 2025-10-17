@@ -9,9 +9,8 @@ from Bio.PDB import PDBParser
 from Bio.PDB.DSSP import DSSP
 
 import pandas as pd
-import requests
 import yaml
-import json
+
 
 def get_dssp_dataframe(pdb_file, dssp_location):
     
@@ -44,62 +43,6 @@ def get_dssp_dataframe(pdb_file, dssp_location):
     
     return df
 
-def get_alphafold_data(uniprot_id,
-                       out_pdb_file,
-                       out_pae_file,
-                       version,
-                       protein_dir):
-    """Given a UniProt ID, download data associated with it
-    in the AlphaFold database.
-    """
-
-    if isinstance(version, int):
-
-    # Generic URL address where AlphaFold PDB models are stored
-        ALPHAFOLD_PDB_URL = \
-            "https://alphafold.ebi.ac.uk/files/AF-{:s}-F1-model_v{:d}.pdb"
-
-        # Generic URL address where AlphaFold predicted aligned error
-        # files are stored
-        ALPHAFOLD_PAE_URL = \
-            "https://alphafold.ebi.ac.uk/files/" \
-            "AF-{:s}-F1-predicted_aligned_error_v{:d}.json"
-
-        # Get the data
-        data_pdb = \
-            requests.get(\
-                ALPHAFOLD_PDB_URL.format(\
-                    uniprot_id, version)).text
-        data_pae = \
-            requests.get(ALPHAFOLD_PAE_URL.format(\
-                    uniprot_id, version)).text
-
-        with open(f"{protein_dir}/{uniprot_id}.yaml", "w") as f:
-            f.write(f"AlphaFold Model: {ALPHAFOLD_PDB_URL.format(uniprot_id, version).split('/')[-1][:-4]}\n" \
-                    f"    version: {version} \n")
-
-    elif version == "latest":
-        ALPHAFOLD_data = requests.get(f"https://alphafold.ebi.ac.uk/api/prediction/{uniprot_id}")
-        ALPHAFOLD_data = json.loads(ALPHAFOLD_data.text)[0]
-
-        with open(f"{protein_dir}/{uniprot_id}.yaml", "w") as f:
-            f.write(f"AlphaFold Model: {ALPHAFOLD_data['pdbUrl'].split('/')[-1][:-4]}\n" \
-                    f"    version: {ALPHAFOLD_data['latestVersion']} \n")
-
-        ALPHAFOLD_PDB_URL = ALPHAFOLD_data['pdbUrl']
-        ALPHAFOLD_PAE_URL = ALPHAFOLD_data['paeDocUrl']
-
-        # Get the data
-        data_pdb = \
-            requests.get(ALPHAFOLD_PDB_URL.format(uniprot_id)).text
-        data_pae = \
-            requests.get(ALPHAFOLD_PAE_URL.format(uniprot_id)).text
-
-    # Write the data to a PDB and a JSON file
-    with open(out_pdb_file, "w") as out_pdb, \
-         open(out_pae_file, "w") as out_pae:
-        out_pdb.write(data_pdb)
-        out_pae.write(data_pae)
 
 def get_plddt_per_residue(pdb_file):
     """Get per-residue pLDDT scores from the AlphaFold PDB file.
@@ -140,6 +83,7 @@ def get_plddt_per_residue(pdb_file):
 
     # Create a data frame with the per-residue data and return it
     return pd.DataFrame(data)
+
 
 def get_regions_by_plddt(plddt_df, plddt_cutoff):
     """Separate the protein regions having a pLDDT score greater than
@@ -199,7 +143,7 @@ def main(config,
     for uniprot_id, protein_data in config["uniprot_ids"].items():
 
 
-        #----------------------- AlphaFold DB ------------------------#
+        #----------------------- Local PDB ------------------------#
 
 
         # Create the directory to store the data
@@ -209,14 +153,14 @@ def main(config,
         protein_dir = os.path.join(wd, protein_dir_name)
         os.makedirs(protein_dir, exist_ok = True)
 
-        # Download the AlphaFold data into the directory
+        # Expect a local PDB placed beforehand at <wd>/<dir_name>/<uniprot_id>.pdb
         out_pdb_file = os.path.join(protein_dir, f"{uniprot_id}.pdb")
-        out_pae_file = os.path.join(protein_dir, f"{uniprot_id}.json")
-        get_alphafold_data(uniprot_id = uniprot_id,
-                           out_pdb_file = out_pdb_file,
-                           out_pae_file = out_pae_file,
-                           version = protein_data["version"],
-                           protein_dir = protein_dir)
+
+        if not os.path.exists(out_pdb_file):
+            raise FileNotFoundError(
+                f"Expected local PDB not found: {out_pdb_file}\n"
+                f"Place a file named {uniprot_id}.pdb in {protein_dir} before running."
+            )
 
 
         #--------------------------- DSSP ----------------------------#
