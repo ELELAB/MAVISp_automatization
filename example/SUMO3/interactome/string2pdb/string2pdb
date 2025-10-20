@@ -22,6 +22,8 @@ import pandas as pd
 from io import StringIO
 import re
 import os
+from pathlib import Path
+import time
 
 def string2uniprot(stringid, alias_df):
     """ 
@@ -205,7 +207,116 @@ def get_experiment_details(common_pdb_ids):
 
     return experiment_details
 
+def make_request(url, mode, pdb_id):
+    """
+    This function can make GET and POST requests to
+    the PDBe API
 
+    :param url: String,
+    :param mode: String,
+    :param pdb_id: String
+    :return: JSON or None
+    """
+    if mode == "get":
+        time.sleep(0.01)
+        response = requests.get(url=url + pdb_id)
+    elif mode == "post":
+        time.sleep(0.01)
+        response = requests.post(url, data=pdb_id)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("NA from ", url, " for pdb ", pdb_id)
+
+    return None
+    
+def make_target_interactor_sequence_files(dataframe_out):
+
+    # get target list so we cover -x option (splitted outs) and normal (with all the targets in the same dataframe
+    target_list = list(dict.fromkeys(dataframe_out['Target_Uniprot_AC'].tolist()))
+
+    Path("inputs_afmulti").mkdir(parents=True, exist_ok=True)
+
+    url = 'https://rest.uniprot.org/uniref/search?query=uniprot_id:'
+
+    for target in target_list:
+        print('>>Making folders/files for target {}                   '.format(target))
+
+        # filter dataframe
+        target_data = dataframe_out[(dataframe_out['Target_Uniprot_AC'] == target)]
+        interactor_uniprot_ids = target_data['Interactor_UniProt_AC'].to_list()
+        interactor_genes = target_data['Interactor'].to_list()
+
+        # get first gene value -> same target = all the same
+        target_uniprot_gene = target_data['Target_protein'].values[0]
+
+        # get target sequence
+        result = make_request(url, 'get', target)
+
+        target_sequence = ''
+
+        #CHOSE RIGHT RESULT : Homo sapiens (Human) in organism name and target in id
+        for res in result['results']:
+            if target in res['id'] and res['representativeMember']['organismName'] == 'Homo sapiens (Human)':
+                target_sequence = res['representativeMember']['sequence']['value']
+                break
+            else:
+                # print(f"result discarded cause {target} not in {res['id']} \n\t "
+                #       f"or \n\t {res['representativeMember']['organismName']} is not Homo sapiens (Human)")
+                pass
+
+        # fix for uniprot genes of type U2AF1L5 {ECO:0000312|HGNC:HGNC:51830} -> error creating folder
+        # covering no space case U2AF1L5{ECO:0000312|HGNC:HGNC:51830} and space case U2AF1L5 {ECO:0000312|HGNC:HGNC:51830}
+        if ' ' in target_uniprot_gene:
+            target_uniprot_gene = target_uniprot_gene.split(' ')[0].rstrip()
+        if '{' in target_uniprot_gene:
+            target_uniprot_gene = target_uniprot_gene.split('{')[0].rstrip()
+
+        # make dir for target
+        Path("inputs_afmulti/" + target_uniprot_gene).mkdir(parents=True, exist_ok=True)
+
+        for interactor_id, interactor_gene in zip(interactor_uniprot_ids, interactor_genes):
+            # for every interactor make request make dir and then build file
+            result = make_request(url, 'get', interactor_id)
+            interactor_sequence = ''
+            if result['results'] != []:
+                ##########CHOSE RIGHT RESULT : Homo sapiens (Human) in organism name and target in id
+                interactor_sequence = ''
+                for res in result['results']:
+                    if interactor_id in res['id'] and res['representativeMember']['organismName'] == 'Homo sapiens (Human)':
+                        interactor_sequence = res['representativeMember']['sequence']['value']
+                        break
+                    else:
+                        # print(f"result discarded cause "
+                        #       f"{interactor_id} not in {res['id']} \n\t "
+                        #       f"or \n\t "
+                        #       f"{res['representativeMember']['organismName']} is not Homo sapiens (Human)")
+                        pass
+            else:
+                print('***INTERACTOR {} of target {} returned NO results, skipping folder/sequence creation'.format(
+                    interactor_id, target))
+                continue
+
+            if ' ' in interactor_gene:
+                interactor_gene = interactor_gene.split(' ')[0].rstrip()
+            if '{' in interactor_gene:
+                interactor_gene = interactor_gene.split('{')[0].rstrip()
+
+            # make dir for interactor
+            Path("inputs_afmulti/" + target_uniprot_gene + '/' + interactor_gene).mkdir(parents=True, exist_ok=True)
+
+            print('>>Made folder {}                     '.format(
+                "inputs_afmulti/" + target_uniprot_gene + '/' + interactor_gene), end='\r')
+
+            with open("inputs_afmulti/" + target_uniprot_gene + '/' + interactor_gene + '/input.fasta',
+                      'w+') as alpha_file:
+                alpha_file.write('>' + target_uniprot_gene + '\n')
+                alpha_file.write(target_sequence + '\n')
+                alpha_file.write('>' + interactor_gene + '\n')
+                alpha_file.write(interactor_sequence + '\n')
+
+    return 0
 
 def main():
     parser = argparse.ArgumentParser(
@@ -236,6 +347,12 @@ def main():
         default="physical",
         choices=["functional", "physical"],
         help="STRING network type to be used: 'physical' for physical interactions, 'functional' for all interactions (default: 'physical')."
+    )
+    parser.add_argument(
+        "-a", 
+        "--afmulti",
+        action="store_true",
+        help="option to have inputs_afmulti folder with subfolders and input.fasta files"
     )
 
     args = parser.parse_args()
@@ -361,18 +478,30 @@ def main():
         interactors['Experiment_Type'] = None
         interactors['Resolution'] = None
                 
+        interactors = interactors.rename(columns={
+            'preferredName_A': 'Target_protein',
+            'stringId_A': 'StringID_Target',
+            'preferredName_B': 'Interactor',
+            'stringId_B': 'StringID_Interactor',
+            'score': 'String_score',
+            'escore': 'Experimental_score',
+            'dscore': 'Database_score',
+            'tscore': 'Textmining_score'
+        })
+
         # Sort the DataFrame: 
         interactors = interactors.sort_values(
-            by=['score','Interactor_UniProt_AC'],  
+            by=['String_score','Interactor_UniProt_AC'],  
             ascending=[False, True]  
         )
 
         # Output CSV file:
         output_file = f"{args.identifier}_string_interactors.csv"
-        interactors.to_csv(output_file, index=False, header=['Target_protein','Target_Uniprot_AC', 'StringID_Target', 'Interactor', 'Interactor_UniProt_AC', 'StringID_Interactor',
-                                                         'String_score', 'Experimental_score', 'Database_score', 
-                                                         'Textmining_score', 'PDB_ID','Experiment_Type','Resolution'])
+        interactors.to_csv(output_file, index=False)
         print(f"Results saved to {output_file}")
+
+        if args.afmulti:
+            make_target_interactor_sequence_files(interactors)
 
     else:
         pdb_columns = []
@@ -408,10 +537,6 @@ def main():
 
         # Save the results to CSV file:
         output_file = f"{args.identifier}_string_interactors.csv"
-        pd.DataFrame(pdb_columns).to_csv(output_file, index=False)
-
-        # Save the results to CSV file:
-        output_file = f"{args.identifier}_string_interactors.csv"
 
         # Sort the DataFrame: descending by String_score, then alphabetically by Interactor_UniProt_AC and PDB_ID:
         sorted_df = pd.DataFrame(pdb_columns).sort_values(
@@ -420,8 +545,10 @@ def main():
         )
 
         sorted_df.to_csv(output_file, index=False)
-
         print(f"Results saved to {output_file}")
+
+        if args.afmulti:
+            make_target_interactor_sequence_files(sorted_df)
 
 if __name__ == "__main__":
     main()

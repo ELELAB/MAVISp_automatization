@@ -6,7 +6,7 @@
     A    /A0038-LYS O   A    /A0040-ARG N    3.2 MM   2 6.1     6
     A    /A0039-GLN O   A    /A0040-ARG C    3.1 MM   1 3.8     7
     A    /A0039-GLN O   A    /A0041-ARG N    3.2 MM   2 6.1     8
-    A    /A0039-GLN NE2 A    /A0042-GLU OE2  3.3 SS   3 8.7     9
+    A    /A0039-GLN NE2 A    /A0042-GLU OE1  3.3 SS   3 8.7     9
     A    /A0040-ARG O   A    /A0041-ARG C    2.9 MM   1 3.9    10
     A    /A0040-ARG O   A    /A0042-GLU N    3.4 MM   2 6.3    11
     A    /A0041-ARG O   A    /A0042-GLU C    2.9 MM   1 3.8    12
@@ -25,8 +25,8 @@
     A    /A0046-PHE C   A    /A0047-THR O    3.2 MM   1 3.8    25
     A    /A0046-PHE CA  A    /A0050-GLN OE1  3.3 MS   4 6.0    26
     A    /A0046-PHE CB  A    /A0051-LEU CD2  3.7 SS   5 6.4    27
-    A    /A0046-PHE CD2 A    /A0054-LEU CD1  3.8 SS   8 9.9    28
-    A    /A0046-PHE CE2 A    /A0078-LEU CD1  3.4 SS  32 9.1    29
+    A    /A0046-PHE CD1 A    /A0054-LEU CD1  3.8 SS   8 9.9    28
+    A    /A0046-PHE CE1 A    /A0078-LEU CD1  3.4 SS  32 9.1    29
     A    /A0046-PHE CZ  A    /A0086-TRP CD1  3.7 SS  40 9.7    30
     A    /A0047-THR O   A    /A0048-ARG C    2.9 MM   1 3.9    31
     A    /A0047-THR C   A    /A0049-SER N    3.4 MM   2 5.6    32
@@ -35,7 +35,7 @@
     A    /A0048-ARG O   A    /A0049-SER C    3.1 MM   1 3.9    35
     A    /A0048-ARG C   A    /A0050-GLN N    3.3 MM   2 5.5    36
     A    /A0048-ARG O   A    /A0051-LEU N    3.1 MM   3 5.2    37
-    A    /A0048-ARG NE  A    /A0052-GLU OE2  2.7 SS   4 6.4    38
+    A    /A0048-ARG NE  A    /A0052-GLU OE1  2.7 SS   4 6.4    38
     A    /A0049-SER O   A    /A0050-GLN C    3.0 MM   1 3.9    39
     A    /A0049-SER C   A    /A0051-LEU N    3.3 MM   2 5.4    40
     A    /A0049-SER O   A    /A0052-GLU N    3.2 MM   3 5.0    41
@@ -59,7 +59,7 @@
     A    /A0053-GLU C   A    /A0055-GLU N    3.3 MM   2 5.5    59
     A    /A0053-GLU O   A    /A0056-ALA N    3.5 MM   3 5.1    60
     A    /A0053-GLU O   A    /A0057-LEU N    3.0 MM   4 6.2    61
-    A    /A0053-GLU OE2 A    /A0075-LYS CG   3.9 SS  22 8.3    62
+    A    /A0053-GLU OE1 A    /A0075-LYS CG   3.9 SS  22 8.3    62
     A    /A0053-GLU CB  A    /A0076-ILE CG2  3.7 SS  23 7.5    63
     A    /A0054-LEU O   A    /A0055-GLU C    3.3 MM   1 3.9    64
     A    /A0054-LEU C   A    /A0056-ALA N    3.5 MM   2 5.6    65
@@ -74,7 +74,7 @@
     A    /A0055-GLU O   A    /A0058-PHE N    3.3 MM   3 4.7    74
     A    /A0055-GLU O   A    /A0059-ALA N    2.9 MM   4 6.1    75
     A    /A0055-GLU CG  A    /A0086-TRP CZ2  3.6 SS  3110.0    76
-    A    /A0055-GLU OE2 A    /A0090-ARG NH1  2.7 SS  35 8.9    77
+    A    /A0055-GLU OE1 A    /A0090-ARG NH1  2.7 SS  35 8.9    77
     A    /A0056-ALA O   A    /A0057-LEU C    3.1 MM   1 3.9    78
     A    /A0056-ALA C   A    /A0058-PHE N    3.4 MM   2 5.4    79
     A    /A0056-ALA O   A    /A0059-ALA N    3.4 MM   3 5.1    80
@@ -90,27 +90,27 @@
     A    /A0058-PHE C   A    /A0060-LYS N    3.4 MM   2 5.4    90
     A    /A0058-PHE CA  A    /A0061-THR O    3.4 MM   3 5.0    91
     A    /A0058-PHE CZ  A    /A0062-GLN CG   3.6 SS   4 4.9    92
-    A    /A0058-PHE CD1 A    /A0087-PHE CE2  3.8 SS  29 7.6    93
-    A    /A0058-PHE CE1 A    /A0090-ARG CG   3.5 SS  32 8.4    94
-    A    /A0058-PHE CE1 A    /A0091-ARG CG   4.0 SS  33 9.1    95
+    A    /A0058-PHE CD2 A    /A0087-PHE CE1  3.8 SS  29 7.6    93
+    A    /A0058-PHE CE2 A    /A0090-ARG CG   3.5 SS  32 8.4    94
+    A    /A0058-PHE CE2 A    /A0091-ARG CG   4.0 SS  33 9.1    95
     A    /A0059-ALA O   A    /A0060-LYS C    3.2 MM   1 3.9    96
     A    /A0059-ALA C   A    /A0061-THR N    3.5 MM   2 5.6    97
     A    /A0060-LYS O   A    /A0061-THR CB   3.3 MS   1 3.9    98
     A    /A0061-THR OG1 A    /A0062-GLN N    3.1 SM   1 3.8    99
     A    /A0061-THR OG1 A    /A0063-TYR N    3.0 SM   2 5.3   100
     A    /A0061-THR O   A    /A0064-PRO CD   3.8 MS   3 5.8   101
-    A    /A0061-THR O   A    /A0087-PHE CE2  3.6 MS  2610.0   102
-    A    /A0062-GLN C   A    /A0063-TYR CD1  3.5 MS   1 3.9   103
+    A    /A0061-THR O   A    /A0087-PHE CE1  3.6 MS  2610.0   102
+    A    /A0062-GLN C   A    /A0063-TYR CD2  3.5 MS   1 3.9   103
     A    /A0062-GLN C   A    /A0064-PRO CD   3.6 MS   2 6.4   104
-    A    /A0062-GLN O   A    /A0087-PHE CD2  3.7 MS  25 7.3   105
+    A    /A0062-GLN O   A    /A0087-PHE CD1  3.7 MS  25 7.3   105
     A    /A0062-GLN O   A    /A0091-ARG NH1  2.7 MS  29 7.0   106
     A    /A0063-TYR O   A    /A0064-PRO C    3.1 MM   1 3.9   107
     A    /A0063-TYR O   A    /A0065-ASP N    3.7 MM   2 6.5   108
-    A    /A0063-TYR CE2 A    /A0091-ARG NE   3.3 SS  28 8.7   109
+    A    /A0063-TYR CE1 A    /A0091-ARG NE   3.3 SS  28 8.7   109
     A    /A0064-PRO C   A    /A0065-ASP O    3.0 MM   1 3.8   110
     A    /A0064-PRO CB  A    /A0068-ALA CB   3.9 SS   4 5.6   111
     A    /A0064-PRO O   A    /A0069-ARG NE   3.4 MS   5 6.1   112
-    A    /A0064-PRO CD  A    /A0087-PHE CD2  3.4 SS  23 8.4   113
+    A    /A0064-PRO CD  A    /A0087-PHE CD1  3.4 SS  23 8.4   113
     A    /A0065-ASP OD1 A    /A0066-VAL N    2.8 SM   1 3.9   114
     A    /A0065-ASP C   A    /A0067-TYR N    3.5 MM   2 5.7   115
     A    /A0065-ASP O   A    /A0068-ALA N    3.6 MM   3 5.4   116
@@ -130,7 +130,7 @@
     A    /A0069-ARG C   A    /A0071-GLU N    3.5 MM   2 5.6   130
     A    /A0069-ARG O   A    /A0072-VAL CG1  3.4 MS   3 5.4   131
     A    /A0069-ARG O   A    /A0073-ALA N    2.9 MM   4 5.9   132
-    A    /A0069-ARG NH1 A    /A0080-GLU OE2  2.7 SS  11 6.1   133
+    A    /A0069-ARG NH1 A    /A0080-GLU OE1  2.7 SS  11 6.1   133
     A    /A0069-ARG CG  A    /A0083-VAL CG1  4.0 SS  14 6.4   134
     A    /A0069-ARG NH1 A    /A0084-GLN OE1  2.8 SS  15 7.2   135
     A    /A0070-GLU O   A    /A0071-GLU C    2.9 MM   1 3.9   136
@@ -167,7 +167,7 @@
     A    /A0079-PRO O   A    /A0081-SER N    3.1 MM   2 5.5   167
     A    /A0079-PRO O   A    /A0082-ARG N    2.8 MM   3 5.6   168
     A    /A0079-PRO O   A    /A0083-VAL N    3.6 MM   4 7.1   169
-    A    /A0080-GLU OE1 A    /A0081-SER N    2.9 SM   1 3.9   170
+    A    /A0080-GLU OE2 A    /A0081-SER N    2.9 SM   1 3.9   170
     A    /A0080-GLU O   A    /A0082-ARG N    2.9 MM   2 5.4   171
     A    /A0080-GLU O   A    /A0083-VAL N    2.8 MM   3 5.1   172
     A    /A0080-GLU O   A    /A0084-GLN N    2.9 MM   4 6.3   173
