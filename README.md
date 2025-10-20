@@ -95,8 +95,8 @@ modules:
         mentha2pdb:
             database_date: 2025-04-28
             database_path: /data/databases/mentha-20250428
-            AF_Huri_path:  /data/databases/AF_Huri_HuMAP/summary/HuRI.csv
-            AF_HuMAP_path: /data/databases/AF_Huri_HuMAP/summary/humap.csv
+            AF_Huri_path:  /data/databases/AF_Huri_HuMAP/summary/huri_upac.csv
+            AF_HuMAP_path: /data/databases/AF_Huri_HuMAP/summary/humap_upac.csv
             AF_Huri_HuMAP_path: /data/databases/AF_Huri_HuMAP
         hpc_atlas:
             database_path: /data/databases/hpc_atlas/HPC-Atlas_gene.txt
@@ -150,16 +150,13 @@ N.B The template files for the RasP calculations are collected in the following 
 
 The pipeline automates the following steps for each entry in the input CSV file, collecting the corresponding readouts and organizing them into specific folders based on the HUGO name of each entry (refer to the example folder):
 
-- **Retrieving AlphaFold models**: The associated PDB file for each entry in the input file is downloaded from the AlphaFold database and stored in the "structure_selection/alphafold_db/" 
-  path (see example folder).
+- **Retrieving and trimming AlphaFold models**: The associated PDB file for each entry in the input file is copied from MutateX folder. Each trimmed model is stored in the "structure_selection/original_model/" path (see example folder). Only regions with high pLDDT scores are retained. The residue range is used in subsequent steps to filter the mutation list for calculations. 
+For proteins using experimental PDB or any other custom structure, the specified PDB file is copied from working directory and trimmed as needed.
 
 - **Retrieving available PDB information through PDB miner**: Information about all possible experimental structures available in the Protein Data Bank (PDB), such as resolution, 
   experimental method, and missing residues, is collected for each entry in the input file. The readouts are stored in the "structure_selection/pdbminer/" path.
-  
+    
 - **Filtering PDB miner results**: Complexes extracted by PDB miner are filtered based on a 10 Å interaction distance. Only complexes meeting this criterion are retained, and their binding interface residues are extracted. If available, the PDB structures of these complexes are downloaded. The readouts are stored in the "structure_selection/pdbminer_complexes/" folder. 
-
-- **Trimming AlphaFold models**: The AlphaFold model is trimmed based on the specified range in the input file. Only regions with high pLDDT scores are retained. The trimmed PDB files are 
-  stored in the "structure_selection/trimmed_model/" path. The residue range is used in subsequent steps to filter the mutation list for calculations.
 
 - **Running Procheck for Structure Quality Assessment**: The Procheck tool is used to assess the quality of the trimmed AlphaFold models. This analysis generates summary files that provide detailed information about the stereochemical quality of the trimmed models generated in the previous step, including Ramachandran plot statistics. The readouts are stored in the "structure_selection/procheck/" folder.
 
@@ -297,10 +294,8 @@ BLM
 │   ├── original_model
 │   │   ├── BLM
 │   │   │   ├── P54132.csv
-│   │   │   ├── P54132.json
-│   │   │   ├── P54132.pdb
-│   │   │   ├── P54132.yaml
-│   │   │   └── P54132_dssp.out
+│   │   │   └── P54132.pdb
+│   │   ├── P54132_368-1290.pdb
 │   │   ├── config_alphafolddb.yaml
 │   │   ├── get_alphafolddb_data.py
 │   │   ├── readme.txt
@@ -331,29 +326,25 @@ BLM
 │   │   └── P54132_pdb_complexes
 │   │      ├── 7XUW.pdb
 │   │      └── 7XV0.pdb
-│   ├── procheck
-│   │   ├── P54132_368-1290.pdb
-│   │   ├── anglen.log
-│   │   ├── P54132_368-1290_*.ps
-│   │   ├── P54132_368-1290.new
-│   │   ├── P54132_368-1290.rin
-│   │   ├── pplot.log
-│   │   ├── bplot.log
-│   │   ├── P54132_368-1290.out
-│   │   ├── P54132_368-1290.sco
-│   │   ├── clean.log
-│   │   ├── P54132_368-1290.lan
-│   │   ├── P54132_368-1290.sdh
-│   │   ├── secstr.log
-│   │   ├── nb.log
-│   │   ├── P54132_368-1290.nb
-│   │   ├── P54132_368-1290.pln
-│   │   ├── P54132_368-1290.sum
-│   │   ├── tplot.log
-│   │   └── readme.txt
-│   └── trimmed_model
+│   └── procheck
 │       ├── P54132_368-1290.pdb
-│       ├── filtre_pdb.py
+│       ├── anglen.log
+│       ├── P54132_368-1290_*.ps
+│       ├── P54132_368-1290.new
+│       ├── P54132_368-1290.rin
+│       ├── pplot.log
+│       ├── bplot.log
+│       ├── P54132_368-1290.out
+│       ├── P54132_368-1290.sco
+│       ├── clean.log
+│       ├── P54132_368-1290.lan
+│       ├── P54132_368-1290.sdh
+│       ├── secstr.log
+│       ├── nb.log
+│       ├── P54132_368-1290.nb
+│       ├── P54132_368-1290.pln
+│       ├── P54132_368-1290.sum
+│       ├── tplot.log
 │       └── readme.txt
 │
 ├── metadata
