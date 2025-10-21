@@ -1,0 +1,138 @@
+>sp_P48539_PCP4_HUMAN	62 amino acids
+#
+#  prediction results
+#
+# Sequence		   # x   Context     Score   Kinase    Answer
+# -------------------------------------------------------------------
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.425   GSK3        . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.420   cdc2        . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.418   CaM-II      . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.399   CKI         . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.352   DNAPK       . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.347   CKII        . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.329   p38MAPK     . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.304   RSK         . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.287   PKG         . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.265   ATM         . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.207   PKA         . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.191   PKC         . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.177   cdk5        . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.087   PKB         . 
+# sp_P48539_PCP4_HUMAN     2 S   ---MSERQG   0.027   unsp        . 
+#
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.759   PKC        YES
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.533   cdc2       YES
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.437   GSK3        . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.418   CaM-II      . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.380   CKI         . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.375   p38MAPK     . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.340   DNAPK       . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.300   CKII        . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.267   ATM         . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.256   PKG         . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.243   RSK         . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.206   cdk5        . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.128   PKA         . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.103   PKB         . 
+# sp_P48539_PCP4_HUMAN    10 T   GAGATNGKD   0.101   unsp        . 
+#
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.539   unsp       YES
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.505   CKII       YES
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.449   GSK3        . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.432   CKI         . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.406   CaM-II      . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.373   PKG         . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.345   cdc2        . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.343   DNAPK       . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.273   p38MAPK     . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.257   PKC         . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.252   ATM         . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.226   RSK         . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.207   PKA         . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.149   cdk5        . 
+# sp_P48539_PCP4_HUMAN    16 T   GKDKTSGEN   0.110   PKB         . 
+#
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.995   unsp       YES
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.494   CKII        . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.445   CaM-II      . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.439   GSK3        . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.386   cdc2        . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.382   CKI         . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.360   PKG         . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.345   DNAPK       . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.343   PKA         . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.331   RSK         . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.330   ATM         . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.302   p38MAPK     . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.151   cdk5        . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.134   PKC         . 
+# sp_P48539_PCP4_HUMAN    17 S   KDKTSGEND   0.088   PKB         . 
+#
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.969   unsp       YES
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.675   PKC        YES
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.472   CKII        . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.441   GSK3        . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.413   CaM-II      . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.409   p38MAPK     . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.387   cdc2        . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.371   CKI         . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.341   DNAPK       . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.255   RSK         . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.234   ATM         . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.226   cdk5        . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.213   PKG         . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.076   PKB         . 
+# sp_P48539_PCP4_HUMAN    39 T   DAPETERAA   0.068   PKA         . 
+#
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.803   PKC        YES
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.590   DNAPK      YES
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.450   ATM         . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.440   cdc2        . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.427   CaM-II      . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.417   GSK3        . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.411   p38MAPK     . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.375   CKI         . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.304   RSK         . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.299   CKII        . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.281   PKG         . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.172   cdk5        . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.097   PKA         . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.078   PKB         . 
+# sp_P48539_PCP4_HUMAN    48 S   VAIQSQFRK   0.027   unsp        . 
+#
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.942   unsp       YES
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.639   DNAPK      YES
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.585   PKA        YES
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.523   ATM        YES
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.472   PKC         . 
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.465   GSK3        . 
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.460   CaM-II      . 
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.425   cdc2        . 
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.392   RSK         . 
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.374   CKI         . 
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.338   CKII        . 
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.309   PKG         . 
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.282   p38MAPK     . 
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.144   cdk5        . 
+# sp_P48539_PCP4_HUMAN    60 S   KKAGSQS--   0.091   PKB         . 
+#
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.459   GSK3        . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.448   CKII        . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.429   CaM-II      . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.374   RSK         . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.368   PKA         . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.367   DNAPK       . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.365   CKI         . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.355   cdc2        . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.337   ATM         . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.301   p38MAPK     . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.295   PKG         . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.202   PKC         . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.185   cdk5        . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.082   PKB         . 
+# sp_P48539_PCP4_HUMAN    62 S   AGSQS----   0.038   unsp        . 
+#
+    MSERQGAGATNGKDKTSGENDGQKKVQEEFDIDMDAPETERAAVAIQSQF   #     50
+    RKFQKKKAGSQS                                         #    100
+%1  .........T.....TS.....................T........S..   #     50
+%1  .........S..
