@@ -20,6 +20,10 @@ MAVISp_automatization is a Snakemake pipeline that has been designed to automate
 - early folding regions prediction
 - relevant data collection to be used by mavisp.py
 
+it also contains an alternative target rule (`idps`) that generate targets for
+intrisically disordered proteins, therefore skipping expensive calculations on
+the structure that wouldn't be appropriate for such cases.
+
 ## Requirements
 
 ### Required software
@@ -69,7 +73,7 @@ where:
 "trimmed" represents the residues range of your trimmed model (in case of multiple models specify the ranges "_" separeted)
 "ref_seq" is the ref seq code associated with the isoform used by cancermuts (usually the first one). The RefSeq associated with the first isoform can be accessed through the Uniprot database in the "Sequence & isoforms" or "Sequence" section (depending on the protein being investigated) under the field "Sequence databases". The RefSeq code required by the pipeline consists of the "NP" followed by all subsequent characters until the dot, excluding it. There may be multiple RefSeq codes available. The one associated with the correct isoform includes the isoform code, which is enclosed in square brackets, corresponding to the canonical isoform. Verify by clicking on it that it corresponds to the correct isoform.
 "research field" is the project or the research field in which the protein is involved (this is the name of the folder in which the cancermuts and rasp calculation will be organized).
-"input_pdb" is an optional input pdb file the user provides
+"input_pdb" is an optional input pdb file the user provides. Notice that this is mandatory when using the `idp` rule target.
 "structure_source" the source of the input structure, it needs to follow the nameing of this dictionary:
 AFDB: "AlphaFold database",
 AF3: "AlphaFold3 webserver",
@@ -152,6 +156,7 @@ The pipeline automates the following steps for each entry in the input CSV file,
 
 - **Retrieving and trimming AlphaFold models**: The associated PDB file for each entry in the input file is copied from MutateX folder. Each trimmed model is stored in the "structure_selection/original_model/" path (see example folder). Only regions with high pLDDT scores are retained. The residue range is used in subsequent steps to filter the mutation list for calculations. 
 For proteins using experimental PDB or any other custom structure, the specified PDB file is copied from working directory and trimmed as needed.
+Notice that when using the `idps` target rule, the PDB file always needs to be specified manually, as the MutateX run will not be available.
 
 - **Retrieving available PDB information through PDB miner**: Information about all possible experimental structures available in the Protein Data Bank (PDB), such as resolution, 
   experimental method, and missing residues, is collected for each entry in the input file. The readouts are stored in the "structure_selection/pdbminer/" path.
@@ -408,13 +413,25 @@ BLM
 
 In order to run the pipeline (see example folder):
 
+```
 conda deactivate
 
 module load python/3.10
 
 snakemake -c 1
+```
 
+to use the target rule for IDPs, instead:
 
+```
+conda deactivate
+
+module load python/3.10
+
+snakemake -c 1 idps
+```
+
+notice that in this case the `input.csv` file must specify a custom PDB file per row.
 
 
 
