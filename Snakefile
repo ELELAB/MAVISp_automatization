@@ -528,6 +528,115 @@ rule all:
                hugo_name = df['protein'].str.upper(),
                uniprot_ac = df['uniprot_ac'].str.upper())
 
+###################### Target rule for IDP processing #######################
+
+rule idps:
+    input:
+        expand("{hugo_name}/structure_selection/"\
+               "domain_annotations/"\
+               "domains_mutlist.csv",
+                zip,
+                hugo_name = df['protein'].str.upper(),
+                structure_source = df['structure_source']),
+
+        expand("{hugo_name}/structure_selection/"\
+               "domain_annotations/"\
+               "results.csv",
+                zip,
+                hugo_name = df['protein'].str.upper(),
+                structure_source = df['structure_source']),
+
+        expand("{hugo_name}/netphos/"\
+               "netphos.out",
+              hugo_name = df['protein'].str.upper()),
+
+        expand("{hugo_name}/interactome/"\
+               "hpc_atlas/{hugo_name}.out",
+              hugo_name = df['protein'].str.upper()),
+
+        expand("{hugo_name}/demask/"\
+               "myquery_predictions.txt",
+               hugo_name = df['protein'].str.upper()),
+
+        expand("{hugo_name}/alphamissense/"\
+               "am.tsv.gz",
+               hugo_name = df['protein'].str.upper()),
+
+        # expand("{path}/"\
+        #        "{research_field}/"\
+        #        "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/",
+        #        zip,
+        #        resrange = df_exploded['trimmed'],
+        #        hugo_name = df_exploded['protein'].str.lower(),
+        #        path = df_exploded['output_path_folder'],
+        #        research_field = df_exploded['research_field'],
+        #        structure_source = df_exploded['structure_source'],
+        #        model = df_exploded['model']),
+
+        #expand("{path}/"\
+        #       "{research_field}/"\
+        #       "{hugo_name}/free/"\
+        #       "{structure_source}_{resrange}/"\
+        #       "{model}_model/ref2015_cartesian2020/relax/relax_{uniprot_ac}_{resrange}_0001.pdb",
+        #       zip,
+        #       uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
+        #       hugo_name = df_exploded['protein'],
+        #       path = df_exploded['output_rosetta_folder'],
+        #       resrange = df_exploded['trimmed'],
+        #       research_field = df_exploded['research_field'],
+        #       structure_source = df_exploded['structure_source'],
+        #       model = df_exploded['model']),
+
+        # expand("{hugo_name}/ptm/{structure_source}_{resrange}/mutatex/summary_stability.txt",
+        #    zip,
+        #    hugo_name = df_exploded['protein'],
+        #    resrange = df_exploded['trimmed'],
+        #    structure_source = df_exploded['structure_source']),
+
+        # expand("{hugo_name}/ptm/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
+        #    zip,
+        #    hugo_name = df_exploded['protein'],
+        #    resrange = df_exploded['trimmed'],
+        #    uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
+        #    structure_source = df_exploded['structure_source']),
+
+        expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
+           zip,
+           hugo_name=df['protein'].str.upper(),
+           uniprot_ac=df['uniprot_ac'].str.upper()),
+
+        # expand("{hugo_name}/structure_selection/procheck/",
+        #       zip,
+        #       hugo_name=df['protein'].str.upper()),
+
+        expand(["{hugo_name}/metadata/metadata.yaml",
+                "{hugo_name}/metadata/importing.yaml"],
+                hugo_name= df_exploded['protein'].str.upper()),
+
+        expand("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.idp.done",
+                zip,
+                hugo_name = df_exploded['protein'].str.upper(),
+                research_field = df_exploded['research_field'],
+                structure_source = df_exploded['structure_source'],
+                resrange = df_exploded['trimmed'],
+                uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
+                model = df_exploded['model']),
+
+        expand("{hugo_name}/interactome/"\
+               "aggregate/"\
+               "{uniprot_ac}_aggregated.csv",
+               zip,
+               hugo_name = df['protein'].str.upper(),
+               uniprot_ac = df['uniprot_ac'].str.upper())
+
+        #expand("{hugo_name}/structure_selection/"\
+        #        "original_model/",
+        #        zip,
+        #        hugo_name = df['protein'].str.upper(),
+        #        structure_source = df['structure_source']),
+
+
+
 ###################### Structure selection and trimming ######################
 
 rule structure_selection:
@@ -1835,3 +1944,182 @@ rule collect_outputs:
 
         # 17) touch the done‐file
         Path(output[0]).touch()
+
+rule collect_outputs_idps:
+    input:
+        clinvar_genes=lambda wcs: f"{wcs.hugo_name}/clinvar_gene/genes_output.csv",
+        # ptm_stability = lambda wcs: [
+        #    f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{resrange}/mutatex/summary_stability.txt"
+        #    for resrange in df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]],
+        # ptm_sas = lambda wcs: [
+        #    f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{resrange}/naccess/"
+        #    f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}"
+        #    f"_trimmed_model0_checked.rsa"
+        #    for resrange in df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]],
+        demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
+        alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
+        cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/",
+        efoldmine=lambda wcs: f"{wcs.hugo_name}/efoldmine/{wcs.uniprot_ac}.tabular",
+        # structure_rasp=lambda wcs: [
+        #    f"{rasp_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/"
+        #    f"{wcs.structure_source}_{resrange}/{wcs.model}_model"
+        #    for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
+        # structure_foldx5=lambda wcs: [
+        #    f"{mutatex_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/"
+        #    f"mutatex_runs/{wcs.structure_source}_{resrange}/model_{wcs.model}/"
+        #    f"saturation/{wcs.uniprot_ac}_table/energies.csv"
+        #    for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
+        pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
+        alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/",
+        metadata = lambda wcs: f"{wcs.hugo_name}/metadata/metadata.yaml"
+    output:
+        temp("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.idp.done")
+    run:
+        hn   = wildcards.hugo_name
+        out  = Path(hn) / "simple_mode"
+        out.mkdir(parents=True, exist_ok=True)
+
+        # 1) clinvar
+        cdir = out / "clinvar"
+        cdir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.clinvar_genes, cdir / "variants_output.csv")
+
+	# 2) PTM stability
+	# ptm_dir = out / "ptm"
+	# ptm_dir.mkdir(parents=True, exist_ok=True)
+
+	# stability_contents = []
+    #    for fn in input.ptm_stability:
+    #        if Path(fn).stat().st_size > 0:
+    #            stability_contents.append(Path(fn).read_text())
+
+    #    if stability_contents:
+    #        with open(ptm_dir / "summary_stability.txt", "w") as fw:
+    #            fw.writelines(stability_contents)
+
+	# 3) PTM sasa.rsa
+      #  rsa_files = sorted(input.ptm_sas,
+      #  key=lambda p: int(Path(p).parent.parent.name.split("_", 1)[1].split("-", 1)[1]))
+      #  first, last = rsa_files[0], rsa_files[-1]
+      #  sasa_out = ptm_dir / "sasa.rsa"
+      #  with open(first) as fh_first:
+      #      header = [next(fh_first) for _ in range(4)]
+      #  res_lines = []
+      #  for rsa in rsa_files:
+      #      with open(rsa) as fh:
+      #          for line in fh:
+      #              if line.startswith("RES "):
+      #                  res_lines.append(line)
+      #  res_lines.sort(key=lambda l: int(l[9:13].strip()))
+      #  with open(last) as fh_last:
+      #      tail = fh_last.readlines()[-4:]
+      #  with open(sasa_out, "w") as fout:
+      #      fout.writelines(header)
+      #      fout.writelines(res_lines)
+      #      fout.writelines(tail)
+
+	# 4) PTM metatable
+        # shutil.copy(meta_src, ptm_dir / "metatable.csv")
+
+        # 5) copy SAS into its own folder
+        # sas_dir = out / "sas"
+        # sas_dir.mkdir(parents=True, exist_ok=True)
+        # shutil.copy(sasa_out, sas_dir / "sasa.rsa")
+
+        # 6) demask
+        dem_dir = out / "demask"
+        dem_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.demask, dem_dir / "myquery_predictions.txt")
+
+        # 7) alphamissense
+        am_dir = out / "alphamissense"
+        am_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.alphamissense, am_dir / "am.tsv.gz")
+
+        # 8) cancermuts
+        meta_src = Path(input.cancermuts) / f"metatable_pancancer_{hn}.csv"
+        cm_dir = out / "cancermuts"
+        cm_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(meta_src, cm_dir / meta_src.name)
+
+        # 9) efoldmine
+        ef_dir = out / "efoldmine"
+        ef_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.efoldmine, ef_dir / Path(input.efoldmine).name)
+
+        # 10) metadata.yaml
+        shutil.copy(Path(hn) / "metadata" / "metadata.yaml", out / "metadata.yaml")
+
+        # 11) pfam
+        pf_dir = out / "pfam"
+        pf_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.pfam, pf_dir / "summary.csv")
+
+        # 12) alphafold
+        af_dir_path = Path(input.alphafold)
+        af_csv = af_dir_path / f"{wildcards.hugo_name.lower()}/{wildcards.uniprot_ac}.csv"
+
+        if af_csv.is_file():
+            af_dir = out / "alphafold"
+            af_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copy(af_csv, af_dir / af_csv.name)
+
+	# 13) merge stability
+    #    ranges = sorted([Path(r).parent.name.split('_',1)[1] for r in input.structure_rasp],
+    #        key=lambda x: int(x.split('-',1)[0]))
+    #    merged_range = "_".join(ranges)
+    #    base = out / "stability" / f"{wildcards.structure_source}_{merged_range}" / wildcards.structure_source / f"model_{wildcards.model}"
+
+        # 14) rasp predictions
+    #    rasp_out = base / "rasp" / "post_processed.csv"
+    #    (rasp_out.parent).mkdir(parents=True, exist_ok=True)
+    #    rasp_files = []
+    #    for r in input.structure_rasp:
+    #        rasp_files += list((Path(r) / "output" / "predictions").glob("post_processed_*.csv"))
+    #    rasp_files = sorted(rasp_files)
+
+    #    with open(rasp_out, "w") as fout:
+    #        header_written = False
+    #        for fp in rasp_files:
+    #            lines = fp.read_text().splitlines(keepends=True)
+    #            if not header_written:
+    #                fout.write(lines[0])
+    #                header_written = True
+    #            fout.writelines(lines[1:])
+
+	# 15) foldx5 energies
+    #    fx_out = base / "foldx5" / "energies.csv"
+    #    (fx_out.parent).mkdir(parents=True, exist_ok=True)
+
+    #    fx_files = sorted(Path(f) for f in input.structure_foldx5)
+
+    #    fx_lines = []
+    #    header = None
+    #    for fx in fx_files:
+    #        lines = Path(fx).read_text().splitlines(keepends=True)
+    #        if header is None:
+    #            header = lines[0]
+    #        fx_lines.extend(lines[1:])  # drop each file’s header
+
+    #    fx_lines.sort(key=lambda l: int(l.split(",")[2]))
+
+    #    fx_out.parent.mkdir(parents=True, exist_ok=True)
+    #    with open(fx_out, "w") as fout:
+    #        fout.write(header)
+    #        fout.writelines(fx_lines)
+
+        # 16) mutation_list
+    #    ml_dir = out / "mutation_list"
+    #    ml_dir.mkdir(parents=True, exist_ok=True)
+    #    all_ml = glob.glob(f"{hn}/cancermuts/mutlist_*.txt")
+    #    pat   = re.compile(r"mutlist_[0-9]{8}\.txt$")
+    #    fpath = next(p for p in all_ml if pat.search(p))
+    #    basename = Path(fpath).name.replace("mutlist_", "mutations_pmid_")
+    #    with open(fpath) as fi, open(ml_dir / basename, "w") as fo:
+    #        fo.write("mutation\tPMID\n")
+    #        for line in fi:
+    #            fo.write(f"{line.rstrip()}\thttps://doi.org/10.1101/2022.10.22.513328\n")
+
+        # 17) touch the done‐file
+        Path(output[0]).touch()
+
