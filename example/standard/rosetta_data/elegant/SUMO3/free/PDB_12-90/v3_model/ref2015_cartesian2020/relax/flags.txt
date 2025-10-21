@@ -10,6 +10,6 @@
 -run:checkpoint true
 -run:version true
 -run:ignore_zero_occupancy false
--parser:protocol /home/elenikia/.cache/Python-Eggs/RosettaDDGPrediction-0.0.1-py3.10.egg-tmp/RosettaDDGPrediction/RosettaScripts/Cartddg2020_relax.xml
+-parser:protocol /home/teo/.cache/Python-Eggs/RosettaDDGPrediction-0.0.1-py3.10.egg-tmp/RosettaDDGPrediction/RosettaScripts/Cartddg2020_relax.xml
 -parser:script_vars repeats=4 scfname=ref2015_cart
--in:file:s /data/user/elenikia/MAVISp_automatization/example/rosetta_data/elegant/SUMO3/free/PDB_12-90/v3_model/ref2015_cartesian2020/P55854_12-90.pdb
+-in:file:s /data/user/teo/devel/MAVISp_automatization/example/standard/rosetta_data/elegant/SUMO3/free/PDB_12-90/v3_model/ref2015_cartesian2020/P55854_12-90.pdb
