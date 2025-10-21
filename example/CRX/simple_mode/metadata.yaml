@@ -14,6 +14,6 @@ allosigma_distance_cutoff:
 allosigma_distance_mode:
 - atomic_contacts
 review_status: 0
-structure_source: AF2
+structure_source: AFDB
 linker_design: false
 pdb_id: ''
