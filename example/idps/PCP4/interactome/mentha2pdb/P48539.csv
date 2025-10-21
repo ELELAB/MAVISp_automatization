@@ -1,0 +1,3 @@
+target uniprot id,target uniprot gene,interactor uniprot id,interactor uniprot gene,mentha score,PDB id,fusion,target chain id,target starting residue,target ending residue,interactor chain id,interactor starting residue,interactor ending residue,other interactors,method,resolution,dna chains,num ligands,PMID,pDockQ HuMap,pDockQ HuRI
+P48539,PCP4,Q8TD86,CALML6,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,0.386076,na
+P48539,PCP4,Q15051,IQCB1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,21565611 ,na,na
