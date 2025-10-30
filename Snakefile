@@ -1968,6 +1968,18 @@ rule collect_outputs_idps:
             af_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy(af_csv, af_dir / af_csv.name)
 
-        # 14) touch the done‐file
+        # 14) mutation_list
+        ml_dir = out / "mutation_list"
+        ml_dir.mkdir(parents=True, exist_ok=True)
+        all_ml = glob.glob(f"{hn}/cancermuts/mutlist_*.txt")
+        pat   = re.compile(r"mutlist_[0-9]{8}\.txt$")
+        fpath = next(p for p in all_ml if pat.search(p))
+        basename = Path(fpath).name.replace("mutlist_", "mutations_pmid_")
+        with open(fpath) as fi, open(ml_dir / basename, "w") as fo:
+            fo.write("mutation\tPMID\n")
+            for line in fi:
+                fo.write(f"{line.rstrip()}\thttps://doi.org/10.1101/2022.10.22.513328\n")
+
+        # 15) touch the done‐file
         Path(output[0]).touch()
 
