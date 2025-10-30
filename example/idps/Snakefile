@@ -1833,7 +1833,6 @@ rule collect_outputs:
         ted_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.ted, ted_dir / "results.csv")
 
-
         # 13) alphafold
         af_dir_path = Path(input.alphafold)
         af_csv = af_dir_path / f"{wildcards.hugo_name.lower()}/{wildcards.uniprot_ac}.csv"
