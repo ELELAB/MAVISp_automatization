@@ -1,8 +1,0 @@
-variant_id;variant_name;genomic_annotation;gene_name;interpretation;condition;number_of_stars;name;site;type;function;reference;genomic_mutations
-3803005;NM_006936.3(SUMO3):c.119G>A (p.Ser40Asn);GRCh37,NC_000021.8:g.46233922C>T GRCh38,NC_000021.9:g.44814007C>T;SUMO3;Uncertain significance;not specified;1;;p.Ser40Asn;mutation;;;hg19,21:g.46233922C>T hg38,21:g.44814007C>T
-3451302;NM_006936.3(SUMO3):c.14A>C (p.Lys5Thr);GRCh37,NC_000021.8:g.46237870T>G GRCh38,NC_000021.9:g.44817955T>G;SUMO3;Uncertain significance;not specified;1;;p.Lys5Thr;mutation;;;hg19,21:g.46237870T>G hg38,21:g.44817955T>G
-3451301;NM_006936.3(SUMO3):c.242A>G (p.Asp81Gly);GRCh37,NC_000021.8:g.46226936T>C GRCh38,NC_000021.9:g.44807021T>C;SUMO3;Uncertain significance;not specified;1;;p.Asp81Gly;mutation;;;hg19,21:g.46226936T>C hg38,21:g.44807021T>C
-3451300;NM_006936.3(SUMO3):c.160A>G (p.Met54Val);GRCh37,NC_000021.8:g.46229024T>C GRCh38,NC_000021.9:g.44809109T>C;SUMO3;Uncertain significance;not specified;1;;p.Met54Val;mutation;;;hg19,21:g.46229024T>C hg38,21:g.44809109T>C
-3172107;NM_006936.3(SUMO3):c.304A>G (p.Ser102Gly);GRCh37,NC_000021.8:g.46226874T>C GRCh38,NC_000021.9:g.44806959T>C;SUMO3;Likely benign;not specified;1;;p.Ser102Gly;mutation;;;hg19,21:g.46226874T>C hg38,21:g.44806959T>C
-3172106;NM_006936.3(SUMO3):c.196A>G (p.Ile66Val);GRCh37,NC_000021.8:g.46228988T>C GRCh38,NC_000021.9:g.44809073T>C;SUMO3;Uncertain significance;not specified;1;;p.Ile66Val;mutation;;;hg19,21:g.46228988T>C hg38,21:g.44809073T>C
-789677;NM_006936.3(SUMO3):c.281C>T (p.Pro94Leu);GRCh37,NC_000021.8:g.46226897G>A GRCh38,NC_000021.9:g.44806982G>A;SUMO3;Benign;not provided;2;;p.Pro94Leu;mutation;;;hg19,21:g.46226897G>A hg38,21:g.44806982G>A
