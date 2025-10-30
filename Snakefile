@@ -1742,6 +1742,7 @@ rule collect_outputs:
             f"saturation/{wcs.uniprot_ac}_table/energies.csv"
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
         pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
+        ted=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/results.csv",
         alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/",
         metadata = lambda wcs: f"{wcs.hugo_name}/metadata/metadata.yaml"
     output:
@@ -1827,7 +1828,13 @@ rule collect_outputs:
         pf_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.pfam, pf_dir / "summary.csv")
 
-        # 12) alphafold
+        # 12) ted
+        ted_dir = out / "ted"
+        ted_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.ted, ted_dir / "results.csv")
+
+
+        # 13) alphafold
         af_dir_path = Path(input.alphafold)
         af_csv = af_dir_path / f"{wildcards.hugo_name.lower()}/{wildcards.uniprot_ac}.csv"
 
@@ -1836,13 +1843,13 @@ rule collect_outputs:
             af_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy(af_csv, af_dir / af_csv.name)
 
-	# 13) merge stability
+	# 14) merge stability
         ranges = sorted([Path(r).parent.name.split('_',1)[1] for r in input.structure_rasp],
             key=lambda x: int(x.split('-',1)[0]))
         merged_range = "_".join(ranges)
         base = out / "stability" / f"{wildcards.structure_source}_{merged_range}" / wildcards.structure_source / f"model_{wildcards.model}"
 
-        # 14) rasp predictions
+        # 15) rasp predictions
         rasp_out = base / "rasp" / "post_processed.csv"
         (rasp_out.parent).mkdir(parents=True, exist_ok=True)
         rasp_files = []
@@ -1859,7 +1866,7 @@ rule collect_outputs:
                     header_written = True
                 fout.writelines(lines[1:])
 
-	# 15) foldx5 energies
+	# 16) foldx5 energies
         fx_out = base / "foldx5" / "energies.csv"
         (fx_out.parent).mkdir(parents=True, exist_ok=True)
 
@@ -1880,7 +1887,7 @@ rule collect_outputs:
             fout.write(header)
             fout.writelines(fx_lines)
 
-        # 16) mutation_list
+        # 17) mutation_list
         ml_dir = out / "mutation_list"
         ml_dir.mkdir(parents=True, exist_ok=True)
         all_ml = glob.glob(f"{hn}/cancermuts/mutlist_*.txt")
@@ -1892,7 +1899,7 @@ rule collect_outputs:
             for line in fi:
                 fo.write(f"{line.rstrip()}\thttps://doi.org/10.1101/2022.10.22.513328\n")
 
-        # 17) touch the done‐file
+        # 18) touch the done‐file
         Path(output[0]).touch()
 
 rule collect_outputs_idps:
@@ -1903,6 +1910,7 @@ rule collect_outputs_idps:
         cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/",
         efoldmine=lambda wcs: f"{wcs.hugo_name}/efoldmine/{wcs.uniprot_ac}.tabular",
         pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
+        ted=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/results.csv",
         alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/",
         metadata = lambda wcs: f"{wcs.hugo_name}/metadata/metadata.yaml"
     output:
@@ -1946,7 +1954,12 @@ rule collect_outputs_idps:
         pf_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.pfam, pf_dir / "summary.csv")
 
-        # 12) alphafold
+        # 12) ted
+        ted_dir = out / "ted"
+        ted_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.ted, ted_dir / "results.csv")
+
+        # 13) alphafold
         af_dir_path = Path(input.alphafold)
         af_csv = af_dir_path / f"{wildcards.hugo_name.lower()}/{wildcards.uniprot_ac}.csv"
 
@@ -1955,6 +1968,6 @@ rule collect_outputs_idps:
             af_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy(af_csv, af_dir / af_csv.name)
 
-        # 17) touch the done‐file
+        # 14) touch the done‐file
         Path(output[0]).touch()
 
