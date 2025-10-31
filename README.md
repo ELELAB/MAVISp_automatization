@@ -165,20 +165,13 @@ Notice that when using the `idps` target rule, the PDB file always needs to be s
 
 - **Running Procheck for Structure Quality Assessment**: The Procheck tool is used to assess the quality of the trimmed AlphaFold models. This analysis generates summary files that provide detailed information about the stereochemical quality of the trimmed models generated in the previous step, including Ramachandran plot statistics. The readouts are stored in the "structure_selection/procheck/" folder.
 
-- **Retrieving mutations from the ClinVar database**: Missense mutations reported in the ClinVar database, along with corresponding classifications, review status, and associated 
-  conditions (diseases), are collected for each entry in the input file. The readouts are stored in the "clinvar_gene/" folder.
-
-- **Cancermuts step**: The mutations obtained from ClinVar are converted into a supported format for the "cancermuts" tool and provided as input, along with any external mutation lists 
-  provided by the user. The pipeline aggregates cancer mutations from cBioPortal, COSMIC, and ClinVar databases, along with structural information (SLiMs, secondary structure, Post Translational Modification sites PTMs) of the protein. In case multiple entrez IDs are found for one protein, no gene ID will be assigned and mutation retrieval from cBioPortal will be skipped. The output is stored in a path specified in the config.yaml file.
+- **Cancermuts step**: The pipeline aggregates cancer mutations from cBioPortal, COSMIC, and ClinVar databases, along with structural information (SLiMs, secondary structure, Post Translational Modification sites PTMs) of the protein. In case multiple entrez IDs are found for one protein, no gene ID will be assigned and mutation retrieval from cBioPortal will be skipped. The output is stored in a path specified in the config.yaml file.
 
 - **Creation of MutateX, Rosetta, and CabsFlex compatible mutation lists**: Using the "metatable.csv" file from the cancermuts output and the residue range from the trimmed model, 
   mutation lists are created in the appropriate format for the following calculations: protein stability through the FoldX energy function (MutateX), protein stability through the Rosetta energy function Ref2015, and conformational structural ensemble generation of mutants and WT through CabsFlex (used with the ensemble mode). Additionally, a mutation list with potential phospho residues for the MutateX calculation is created. Finally, a mutation list with mutations expressed in one-letter code is created for other annotation steps. The files are stored in the "cancermuts" folder.
 
 - **Domain annotations based on the mutation list**: The mutation list obtained in the previous step is used to retrieve information about the domains in the protein under investigation. 
   The readouts are stored in the "structure_selection/domain_annotations/" path.
-
-- **ClinVar annotations retrieval for the mutation list**: The same mutation list used in the previous step is used to retrieve corresponding classifications, conditions, review statuses, 
-  and phenotypes from the ClinVar database. The output is stored in the "clinvar" folder.
 
 - **Retrieving interactors from the Mentha database**: Information about experimentally validated interactors collected in the Mentha and database is retrieved and organized in a CSV file, 
   along with information about possible PDB IDs and associated PMID references. Each interactor is assigned a score indicating the certainty of the interaction. The output is stored in the "interactome/mentha2pdb" path.
@@ -236,22 +229,10 @@ BLM
 │   ├── mutlist_mutatex_08092023.txt
 │   ├── mutlist_mutatex_P_08092023.txt
 │   ├── mutlist_rosetta_08092023.txt
-│   └── readme.txt
-│
-├── clinvar
-│   ├── clinvar.py
-│   ├── entry_not_found_variants.csv
 │   ├── readme.txt
-│   ├── variants.csv
-│   ├── variants_output.csv
-│   └── variants_to_check.csv
-│
-├── clinvar_gene
-│   ├── BLM_mutation_list.txt
-│   ├── clinvar.py
-│   ├── genes.csv
-│   ├── readme.txt
-│   └── variants_output.csv
+│   ├── entry_not_found.csv
+│   ├── variants_to_check.csv
+│   └── inconsistency.annotations.csv
 │
 ├── demask
 │   ├── P54132.blast.json
