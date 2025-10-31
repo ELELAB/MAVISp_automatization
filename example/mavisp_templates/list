@@ -140,11 +140,6 @@
 ./GENE_NAME/metadata
 ./GENE_NAME/metadata/metadata.yaml
 ./GENE_NAME/metadata/readme.txt
-./GENE_NAME/clinvar_gene
-./GENE_NAME/clinvar_gene/gene.csv
-./GENE_NAME/clinvar_gene/clinvar.py
-./GENE_NAME/clinvar_gene/run.sh
-./GENE_NAME/clinvar_gene/readme.txt
 ./GENE_NAME/saturation_list
 ./GENE_NAME/saturation_list/do.sh
 ./GENE_NAME/saturation_list/saturation_mutlist_29-110.txt

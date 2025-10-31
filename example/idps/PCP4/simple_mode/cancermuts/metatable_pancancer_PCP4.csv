@@ -92,7 +92,7 @@
 90,6,G,R,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 91,6,G,S,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 92,6,G,T,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
-93,6,G,V,,,,,,,,,,,,,"Manual annotations from clinvar.csv,Manual annotations from saturation_mutlist.csv",,,,"hg19,21:g.41270408G>T, hg38,21:g.39898483G>T",0.092,,,,,,,,,,
+93,6,G,V,,,,,,,,,,,,,"ClinVar,Manual annotations from saturation_mutlist.csv",,,"hg19,21:41270408-41270408, hg38,21:39898483-39898483","hg19,21:g.41270408G>T, hg38,21:g.39898483G>T",0.092,,,,,,,Uncertain significance,not specified,1,4133389
 94,6,G,W,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 95,6,G,Y,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 96,7,A,C,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
@@ -501,7 +501,7 @@
 499,28,E,G,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 500,28,E,H,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 501,28,E,I,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
-502,28,E,K,,,,,,,,,,,,,"cBioPortal,COSMIC,Manual annotations from clinvar.csv,Manual annotations from saturation_mutlist.csv","mixed_allen_2018, skcm_dfci_2015","Cutaneous Melanoma, Mixed Cancer Types","hg19,21:41300929-41300929, hg38,21:39929004-39929004","hg19,21:g.41300929G>A, hg38,21:g.39929004G>A",0.590,skin,malignant_melanoma,0.0000039923028401,0.0000318491623670,,,,,,
+502,28,E,K,,,,,,,,,,,,,"cBioPortal,COSMIC,ClinVar,Manual annotations from saturation_mutlist.csv","mixed_allen_2018, skcm_dfci_2015","Cutaneous Melanoma, Mixed Cancer Types","hg19,21:41300929-41300929, hg38,21:39929004-39929004","hg19,21:g.41300929G>A, hg38,21:g.39929004G>A",0.590,skin,malignant_melanoma,0.0000039923028401,0.0000318491623670,,,Uncertain significance,not specified,1,3210424
 503,28,E,L,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 504,28,E,M,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 505,28,E,N,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
@@ -631,7 +631,7 @@
 629,35,D,C,,,,,,,,,,,"Raptor interacting motif (DOC_WD40_RPTOR_TOS_1), 30-35, ggetELM|MTR4 arch domain ligand  (LIG_MTR4_AIM_1), 30-36, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 630,35,D,E,,,,,,,,,,,"Raptor interacting motif (DOC_WD40_RPTOR_TOS_1), 30-35, ggetELM|MTR4 arch domain ligand  (LIG_MTR4_AIM_1), 30-36, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 631,35,D,F,,,,,,,,,,,"Raptor interacting motif (DOC_WD40_RPTOR_TOS_1), 30-35, ggetELM|MTR4 arch domain ligand  (LIG_MTR4_AIM_1), 30-36, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
-632,35,D,G,,,,,,,,,,,"Raptor interacting motif (DOC_WD40_RPTOR_TOS_1), 30-35, ggetELM|MTR4 arch domain ligand  (LIG_MTR4_AIM_1), 30-36, ggetELM",,"Manual annotations from clinvar.csv,Manual annotations from saturation_mutlist.csv",,,,"hg19,21:g.41300951A>G, hg38,21:g.39929026A>G",0.189,,,0.0000039867003676,,,,,,,
+632,35,D,G,,,,,,,,,,,"Raptor interacting motif (DOC_WD40_RPTOR_TOS_1), 30-35, ggetELM|MTR4 arch domain ligand  (LIG_MTR4_AIM_1), 30-36, ggetELM",,"ClinVar,Manual annotations from saturation_mutlist.csv",,,"hg19,21:41300951-41300951, hg38,21:39929026-39929026","hg19,21:g.41300951A>G, hg38,21:g.39929026A>G",0.189,,,0.0000039867003676,,,,Uncertain significance,not specified,1,3887011
 633,35,D,H,,,,,,,,,,,"Raptor interacting motif (DOC_WD40_RPTOR_TOS_1), 30-35, ggetELM|MTR4 arch domain ligand  (LIG_MTR4_AIM_1), 30-36, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 634,35,D,I,,,,,,,,,,,"Raptor interacting motif (DOC_WD40_RPTOR_TOS_1), 30-35, ggetELM|MTR4 arch domain ligand  (LIG_MTR4_AIM_1), 30-36, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 635,35,D,K,,,,,,,,,,,"Raptor interacting motif (DOC_WD40_RPTOR_TOS_1), 30-35, ggetELM|MTR4 arch domain ligand  (LIG_MTR4_AIM_1), 30-36, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
@@ -1017,7 +1017,7 @@
 1015,55,K,I,,,,,,,,,,,"USP7 binding motif (DOC_USP7_UBL2_3), 52-56, ggetELM|Helical calmodulin binding motifs (LIG_CaM_IQ_9), 43-59, ggetELM|NLS classical Nuclear Localization Signals (TRG_NLS_MonoExtN_4), 52-59, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 1016,55,K,L,,,,,,,,,,,"USP7 binding motif (DOC_USP7_UBL2_3), 52-56, ggetELM|Helical calmodulin binding motifs (LIG_CaM_IQ_9), 43-59, ggetELM|NLS classical Nuclear Localization Signals (TRG_NLS_MonoExtN_4), 52-59, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 1017,55,K,M,,,,,,,,,,,"USP7 binding motif (DOC_USP7_UBL2_3), 52-56, ggetELM|Helical calmodulin binding motifs (LIG_CaM_IQ_9), 43-59, ggetELM|NLS classical Nuclear Localization Signals (TRG_NLS_MonoExtN_4), 52-59, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
-1018,55,K,N,,,,,,,,,,,"USP7 binding motif (DOC_USP7_UBL2_3), 52-56, ggetELM|Helical calmodulin binding motifs (LIG_CaM_IQ_9), 43-59, ggetELM|NLS classical Nuclear Localization Signals (TRG_NLS_MonoExtN_4), 52-59, ggetELM",,"cBioPortal,Manual annotations from saturation_mutlist.csv","gbm_tcga_gdc, gbm_tcga_pan_can_atlas_2018",gbm,"hg19,21:39929087-39929087, hg19,21:41301012-41301012","hg19,21:g.39929087G>T, hg19,21:g.41301012G>T",0.533,,,,,,,,,,
+1018,55,K,N,,,,,,,,,,,"USP7 binding motif (DOC_USP7_UBL2_3), 52-56, ggetELM|Helical calmodulin binding motifs (LIG_CaM_IQ_9), 43-59, ggetELM|NLS classical Nuclear Localization Signals (TRG_NLS_MonoExtN_4), 52-59, ggetELM",,"cBioPortal,Manual annotations from saturation_mutlist.csv","gbm_tcga_gdc, gbm_tcga_pan_can_atlas_2018",Diffuse Glioma,"hg19,21:39929087-39929087, hg19,21:41301012-41301012","hg19,21:g.39929087G>T, hg19,21:g.41301012G>T",0.533,,,,,,,,,,
 1019,55,K,P,,,,,,,,,,,"USP7 binding motif (DOC_USP7_UBL2_3), 52-56, ggetELM|Helical calmodulin binding motifs (LIG_CaM_IQ_9), 43-59, ggetELM|NLS classical Nuclear Localization Signals (TRG_NLS_MonoExtN_4), 52-59, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 1020,55,K,Q,,,,,,,,,,,"USP7 binding motif (DOC_USP7_UBL2_3), 52-56, ggetELM|Helical calmodulin binding motifs (LIG_CaM_IQ_9), 43-59, ggetELM|NLS classical Nuclear Localization Signals (TRG_NLS_MonoExtN_4), 52-59, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 1021,55,K,R,,,,,,,,,,,"USP7 binding motif (DOC_USP7_UBL2_3), 52-56, ggetELM|Helical calmodulin binding motifs (LIG_CaM_IQ_9), 43-59, ggetELM|NLS classical Nuclear Localization Signals (TRG_NLS_MonoExtN_4), 52-59, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
@@ -1103,7 +1103,7 @@
 1101,59,G,W,,,,,,,,,,,"Helical calmodulin binding motifs (LIG_CaM_IQ_9), 43-59, ggetELM|NLS classical Nuclear Localization Signals (TRG_NLS_MonoExtN_4), 52-59, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 1102,59,G,Y,,,,,,,,,,,"Helical calmodulin binding motifs (LIG_CaM_IQ_9), 43-59, ggetELM|NLS classical Nuclear Localization Signals (TRG_NLS_MonoExtN_4), 52-59, ggetELM",,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 1103,60,S,A,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
-1104,60,S,C,,,,,,,,,,,,,"Manual annotations from clinvar.csv,Manual annotations from saturation_mutlist.csv",,,,"hg19,21:g.41301026C>G, hg38,21:g.39929101C>G",0.328,,,,0.0000318654005481,,,,,,
+1104,60,S,C,,,,,,,,,,,,,"ClinVar,Manual annotations from saturation_mutlist.csv",,,"hg19,21:41301026-41301026, hg38,21:39929101-39929101","hg19,21:g.41301026C>G, hg38,21:g.39929101C>G",0.328,,,,0.0000318654005481,,,Uncertain significance,not specified,1,3929726
 1105,60,S,D,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 1106,60,S,E,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,
 1107,60,S,F,,,,,,,,,,,,,Manual annotations from saturation_mutlist.csv,,,,,,,,,,,,,,,

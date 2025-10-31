@@ -1,19 +1,20 @@
 import argparse
 from cancermuts.datasources import ManualAnnotation
 from cancermuts.datasources import UniProt
-from cancermuts.datasources import cBioPortal, COSMIC
+from cancermuts.datasources import cBioPortal, COSMIC, ClinVar
 from cancermuts.datasources import MyVariant
 from cancermuts.datasources import gnomAD
 from cancermuts.datasources import PhosphoSite, MobiDB
 from cancermuts.datasources import ggetELMPredictions
 from cancermuts.table import Table
+import pandas as pd
 
 parser=argparse.ArgumentParser(description='Pancancer: run Cancermuts"\
                                "software')
 parser.add_argument("-p", "--prt", dest="prt", help="hugo name of your protein")
 parser.add_argument("-i", "--uniprotID", dest="uniprotID", help="uniprot_id of your protein (the one ending with _HUMAN)")
 parser.add_argument("-a", "--uniprotAC", dest="uniprotAC", default= None, help="uniprot_ac of your protein")
-parser.add_argument("-c", "--clinvar", dest="clinvar", default= None, help="csv mutation file from clinvar database")
+parser.add_argument("-r", "--refseq", dest="refseq", required=False, help="RefSeq isoform ID required for ClinVar mapping")
 parser.add_argument("-e", "--external_mutations", dest="external_mutations", nargs='+', default= None, help="csv file containing the external mutations to study")
 
 args=parser.parse_args()
@@ -40,19 +41,28 @@ cosmic = COSMIC(targeted_database_file='/data/databases/cosmic-v102/Cosmic_Compl
                 )
 cosmic.add_mutations(seq, genome_assembly_version='GRCh38', metadata=['genomic_coordinates', 'genomic_mutations',
                                                 'cancer_site', 'cancer_histology'])
-# add mutations from other sources
-if args.clinvar:
-    ma = ManualAnnotation(args.clinvar)
-
-    # add mutations to the seq object
-    ma.add_mutations(seq, metadata=['genomic_mutations'])
-
-    # add PTM annotations to the sequence object
-    ma.add_position_properties(seq)
-
-    # add structure or linear motif annotation to the sequence object
-    ma.add_sequence_properties(seq)
-
+#add mutations from ClinVar:
+if args.refseq:
+    seq.aliases["refseq"] = args.refseq
+    clinvar = ClinVar()
+    clinvar_output = clinvar.add_mutations(seq, metadata=[
+                    'clinvar_classification',
+                    'clinvar_condition',
+                    'clinvar_review_status',
+                    'clinvar_variant_id',
+                    'genomic_mutations',
+                    'genomic_coordinates'
+                ])
+    entry_not_found = clinvar_output['entry_not_found']
+    variants_to_check = clinvar_output['variants_to_check']
+    inconsistency_annotations = clinvar_output['inconsistency_annotations']
+    
+    if not entry_not_found.empty:
+        entry_not_found.to_csv('entry_not_found.csv', index=False)
+    if not variants_to_check.empty:
+        variants_to_check.to_csv('variants_to_check.csv', index=False)
+    if not inconsistency_annotations.empty:
+        inconsistency_annotations.to_csv('inconsistency_annotations.csv', index=False)
 
 if args.external_mutations:
     for external_list in args.external_mutations:
