@@ -21,10 +21,6 @@
 ./GENE_NAME/cancermuts
 ./GENE_NAME/cancermuts/get_mutlists.py
 ./GENE_NAME/cancermuts/readme.txt
-./GENE_NAME/clinvar
-./GENE_NAME/clinvar/clinvar.py
-./GENE_NAME/clinvar/run.sh
-./GENE_NAME/clinvar/readme.txt
 ./GENE_NAME/membrane_filtering
 ./GENE_NAME/membrane_filtering/opm
 ./GENE_NAME/membrane_filtering/opm/embedded_residues.txt

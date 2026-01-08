@@ -45,14 +45,10 @@ cosmic.add_mutations(seq, genome_assembly_version='GRCh38', metadata=['genomic_c
 if args.refseq:
     seq.aliases["refseq"] = args.refseq
     clinvar = ClinVar()
-    clinvar_output = clinvar.add_mutations(seq, metadata=[
-                    'clinvar_classification',
-                    'clinvar_condition',
-                    'clinvar_review_status',
-                    'clinvar_variant_id',
-                    'genomic_mutations',
-                    'genomic_coordinates'
-                ])
+    clinvar_output = clinvar.add_mutations(seq, metadata=['clinvar_germline_classification', 'clinvar_germline_condition', 
+        'clinvar_germline_review_status', 'genomic_mutations', 'clinvar_variant_id', 'genomic_coordinates', 
+        'clinvar_oncogenicity_condition', 'clinvar_oncogenicity_classification', 'clinvar_oncogenicity_review_status', 
+        'clinvar_clinical_impact_condition', 'clinvar_clinical_impact_review_status', 'clinvar_clinical_impact_classification'])
     entry_not_found = clinvar_output['entry_not_found']
     variants_to_check = clinvar_output['variants_to_check']
     inconsistency_annotations = clinvar_output['inconsistency_annotations']

@@ -145,17 +145,6 @@ modules['mutations_aggregation']['cancermuts'].update({"readme" : cancermuts_rea
                                                        "script_pancancer" : cancermuts_pancancer_script,
                                                        "script_plot" : cancermuts_plot_script})
 
-def variant_name_to_HGVSp(row):
-    hgvsps = re.findall(HGVSp_re, row['variant_name'])
-    if len(hgvsps) != 1:
-        print(f"WARNING: skipping {row.variant_id}, {row.variant_name}")
-        return 'unexpected'
-    if hgvsps[0].endswith('Ter'):
-        print(f"WARNING: skipping {row.variant_id}, {row.variant_name}")
-        return 'unexpected'
-
-    return hgvsps[0]
-
 #------------------------------- Mutlist -----------------------------------#
 
 mutlist_script = f"mavisp_templates/GENE_NAME/"\
@@ -487,6 +476,19 @@ rule idps:
                zip,
                hugo_name = df['protein'].str.upper(),
                uniprot_ac = df['uniprot_ac'].str.upper())
+
+###################### Target rule for simple_mode processing #######################
+
+rule essentials:
+    input:
+        expand("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done",
+                zip,
+                hugo_name = df_exploded['protein'].str.upper(),
+                research_field = df_exploded['research_field'],
+                structure_source = df_exploded['structure_source'],
+                resrange = df_exploded['trimmed'],
+                uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
+                model = df_exploded['model'])
 
 ###################### Structure selection and trimming ######################
 
@@ -1576,6 +1578,7 @@ rule collect_outputs:
             f"saturation/{wcs.uniprot_ac}_table/energies.csv"
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
         pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
+        ted=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/results.csv",
         alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/",
         metadata = lambda wcs: f"{wcs.hugo_name}/metadata/metadata.yaml"
     output:
@@ -1656,7 +1659,12 @@ rule collect_outputs:
         pf_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.pfam, pf_dir / "summary.csv")
 
-        # 11) alphafold
+        # 11) ted
+        ted_dir = out / "ted"
+        ted_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.ted, ted_dir / "results.csv")
+
+        # 12) alphafold
         af_dir_path = Path(input.alphafold)
         af_csv = af_dir_path / f"{wildcards.hugo_name.lower()}/{wildcards.uniprot_ac}.csv"
 
@@ -1665,13 +1673,13 @@ rule collect_outputs:
             af_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy(af_csv, af_dir / af_csv.name)
 
-	# 12) merge stability
+	# 13) merge stability
         ranges = sorted([Path(r).parent.name.split('_',1)[1] for r in input.structure_rasp],
             key=lambda x: int(x.split('-',1)[0]))
         merged_range = "_".join(ranges)
         base = out / "stability" / f"{wildcards.structure_source}_{merged_range}" / wildcards.structure_source / f"model_{wildcards.model}"
 
-        # 13) rasp predictions
+        # 14) rasp predictions
         rasp_out = base / "rasp" / "post_processed.csv"
         (rasp_out.parent).mkdir(parents=True, exist_ok=True)
         rasp_files = []
@@ -1688,7 +1696,7 @@ rule collect_outputs:
                     header_written = True
                 fout.writelines(lines[1:])
 
-	# 14) foldx5 energies
+	# 15) foldx5 energies
         fx_out = base / "foldx5" / "energies.csv"
         (fx_out.parent).mkdir(parents=True, exist_ok=True)
 
@@ -1709,7 +1717,7 @@ rule collect_outputs:
             fout.write(header)
             fout.writelines(fx_lines)
 
-        # 15) mutation_list
+        # 16) mutation_list
         ml_dir = out / "mutation_list"
         ml_dir.mkdir(parents=True, exist_ok=True)
         all_ml = glob.glob(f"{hn}/cancermuts/mutlist_*.txt")
@@ -1721,7 +1729,7 @@ rule collect_outputs:
             for line in fi:
                 fo.write(f"{line.rstrip()}\thttps://doi.org/10.1101/2022.10.22.513328\n")
 
-        # 16) touch the done‐file
+        # 17) touch the done‐file
         Path(output[0]).touch()
 
 rule collect_outputs_idps:
@@ -1731,6 +1739,7 @@ rule collect_outputs_idps:
         cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/",
         efoldmine=lambda wcs: f"{wcs.hugo_name}/efoldmine/{wcs.uniprot_ac}.tabular",
         pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
+        ted=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/results.csv",
         alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/",
         metadata = lambda wcs: f"{wcs.hugo_name}/metadata/metadata.yaml"
     output:
@@ -1769,7 +1778,12 @@ rule collect_outputs_idps:
         pf_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.pfam, pf_dir / "summary.csv")
 
-        # 12) alphafold
+        # 12) ted
+        ted_dir = out / "ted"
+        ted_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(input.ted, ted_dir / "results.csv")
+
+        # 13) alphafold
         af_dir_path = Path(input.alphafold)
         af_csv = af_dir_path / f"{wildcards.hugo_name.lower()}/{wildcards.uniprot_ac}.csv"
 
@@ -1778,6 +1792,18 @@ rule collect_outputs_idps:
             af_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy(af_csv, af_dir / af_csv.name)
 
-        # 17) touch the done‐file
+        # 14) mutation_list
+        ml_dir = out / "mutation_list"
+        ml_dir.mkdir(parents=True, exist_ok=True)
+        all_ml = glob.glob(f"{hn}/cancermuts/mutlist_*.txt")
+        pat   = re.compile(r"mutlist_[0-9]{8}\.txt$")
+        fpath = next(p for p in all_ml if pat.search(p))
+        basename = Path(fpath).name.replace("mutlist_", "mutations_pmid_")
+        with open(fpath) as fi, open(ml_dir / basename, "w") as fo:
+            fo.write("mutation\tPMID\n")
+            for line in fi:
+                fo.write(f"{line.rstrip()}\thttps://doi.org/10.1101/2022.10.22.513328\n")
+
+        # 15) touch the done‐file
         Path(output[0]).touch()
 

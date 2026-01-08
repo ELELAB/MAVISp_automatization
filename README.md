@@ -230,6 +230,7 @@ BLM
 │   ├── mutlist_mutatex_P_08092023.txt
 │   ├── mutlist_rosetta_08092023.txt
 │   ├── readme.txt
+│   ├── metatable_pancancer_BLM.csv  
 │   ├── entry_not_found.csv
 │   ├── variants_to_check.csv
 │   └── inconsistency.annotations.csv
@@ -414,5 +415,14 @@ snakemake -c 1 idps
 
 notice that in this case the `input.csv` file must specify a custom PDB file per row.
 
+to use the mode to run only essential data:
+
+```
+conda deactivate
+
+module load python/3.10
+
+snakemake -c 1 essentials
+```
 
 

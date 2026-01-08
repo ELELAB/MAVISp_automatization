@@ -1,0 +1,1312 @@
+mutation;pfam_domain;accession
+P36A;Not found;NA
+P36C;Not found;NA
+P36D;Not found;NA
+P36E;Not found;NA
+P36F;Not found;NA
+P36G;Not found;NA
+P36H;Not found;NA
+P36I;Not found;NA
+P36K;Not found;NA
+P36L;Not found;NA
+P36M;Not found;NA
+P36N;Not found;NA
+P36Q;Not found;NA
+P36R;Not found;NA
+P36S;Not found;NA
+P36T;Not found;NA
+P36V;Not found;NA
+P36W;Not found;NA
+P36Y;Not found;NA
+R37A;Not found;NA
+R37C;Not found;NA
+R37D;Not found;NA
+R37E;Not found;NA
+R37F;Not found;NA
+R37G;Not found;NA
+R37H;Not found;NA
+R37I;Not found;NA
+R37K;Not found;NA
+R37L;Not found;NA
+R37M;Not found;NA
+R37N;Not found;NA
+R37P;Not found;NA
+R37Q;Not found;NA
+R37S;Not found;NA
+R37T;Not found;NA
+R37V;Not found;NA
+R37W;Not found;NA
+R37Y;Not found;NA
+K38A;Not found;NA
+K38C;Not found;NA
+K38D;Not found;NA
+K38E;Not found;NA
+K38F;Not found;NA
+K38G;Not found;NA
+K38H;Not found;NA
+K38I;Not found;NA
+K38L;Not found;NA
+K38M;Not found;NA
+K38N;Not found;NA
+K38P;Not found;NA
+K38Q;Not found;NA
+K38R;Not found;NA
+K38S;Not found;NA
+K38T;Not found;NA
+K38V;Not found;NA
+K38W;Not found;NA
+K38Y;Not found;NA
+Q39A;Not found;NA
+Q39C;Not found;NA
+Q39D;Not found;NA
+Q39E;Not found;NA
+Q39F;Not found;NA
+Q39G;Not found;NA
+Q39H;Not found;NA
+Q39I;Not found;NA
+Q39K;Not found;NA
+Q39L;Not found;NA
+Q39M;Not found;NA
+Q39N;Not found;NA
+Q39P;Not found;NA
+Q39R;Not found;NA
+Q39S;Not found;NA
+Q39T;Not found;NA
+Q39V;Not found;NA
+Q39W;Not found;NA
+Q39Y;Not found;NA
+R40A;Homeodomain;PF00046
+R40C;Homeodomain;PF00046
+R40D;Homeodomain;PF00046
+R40E;Homeodomain;PF00046
+R40F;Homeodomain;PF00046
+R40G;Homeodomain;PF00046
+R40H;Homeodomain;PF00046
+R40I;Homeodomain;PF00046
+R40K;Homeodomain;PF00046
+R40L;Homeodomain;PF00046
+R40M;Homeodomain;PF00046
+R40N;Homeodomain;PF00046
+R40P;Homeodomain;PF00046
+R40Q;Homeodomain;PF00046
+R40S;Homeodomain;PF00046
+R40T;Homeodomain;PF00046
+R40V;Homeodomain;PF00046
+R40W;Homeodomain;PF00046
+R40Y;Homeodomain;PF00046
+R41A;Homeodomain;PF00046
+R41C;Homeodomain;PF00046
+R41D;Homeodomain;PF00046
+R41E;Homeodomain;PF00046
+R41F;Homeodomain;PF00046
+R41G;Homeodomain;PF00046
+R41H;Homeodomain;PF00046
+R41I;Homeodomain;PF00046
+R41K;Homeodomain;PF00046
+R41L;Homeodomain;PF00046
+R41M;Homeodomain;PF00046
+R41N;Homeodomain;PF00046
+R41P;Homeodomain;PF00046
+R41Q;Homeodomain;PF00046
+R41S;Homeodomain;PF00046
+R41T;Homeodomain;PF00046
+R41V;Homeodomain;PF00046
+R41W;Homeodomain;PF00046
+R41Y;Homeodomain;PF00046
+E42A;Homeodomain;PF00046
+E42C;Homeodomain;PF00046
+E42D;Homeodomain;PF00046
+E42F;Homeodomain;PF00046
+E42G;Homeodomain;PF00046
+E42H;Homeodomain;PF00046
+E42I;Homeodomain;PF00046
+E42K;Homeodomain;PF00046
+E42L;Homeodomain;PF00046
+E42M;Homeodomain;PF00046
+E42N;Homeodomain;PF00046
+E42P;Homeodomain;PF00046
+E42Q;Homeodomain;PF00046
+E42R;Homeodomain;PF00046
+E42S;Homeodomain;PF00046
+E42T;Homeodomain;PF00046
+E42V;Homeodomain;PF00046
+E42W;Homeodomain;PF00046
+E42Y;Homeodomain;PF00046
+R43A;Homeodomain;PF00046
+R43C;Homeodomain;PF00046
+R43D;Homeodomain;PF00046
+R43E;Homeodomain;PF00046
+R43F;Homeodomain;PF00046
+R43G;Homeodomain;PF00046
+R43H;Homeodomain;PF00046
+R43I;Homeodomain;PF00046
+R43K;Homeodomain;PF00046
+R43L;Homeodomain;PF00046
+R43M;Homeodomain;PF00046
+R43N;Homeodomain;PF00046
+R43P;Homeodomain;PF00046
+R43Q;Homeodomain;PF00046
+R43S;Homeodomain;PF00046
+R43T;Homeodomain;PF00046
+R43V;Homeodomain;PF00046
+R43W;Homeodomain;PF00046
+R43Y;Homeodomain;PF00046
+T44A;Homeodomain;PF00046
+T44C;Homeodomain;PF00046
+T44D;Homeodomain;PF00046
+T44E;Homeodomain;PF00046
+T44F;Homeodomain;PF00046
+T44G;Homeodomain;PF00046
+T44H;Homeodomain;PF00046
+T44I;Homeodomain;PF00046
+T44K;Homeodomain;PF00046
+T44L;Homeodomain;PF00046
+T44M;Homeodomain;PF00046
+T44N;Homeodomain;PF00046
+T44P;Homeodomain;PF00046
+T44Q;Homeodomain;PF00046
+T44R;Homeodomain;PF00046
+T44S;Homeodomain;PF00046
+T44V;Homeodomain;PF00046
+T44W;Homeodomain;PF00046
+T44Y;Homeodomain;PF00046
+T45A;Homeodomain;PF00046
+T45C;Homeodomain;PF00046
+T45D;Homeodomain;PF00046
+T45E;Homeodomain;PF00046
+T45F;Homeodomain;PF00046
+T45G;Homeodomain;PF00046
+T45H;Homeodomain;PF00046
+T45I;Homeodomain;PF00046
+T45K;Homeodomain;PF00046
+T45L;Homeodomain;PF00046
+T45M;Homeodomain;PF00046
+T45N;Homeodomain;PF00046
+T45P;Homeodomain;PF00046
+T45Q;Homeodomain;PF00046
+T45R;Homeodomain;PF00046
+T45S;Homeodomain;PF00046
+T45V;Homeodomain;PF00046
+T45W;Homeodomain;PF00046
+T45Y;Homeodomain;PF00046
+F46A;Homeodomain;PF00046
+F46C;Homeodomain;PF00046
+F46D;Homeodomain;PF00046
+F46E;Homeodomain;PF00046
+F46G;Homeodomain;PF00046
+F46H;Homeodomain;PF00046
+F46I;Homeodomain;PF00046
+F46K;Homeodomain;PF00046
+F46L;Homeodomain;PF00046
+F46M;Homeodomain;PF00046
+F46N;Homeodomain;PF00046
+F46P;Homeodomain;PF00046
+F46Q;Homeodomain;PF00046
+F46R;Homeodomain;PF00046
+F46S;Homeodomain;PF00046
+F46T;Homeodomain;PF00046
+F46V;Homeodomain;PF00046
+F46W;Homeodomain;PF00046
+F46Y;Homeodomain;PF00046
+T47A;Homeodomain;PF00046
+T47C;Homeodomain;PF00046
+T47D;Homeodomain;PF00046
+T47E;Homeodomain;PF00046
+T47F;Homeodomain;PF00046
+T47G;Homeodomain;PF00046
+T47H;Homeodomain;PF00046
+T47I;Homeodomain;PF00046
+T47K;Homeodomain;PF00046
+T47L;Homeodomain;PF00046
+T47M;Homeodomain;PF00046
+T47N;Homeodomain;PF00046
+T47P;Homeodomain;PF00046
+T47Q;Homeodomain;PF00046
+T47R;Homeodomain;PF00046
+T47S;Homeodomain;PF00046
+T47V;Homeodomain;PF00046
+T47W;Homeodomain;PF00046
+T47Y;Homeodomain;PF00046
+R48A;Homeodomain;PF00046
+R48C;Homeodomain;PF00046
+R48D;Homeodomain;PF00046
+R48E;Homeodomain;PF00046
+R48F;Homeodomain;PF00046
+R48G;Homeodomain;PF00046
+R48H;Homeodomain;PF00046
+R48I;Homeodomain;PF00046
+R48K;Homeodomain;PF00046
+R48L;Homeodomain;PF00046
+R48M;Homeodomain;PF00046
+R48N;Homeodomain;PF00046
+R48P;Homeodomain;PF00046
+R48Q;Homeodomain;PF00046
+R48S;Homeodomain;PF00046
+R48T;Homeodomain;PF00046
+R48V;Homeodomain;PF00046
+R48W;Homeodomain;PF00046
+R48Y;Homeodomain;PF00046
+S49A;Homeodomain;PF00046
+S49C;Homeodomain;PF00046
+S49D;Homeodomain;PF00046
+S49E;Homeodomain;PF00046
+S49F;Homeodomain;PF00046
+S49G;Homeodomain;PF00046
+S49H;Homeodomain;PF00046
+S49I;Homeodomain;PF00046
+S49K;Homeodomain;PF00046
+S49L;Homeodomain;PF00046
+S49M;Homeodomain;PF00046
+S49N;Homeodomain;PF00046
+S49P;Homeodomain;PF00046
+S49Q;Homeodomain;PF00046
+S49R;Homeodomain;PF00046
+S49T;Homeodomain;PF00046
+S49V;Homeodomain;PF00046
+S49W;Homeodomain;PF00046
+S49Y;Homeodomain;PF00046
+Q50A;Homeodomain;PF00046
+Q50C;Homeodomain;PF00046
+Q50D;Homeodomain;PF00046
+Q50E;Homeodomain;PF00046
+Q50F;Homeodomain;PF00046
+Q50G;Homeodomain;PF00046
+Q50H;Homeodomain;PF00046
+Q50I;Homeodomain;PF00046
+Q50K;Homeodomain;PF00046
+Q50L;Homeodomain;PF00046
+Q50M;Homeodomain;PF00046
+Q50N;Homeodomain;PF00046
+Q50P;Homeodomain;PF00046
+Q50R;Homeodomain;PF00046
+Q50S;Homeodomain;PF00046
+Q50T;Homeodomain;PF00046
+Q50V;Homeodomain;PF00046
+Q50W;Homeodomain;PF00046
+Q50Y;Homeodomain;PF00046
+L51A;Homeodomain;PF00046
+L51C;Homeodomain;PF00046
+L51D;Homeodomain;PF00046
+L51E;Homeodomain;PF00046
+L51F;Homeodomain;PF00046
+L51G;Homeodomain;PF00046
+L51H;Homeodomain;PF00046
+L51I;Homeodomain;PF00046
+L51K;Homeodomain;PF00046
+L51M;Homeodomain;PF00046
+L51N;Homeodomain;PF00046
+L51P;Homeodomain;PF00046
+L51Q;Homeodomain;PF00046
+L51R;Homeodomain;PF00046
+L51S;Homeodomain;PF00046
+L51T;Homeodomain;PF00046
+L51V;Homeodomain;PF00046
+L51W;Homeodomain;PF00046
+L51Y;Homeodomain;PF00046
+E52A;Homeodomain;PF00046
+E52C;Homeodomain;PF00046
+E52D;Homeodomain;PF00046
+E52F;Homeodomain;PF00046
+E52G;Homeodomain;PF00046
+E52H;Homeodomain;PF00046
+E52I;Homeodomain;PF00046
+E52K;Homeodomain;PF00046
+E52L;Homeodomain;PF00046
+E52M;Homeodomain;PF00046
+E52N;Homeodomain;PF00046
+E52P;Homeodomain;PF00046
+E52Q;Homeodomain;PF00046
+E52R;Homeodomain;PF00046
+E52S;Homeodomain;PF00046
+E52T;Homeodomain;PF00046
+E52V;Homeodomain;PF00046
+E52W;Homeodomain;PF00046
+E52Y;Homeodomain;PF00046
+E53A;Homeodomain;PF00046
+E53C;Homeodomain;PF00046
+E53D;Homeodomain;PF00046
+E53F;Homeodomain;PF00046
+E53G;Homeodomain;PF00046
+E53H;Homeodomain;PF00046
+E53I;Homeodomain;PF00046
+E53K;Homeodomain;PF00046
+E53L;Homeodomain;PF00046
+E53M;Homeodomain;PF00046
+E53N;Homeodomain;PF00046
+E53P;Homeodomain;PF00046
+E53Q;Homeodomain;PF00046
+E53R;Homeodomain;PF00046
+E53S;Homeodomain;PF00046
+E53T;Homeodomain;PF00046
+E53V;Homeodomain;PF00046
+E53W;Homeodomain;PF00046
+E53Y;Homeodomain;PF00046
+L54A;Homeodomain;PF00046
+L54C;Homeodomain;PF00046
+L54D;Homeodomain;PF00046
+L54E;Homeodomain;PF00046
+L54F;Homeodomain;PF00046
+L54G;Homeodomain;PF00046
+L54H;Homeodomain;PF00046
+L54I;Homeodomain;PF00046
+L54K;Homeodomain;PF00046
+L54M;Homeodomain;PF00046
+L54N;Homeodomain;PF00046
+L54P;Homeodomain;PF00046
+L54Q;Homeodomain;PF00046
+L54R;Homeodomain;PF00046
+L54S;Homeodomain;PF00046
+L54T;Homeodomain;PF00046
+L54V;Homeodomain;PF00046
+L54W;Homeodomain;PF00046
+L54Y;Homeodomain;PF00046
+E55A;Homeodomain;PF00046
+E55C;Homeodomain;PF00046
+E55D;Homeodomain;PF00046
+E55F;Homeodomain;PF00046
+E55G;Homeodomain;PF00046
+E55H;Homeodomain;PF00046
+E55I;Homeodomain;PF00046
+E55K;Homeodomain;PF00046
+E55L;Homeodomain;PF00046
+E55M;Homeodomain;PF00046
+E55N;Homeodomain;PF00046
+E55P;Homeodomain;PF00046
+E55Q;Homeodomain;PF00046
+E55R;Homeodomain;PF00046
+E55S;Homeodomain;PF00046
+E55T;Homeodomain;PF00046
+E55V;Homeodomain;PF00046
+E55W;Homeodomain;PF00046
+E55Y;Homeodomain;PF00046
+A56C;Homeodomain;PF00046
+A56D;Homeodomain;PF00046
+A56E;Homeodomain;PF00046
+A56F;Homeodomain;PF00046
+A56G;Homeodomain;PF00046
+A56H;Homeodomain;PF00046
+A56I;Homeodomain;PF00046
+A56K;Homeodomain;PF00046
+A56L;Homeodomain;PF00046
+A56M;Homeodomain;PF00046
+A56N;Homeodomain;PF00046
+A56P;Homeodomain;PF00046
+A56Q;Homeodomain;PF00046
+A56R;Homeodomain;PF00046
+A56S;Homeodomain;PF00046
+A56T;Homeodomain;PF00046
+A56V;Homeodomain;PF00046
+A56W;Homeodomain;PF00046
+A56Y;Homeodomain;PF00046
+L57A;Homeodomain;PF00046
+L57C;Homeodomain;PF00046
+L57D;Homeodomain;PF00046
+L57E;Homeodomain;PF00046
+L57F;Homeodomain;PF00046
+L57G;Homeodomain;PF00046
+L57H;Homeodomain;PF00046
+L57I;Homeodomain;PF00046
+L57K;Homeodomain;PF00046
+L57M;Homeodomain;PF00046
+L57N;Homeodomain;PF00046
+L57P;Homeodomain;PF00046
+L57Q;Homeodomain;PF00046
+L57R;Homeodomain;PF00046
+L57S;Homeodomain;PF00046
+L57T;Homeodomain;PF00046
+L57V;Homeodomain;PF00046
+L57W;Homeodomain;PF00046
+L57Y;Homeodomain;PF00046
+F58A;Homeodomain;PF00046
+F58C;Homeodomain;PF00046
+F58D;Homeodomain;PF00046
+F58E;Homeodomain;PF00046
+F58G;Homeodomain;PF00046
+F58H;Homeodomain;PF00046
+F58I;Homeodomain;PF00046
+F58K;Homeodomain;PF00046
+F58L;Homeodomain;PF00046
+F58M;Homeodomain;PF00046
+F58N;Homeodomain;PF00046
+F58P;Homeodomain;PF00046
+F58Q;Homeodomain;PF00046
+F58R;Homeodomain;PF00046
+F58S;Homeodomain;PF00046
+F58T;Homeodomain;PF00046
+F58V;Homeodomain;PF00046
+F58W;Homeodomain;PF00046
+F58Y;Homeodomain;PF00046
+A59C;Homeodomain;PF00046
+A59D;Homeodomain;PF00046
+A59E;Homeodomain;PF00046
+A59F;Homeodomain;PF00046
+A59G;Homeodomain;PF00046
+A59H;Homeodomain;PF00046
+A59I;Homeodomain;PF00046
+A59K;Homeodomain;PF00046
+A59L;Homeodomain;PF00046
+A59M;Homeodomain;PF00046
+A59N;Homeodomain;PF00046
+A59P;Homeodomain;PF00046
+A59Q;Homeodomain;PF00046
+A59R;Homeodomain;PF00046
+A59S;Homeodomain;PF00046
+A59T;Homeodomain;PF00046
+A59V;Homeodomain;PF00046
+A59W;Homeodomain;PF00046
+A59Y;Homeodomain;PF00046
+K60A;Homeodomain;PF00046
+K60C;Homeodomain;PF00046
+K60D;Homeodomain;PF00046
+K60E;Homeodomain;PF00046
+K60F;Homeodomain;PF00046
+K60G;Homeodomain;PF00046
+K60H;Homeodomain;PF00046
+K60I;Homeodomain;PF00046
+K60L;Homeodomain;PF00046
+K60M;Homeodomain;PF00046
+K60N;Homeodomain;PF00046
+K60P;Homeodomain;PF00046
+K60Q;Homeodomain;PF00046
+K60R;Homeodomain;PF00046
+K60S;Homeodomain;PF00046
+K60T;Homeodomain;PF00046
+K60V;Homeodomain;PF00046
+K60W;Homeodomain;PF00046
+K60Y;Homeodomain;PF00046
+T61A;Homeodomain;PF00046
+T61C;Homeodomain;PF00046
+T61D;Homeodomain;PF00046
+T61E;Homeodomain;PF00046
+T61F;Homeodomain;PF00046
+T61G;Homeodomain;PF00046
+T61H;Homeodomain;PF00046
+T61I;Homeodomain;PF00046
+T61K;Homeodomain;PF00046
+T61L;Homeodomain;PF00046
+T61M;Homeodomain;PF00046
+T61N;Homeodomain;PF00046
+T61P;Homeodomain;PF00046
+T61Q;Homeodomain;PF00046
+T61R;Homeodomain;PF00046
+T61S;Homeodomain;PF00046
+T61V;Homeodomain;PF00046
+T61W;Homeodomain;PF00046
+T61Y;Homeodomain;PF00046
+Q62A;Homeodomain;PF00046
+Q62C;Homeodomain;PF00046
+Q62D;Homeodomain;PF00046
+Q62E;Homeodomain;PF00046
+Q62F;Homeodomain;PF00046
+Q62G;Homeodomain;PF00046
+Q62H;Homeodomain;PF00046
+Q62I;Homeodomain;PF00046
+Q62K;Homeodomain;PF00046
+Q62L;Homeodomain;PF00046
+Q62M;Homeodomain;PF00046
+Q62N;Homeodomain;PF00046
+Q62P;Homeodomain;PF00046
+Q62R;Homeodomain;PF00046
+Q62S;Homeodomain;PF00046
+Q62T;Homeodomain;PF00046
+Q62V;Homeodomain;PF00046
+Q62W;Homeodomain;PF00046
+Q62Y;Homeodomain;PF00046
+Y63A;Homeodomain;PF00046
+Y63C;Homeodomain;PF00046
+Y63D;Homeodomain;PF00046
+Y63E;Homeodomain;PF00046
+Y63F;Homeodomain;PF00046
+Y63G;Homeodomain;PF00046
+Y63H;Homeodomain;PF00046
+Y63I;Homeodomain;PF00046
+Y63K;Homeodomain;PF00046
+Y63L;Homeodomain;PF00046
+Y63M;Homeodomain;PF00046
+Y63N;Homeodomain;PF00046
+Y63P;Homeodomain;PF00046
+Y63Q;Homeodomain;PF00046
+Y63R;Homeodomain;PF00046
+Y63S;Homeodomain;PF00046
+Y63T;Homeodomain;PF00046
+Y63V;Homeodomain;PF00046
+Y63W;Homeodomain;PF00046
+P64A;Homeodomain;PF00046
+P64C;Homeodomain;PF00046
+P64D;Homeodomain;PF00046
+P64E;Homeodomain;PF00046
+P64F;Homeodomain;PF00046
+P64G;Homeodomain;PF00046
+P64H;Homeodomain;PF00046
+P64I;Homeodomain;PF00046
+P64K;Homeodomain;PF00046
+P64L;Homeodomain;PF00046
+P64M;Homeodomain;PF00046
+P64N;Homeodomain;PF00046
+P64Q;Homeodomain;PF00046
+P64R;Homeodomain;PF00046
+P64S;Homeodomain;PF00046
+P64T;Homeodomain;PF00046
+P64V;Homeodomain;PF00046
+P64W;Homeodomain;PF00046
+P64Y;Homeodomain;PF00046
+D65A;Homeodomain;PF00046
+D65C;Homeodomain;PF00046
+D65E;Homeodomain;PF00046
+D65F;Homeodomain;PF00046
+D65G;Homeodomain;PF00046
+D65H;Homeodomain;PF00046
+D65I;Homeodomain;PF00046
+D65K;Homeodomain;PF00046
+D65L;Homeodomain;PF00046
+D65M;Homeodomain;PF00046
+D65N;Homeodomain;PF00046
+D65P;Homeodomain;PF00046
+D65Q;Homeodomain;PF00046
+D65R;Homeodomain;PF00046
+D65S;Homeodomain;PF00046
+D65T;Homeodomain;PF00046
+D65V;Homeodomain;PF00046
+D65W;Homeodomain;PF00046
+D65Y;Homeodomain;PF00046
+V66A;Homeodomain;PF00046
+V66C;Homeodomain;PF00046
+V66D;Homeodomain;PF00046
+V66E;Homeodomain;PF00046
+V66F;Homeodomain;PF00046
+V66G;Homeodomain;PF00046
+V66H;Homeodomain;PF00046
+V66I;Homeodomain;PF00046
+V66K;Homeodomain;PF00046
+V66L;Homeodomain;PF00046
+V66M;Homeodomain;PF00046
+V66N;Homeodomain;PF00046
+V66P;Homeodomain;PF00046
+V66Q;Homeodomain;PF00046
+V66R;Homeodomain;PF00046
+V66S;Homeodomain;PF00046
+V66T;Homeodomain;PF00046
+V66W;Homeodomain;PF00046
+V66Y;Homeodomain;PF00046
+Y67A;Homeodomain;PF00046
+Y67C;Homeodomain;PF00046
+Y67D;Homeodomain;PF00046
+Y67E;Homeodomain;PF00046
+Y67F;Homeodomain;PF00046
+Y67G;Homeodomain;PF00046
+Y67H;Homeodomain;PF00046
+Y67I;Homeodomain;PF00046
+Y67K;Homeodomain;PF00046
+Y67L;Homeodomain;PF00046
+Y67M;Homeodomain;PF00046
+Y67N;Homeodomain;PF00046
+Y67P;Homeodomain;PF00046
+Y67Q;Homeodomain;PF00046
+Y67R;Homeodomain;PF00046
+Y67S;Homeodomain;PF00046
+Y67T;Homeodomain;PF00046
+Y67V;Homeodomain;PF00046
+Y67W;Homeodomain;PF00046
+A68C;Homeodomain;PF00046
+A68D;Homeodomain;PF00046
+A68E;Homeodomain;PF00046
+A68F;Homeodomain;PF00046
+A68G;Homeodomain;PF00046
+A68H;Homeodomain;PF00046
+A68I;Homeodomain;PF00046
+A68K;Homeodomain;PF00046
+A68L;Homeodomain;PF00046
+A68M;Homeodomain;PF00046
+A68N;Homeodomain;PF00046
+A68P;Homeodomain;PF00046
+A68Q;Homeodomain;PF00046
+A68R;Homeodomain;PF00046
+A68S;Homeodomain;PF00046
+A68T;Homeodomain;PF00046
+A68V;Homeodomain;PF00046
+A68W;Homeodomain;PF00046
+A68Y;Homeodomain;PF00046
+R69A;Homeodomain;PF00046
+R69C;Homeodomain;PF00046
+R69D;Homeodomain;PF00046
+R69E;Homeodomain;PF00046
+R69F;Homeodomain;PF00046
+R69G;Homeodomain;PF00046
+R69H;Homeodomain;PF00046
+R69I;Homeodomain;PF00046
+R69K;Homeodomain;PF00046
+R69L;Homeodomain;PF00046
+R69M;Homeodomain;PF00046
+R69N;Homeodomain;PF00046
+R69P;Homeodomain;PF00046
+R69Q;Homeodomain;PF00046
+R69S;Homeodomain;PF00046
+R69T;Homeodomain;PF00046
+R69V;Homeodomain;PF00046
+R69W;Homeodomain;PF00046
+R69Y;Homeodomain;PF00046
+E70A;Homeodomain;PF00046
+E70C;Homeodomain;PF00046
+E70D;Homeodomain;PF00046
+E70F;Homeodomain;PF00046
+E70G;Homeodomain;PF00046
+E70H;Homeodomain;PF00046
+E70I;Homeodomain;PF00046
+E70K;Homeodomain;PF00046
+E70L;Homeodomain;PF00046
+E70M;Homeodomain;PF00046
+E70N;Homeodomain;PF00046
+E70P;Homeodomain;PF00046
+E70Q;Homeodomain;PF00046
+E70R;Homeodomain;PF00046
+E70S;Homeodomain;PF00046
+E70T;Homeodomain;PF00046
+E70V;Homeodomain;PF00046
+E70W;Homeodomain;PF00046
+E70Y;Homeodomain;PF00046
+E71A;Homeodomain;PF00046
+E71C;Homeodomain;PF00046
+E71D;Homeodomain;PF00046
+E71F;Homeodomain;PF00046
+E71G;Homeodomain;PF00046
+E71H;Homeodomain;PF00046
+E71I;Homeodomain;PF00046
+E71K;Homeodomain;PF00046
+E71L;Homeodomain;PF00046
+E71M;Homeodomain;PF00046
+E71N;Homeodomain;PF00046
+E71P;Homeodomain;PF00046
+E71Q;Homeodomain;PF00046
+E71R;Homeodomain;PF00046
+E71S;Homeodomain;PF00046
+E71T;Homeodomain;PF00046
+E71V;Homeodomain;PF00046
+E71W;Homeodomain;PF00046
+E71Y;Homeodomain;PF00046
+V72A;Homeodomain;PF00046
+V72C;Homeodomain;PF00046
+V72D;Homeodomain;PF00046
+V72E;Homeodomain;PF00046
+V72F;Homeodomain;PF00046
+V72G;Homeodomain;PF00046
+V72H;Homeodomain;PF00046
+V72I;Homeodomain;PF00046
+V72K;Homeodomain;PF00046
+V72L;Homeodomain;PF00046
+V72M;Homeodomain;PF00046
+V72N;Homeodomain;PF00046
+V72P;Homeodomain;PF00046
+V72Q;Homeodomain;PF00046
+V72R;Homeodomain;PF00046
+V72S;Homeodomain;PF00046
+V72T;Homeodomain;PF00046
+V72W;Homeodomain;PF00046
+V72Y;Homeodomain;PF00046
+A73C;Homeodomain;PF00046
+A73D;Homeodomain;PF00046
+A73E;Homeodomain;PF00046
+A73F;Homeodomain;PF00046
+A73G;Homeodomain;PF00046
+A73H;Homeodomain;PF00046
+A73I;Homeodomain;PF00046
+A73K;Homeodomain;PF00046
+A73L;Homeodomain;PF00046
+A73M;Homeodomain;PF00046
+A73N;Homeodomain;PF00046
+A73P;Homeodomain;PF00046
+A73Q;Homeodomain;PF00046
+A73R;Homeodomain;PF00046
+A73S;Homeodomain;PF00046
+A73T;Homeodomain;PF00046
+A73V;Homeodomain;PF00046
+A73W;Homeodomain;PF00046
+A73Y;Homeodomain;PF00046
+L74A;Homeodomain;PF00046
+L74C;Homeodomain;PF00046
+L74D;Homeodomain;PF00046
+L74E;Homeodomain;PF00046
+L74F;Homeodomain;PF00046
+L74G;Homeodomain;PF00046
+L74H;Homeodomain;PF00046
+L74I;Homeodomain;PF00046
+L74K;Homeodomain;PF00046
+L74M;Homeodomain;PF00046
+L74N;Homeodomain;PF00046
+L74P;Homeodomain;PF00046
+L74Q;Homeodomain;PF00046
+L74R;Homeodomain;PF00046
+L74S;Homeodomain;PF00046
+L74T;Homeodomain;PF00046
+L74V;Homeodomain;PF00046
+L74W;Homeodomain;PF00046
+L74Y;Homeodomain;PF00046
+K75A;Homeodomain;PF00046
+K75C;Homeodomain;PF00046
+K75D;Homeodomain;PF00046
+K75E;Homeodomain;PF00046
+K75F;Homeodomain;PF00046
+K75G;Homeodomain;PF00046
+K75H;Homeodomain;PF00046
+K75I;Homeodomain;PF00046
+K75L;Homeodomain;PF00046
+K75M;Homeodomain;PF00046
+K75N;Homeodomain;PF00046
+K75P;Homeodomain;PF00046
+K75Q;Homeodomain;PF00046
+K75R;Homeodomain;PF00046
+K75S;Homeodomain;PF00046
+K75T;Homeodomain;PF00046
+K75V;Homeodomain;PF00046
+K75W;Homeodomain;PF00046
+K75Y;Homeodomain;PF00046
+I76A;Homeodomain;PF00046
+I76C;Homeodomain;PF00046
+I76D;Homeodomain;PF00046
+I76E;Homeodomain;PF00046
+I76F;Homeodomain;PF00046
+I76G;Homeodomain;PF00046
+I76H;Homeodomain;PF00046
+I76K;Homeodomain;PF00046
+I76L;Homeodomain;PF00046
+I76M;Homeodomain;PF00046
+I76N;Homeodomain;PF00046
+I76P;Homeodomain;PF00046
+I76Q;Homeodomain;PF00046
+I76R;Homeodomain;PF00046
+I76S;Homeodomain;PF00046
+I76T;Homeodomain;PF00046
+I76V;Homeodomain;PF00046
+I76W;Homeodomain;PF00046
+I76Y;Homeodomain;PF00046
+N77A;Homeodomain;PF00046
+N77C;Homeodomain;PF00046
+N77D;Homeodomain;PF00046
+N77E;Homeodomain;PF00046
+N77F;Homeodomain;PF00046
+N77G;Homeodomain;PF00046
+N77H;Homeodomain;PF00046
+N77I;Homeodomain;PF00046
+N77K;Homeodomain;PF00046
+N77L;Homeodomain;PF00046
+N77M;Homeodomain;PF00046
+N77P;Homeodomain;PF00046
+N77Q;Homeodomain;PF00046
+N77R;Homeodomain;PF00046
+N77S;Homeodomain;PF00046
+N77T;Homeodomain;PF00046
+N77V;Homeodomain;PF00046
+N77W;Homeodomain;PF00046
+N77Y;Homeodomain;PF00046
+L78A;Homeodomain;PF00046
+L78C;Homeodomain;PF00046
+L78D;Homeodomain;PF00046
+L78E;Homeodomain;PF00046
+L78F;Homeodomain;PF00046
+L78G;Homeodomain;PF00046
+L78H;Homeodomain;PF00046
+L78I;Homeodomain;PF00046
+L78K;Homeodomain;PF00046
+L78M;Homeodomain;PF00046
+L78N;Homeodomain;PF00046
+L78P;Homeodomain;PF00046
+L78Q;Homeodomain;PF00046
+L78R;Homeodomain;PF00046
+L78S;Homeodomain;PF00046
+L78T;Homeodomain;PF00046
+L78V;Homeodomain;PF00046
+L78W;Homeodomain;PF00046
+L78Y;Homeodomain;PF00046
+P79A;Homeodomain;PF00046
+P79C;Homeodomain;PF00046
+P79D;Homeodomain;PF00046
+P79E;Homeodomain;PF00046
+P79F;Homeodomain;PF00046
+P79G;Homeodomain;PF00046
+P79H;Homeodomain;PF00046
+P79I;Homeodomain;PF00046
+P79K;Homeodomain;PF00046
+P79L;Homeodomain;PF00046
+P79M;Homeodomain;PF00046
+P79N;Homeodomain;PF00046
+P79Q;Homeodomain;PF00046
+P79R;Homeodomain;PF00046
+P79S;Homeodomain;PF00046
+P79T;Homeodomain;PF00046
+P79V;Homeodomain;PF00046
+P79W;Homeodomain;PF00046
+P79Y;Homeodomain;PF00046
+E80A;Homeodomain;PF00046
+E80C;Homeodomain;PF00046
+E80D;Homeodomain;PF00046
+E80F;Homeodomain;PF00046
+E80G;Homeodomain;PF00046
+E80H;Homeodomain;PF00046
+E80I;Homeodomain;PF00046
+E80K;Homeodomain;PF00046
+E80L;Homeodomain;PF00046
+E80M;Homeodomain;PF00046
+E80N;Homeodomain;PF00046
+E80P;Homeodomain;PF00046
+E80Q;Homeodomain;PF00046
+E80R;Homeodomain;PF00046
+E80S;Homeodomain;PF00046
+E80T;Homeodomain;PF00046
+E80V;Homeodomain;PF00046
+E80W;Homeodomain;PF00046
+E80Y;Homeodomain;PF00046
+S81A;Homeodomain;PF00046
+S81C;Homeodomain;PF00046
+S81D;Homeodomain;PF00046
+S81E;Homeodomain;PF00046
+S81F;Homeodomain;PF00046
+S81G;Homeodomain;PF00046
+S81H;Homeodomain;PF00046
+S81I;Homeodomain;PF00046
+S81K;Homeodomain;PF00046
+S81L;Homeodomain;PF00046
+S81M;Homeodomain;PF00046
+S81N;Homeodomain;PF00046
+S81P;Homeodomain;PF00046
+S81Q;Homeodomain;PF00046
+S81R;Homeodomain;PF00046
+S81T;Homeodomain;PF00046
+S81V;Homeodomain;PF00046
+S81W;Homeodomain;PF00046
+S81Y;Homeodomain;PF00046
+R82A;Homeodomain;PF00046
+R82C;Homeodomain;PF00046
+R82D;Homeodomain;PF00046
+R82E;Homeodomain;PF00046
+R82F;Homeodomain;PF00046
+R82G;Homeodomain;PF00046
+R82H;Homeodomain;PF00046
+R82I;Homeodomain;PF00046
+R82K;Homeodomain;PF00046
+R82L;Homeodomain;PF00046
+R82M;Homeodomain;PF00046
+R82N;Homeodomain;PF00046
+R82P;Homeodomain;PF00046
+R82Q;Homeodomain;PF00046
+R82S;Homeodomain;PF00046
+R82T;Homeodomain;PF00046
+R82V;Homeodomain;PF00046
+R82W;Homeodomain;PF00046
+R82Y;Homeodomain;PF00046
+V83A;Homeodomain;PF00046
+V83C;Homeodomain;PF00046
+V83D;Homeodomain;PF00046
+V83E;Homeodomain;PF00046
+V83F;Homeodomain;PF00046
+V83G;Homeodomain;PF00046
+V83H;Homeodomain;PF00046
+V83I;Homeodomain;PF00046
+V83K;Homeodomain;PF00046
+V83L;Homeodomain;PF00046
+V83M;Homeodomain;PF00046
+V83N;Homeodomain;PF00046
+V83P;Homeodomain;PF00046
+V83Q;Homeodomain;PF00046
+V83R;Homeodomain;PF00046
+V83S;Homeodomain;PF00046
+V83T;Homeodomain;PF00046
+V83W;Homeodomain;PF00046
+V83Y;Homeodomain;PF00046
+Q84A;Homeodomain;PF00046
+Q84C;Homeodomain;PF00046
+Q84D;Homeodomain;PF00046
+Q84E;Homeodomain;PF00046
+Q84F;Homeodomain;PF00046
+Q84G;Homeodomain;PF00046
+Q84H;Homeodomain;PF00046
+Q84I;Homeodomain;PF00046
+Q84K;Homeodomain;PF00046
+Q84L;Homeodomain;PF00046
+Q84M;Homeodomain;PF00046
+Q84N;Homeodomain;PF00046
+Q84P;Homeodomain;PF00046
+Q84R;Homeodomain;PF00046
+Q84S;Homeodomain;PF00046
+Q84T;Homeodomain;PF00046
+Q84V;Homeodomain;PF00046
+Q84W;Homeodomain;PF00046
+Q84Y;Homeodomain;PF00046
+V85A;Homeodomain;PF00046
+V85C;Homeodomain;PF00046
+V85D;Homeodomain;PF00046
+V85E;Homeodomain;PF00046
+V85F;Homeodomain;PF00046
+V85G;Homeodomain;PF00046
+V85H;Homeodomain;PF00046
+V85I;Homeodomain;PF00046
+V85K;Homeodomain;PF00046
+V85L;Homeodomain;PF00046
+V85M;Homeodomain;PF00046
+V85N;Homeodomain;PF00046
+V85P;Homeodomain;PF00046
+V85Q;Homeodomain;PF00046
+V85R;Homeodomain;PF00046
+V85S;Homeodomain;PF00046
+V85T;Homeodomain;PF00046
+V85W;Homeodomain;PF00046
+V85Y;Homeodomain;PF00046
+W86A;Homeodomain;PF00046
+W86C;Homeodomain;PF00046
+W86D;Homeodomain;PF00046
+W86E;Homeodomain;PF00046
+W86F;Homeodomain;PF00046
+W86G;Homeodomain;PF00046
+W86H;Homeodomain;PF00046
+W86I;Homeodomain;PF00046
+W86K;Homeodomain;PF00046
+W86L;Homeodomain;PF00046
+W86M;Homeodomain;PF00046
+W86N;Homeodomain;PF00046
+W86P;Homeodomain;PF00046
+W86Q;Homeodomain;PF00046
+W86R;Homeodomain;PF00046
+W86S;Homeodomain;PF00046
+W86T;Homeodomain;PF00046
+W86V;Homeodomain;PF00046
+W86Y;Homeodomain;PF00046
+F87A;Homeodomain;PF00046
+F87C;Homeodomain;PF00046
+F87D;Homeodomain;PF00046
+F87E;Homeodomain;PF00046
+F87G;Homeodomain;PF00046
+F87H;Homeodomain;PF00046
+F87I;Homeodomain;PF00046
+F87K;Homeodomain;PF00046
+F87L;Homeodomain;PF00046
+F87M;Homeodomain;PF00046
+F87N;Homeodomain;PF00046
+F87P;Homeodomain;PF00046
+F87Q;Homeodomain;PF00046
+F87R;Homeodomain;PF00046
+F87S;Homeodomain;PF00046
+F87T;Homeodomain;PF00046
+F87V;Homeodomain;PF00046
+F87W;Homeodomain;PF00046
+F87Y;Homeodomain;PF00046
+K88A;Homeodomain;PF00046
+K88C;Homeodomain;PF00046
+K88D;Homeodomain;PF00046
+K88E;Homeodomain;PF00046
+K88F;Homeodomain;PF00046
+K88G;Homeodomain;PF00046
+K88H;Homeodomain;PF00046
+K88I;Homeodomain;PF00046
+K88L;Homeodomain;PF00046
+K88M;Homeodomain;PF00046
+K88N;Homeodomain;PF00046
+K88P;Homeodomain;PF00046
+K88Q;Homeodomain;PF00046
+K88R;Homeodomain;PF00046
+K88S;Homeodomain;PF00046
+K88T;Homeodomain;PF00046
+K88V;Homeodomain;PF00046
+K88W;Homeodomain;PF00046
+K88Y;Homeodomain;PF00046
+N89A;Homeodomain;PF00046
+N89C;Homeodomain;PF00046
+N89D;Homeodomain;PF00046
+N89E;Homeodomain;PF00046
+N89F;Homeodomain;PF00046
+N89G;Homeodomain;PF00046
+N89H;Homeodomain;PF00046
+N89I;Homeodomain;PF00046
+N89K;Homeodomain;PF00046
+N89L;Homeodomain;PF00046
+N89M;Homeodomain;PF00046
+N89P;Homeodomain;PF00046
+N89Q;Homeodomain;PF00046
+N89R;Homeodomain;PF00046
+N89S;Homeodomain;PF00046
+N89T;Homeodomain;PF00046
+N89V;Homeodomain;PF00046
+N89W;Homeodomain;PF00046
+N89Y;Homeodomain;PF00046
+R90A;Homeodomain;PF00046
+R90C;Homeodomain;PF00046
+R90D;Homeodomain;PF00046
+R90E;Homeodomain;PF00046
+R90F;Homeodomain;PF00046
+R90G;Homeodomain;PF00046
+R90H;Homeodomain;PF00046
+R90I;Homeodomain;PF00046
+R90K;Homeodomain;PF00046
+R90L;Homeodomain;PF00046
+R90M;Homeodomain;PF00046
+R90N;Homeodomain;PF00046
+R90P;Homeodomain;PF00046
+R90Q;Homeodomain;PF00046
+R90S;Homeodomain;PF00046
+R90T;Homeodomain;PF00046
+R90V;Homeodomain;PF00046
+R90W;Homeodomain;PF00046
+R90Y;Homeodomain;PF00046
+R91A;Homeodomain;PF00046
+R91C;Homeodomain;PF00046
+R91D;Homeodomain;PF00046
+R91E;Homeodomain;PF00046
+R91F;Homeodomain;PF00046
+R91G;Homeodomain;PF00046
+R91H;Homeodomain;PF00046
+R91I;Homeodomain;PF00046
+R91K;Homeodomain;PF00046
+R91L;Homeodomain;PF00046
+R91M;Homeodomain;PF00046
+R91N;Homeodomain;PF00046
+R91P;Homeodomain;PF00046
+R91Q;Homeodomain;PF00046
+R91S;Homeodomain;PF00046
+R91T;Homeodomain;PF00046
+R91V;Homeodomain;PF00046
+R91W;Homeodomain;PF00046
+R91Y;Homeodomain;PF00046
+A92C;Homeodomain;PF00046
+A92D;Homeodomain;PF00046
+A92E;Homeodomain;PF00046
+A92F;Homeodomain;PF00046
+A92G;Homeodomain;PF00046
+A92H;Homeodomain;PF00046
+A92I;Homeodomain;PF00046
+A92K;Homeodomain;PF00046
+A92L;Homeodomain;PF00046
+A92M;Homeodomain;PF00046
+A92N;Homeodomain;PF00046
+A92P;Homeodomain;PF00046
+A92Q;Homeodomain;PF00046
+A92R;Homeodomain;PF00046
+A92S;Homeodomain;PF00046
+A92T;Homeodomain;PF00046
+A92V;Homeodomain;PF00046
+A92W;Homeodomain;PF00046
+A92Y;Homeodomain;PF00046
+K93A;Homeodomain;PF00046
+K93C;Homeodomain;PF00046
+K93D;Homeodomain;PF00046
+K93E;Homeodomain;PF00046
+K93F;Homeodomain;PF00046
+K93G;Homeodomain;PF00046
+K93H;Homeodomain;PF00046
+K93I;Homeodomain;PF00046
+K93L;Homeodomain;PF00046
+K93M;Homeodomain;PF00046
+K93N;Homeodomain;PF00046
+K93P;Homeodomain;PF00046
+K93Q;Homeodomain;PF00046
+K93R;Homeodomain;PF00046
+K93S;Homeodomain;PF00046
+K93T;Homeodomain;PF00046
+K93V;Homeodomain;PF00046
+K93W;Homeodomain;PF00046
+K93Y;Homeodomain;PF00046
+C94A;Homeodomain;PF00046
+C94D;Homeodomain;PF00046
+C94E;Homeodomain;PF00046
+C94F;Homeodomain;PF00046
+C94G;Homeodomain;PF00046
+C94H;Homeodomain;PF00046
+C94I;Homeodomain;PF00046
+C94K;Homeodomain;PF00046
+C94L;Homeodomain;PF00046
+C94M;Homeodomain;PF00046
+C94N;Homeodomain;PF00046
+C94P;Homeodomain;PF00046
+C94Q;Homeodomain;PF00046
+C94R;Homeodomain;PF00046
+C94S;Homeodomain;PF00046
+C94T;Homeodomain;PF00046
+C94V;Homeodomain;PF00046
+C94W;Homeodomain;PF00046
+C94Y;Homeodomain;PF00046
+R95A;Homeodomain;PF00046
+R95C;Homeodomain;PF00046
+R95D;Homeodomain;PF00046
+R95E;Homeodomain;PF00046
+R95F;Homeodomain;PF00046
+R95G;Homeodomain;PF00046
+R95H;Homeodomain;PF00046
+R95I;Homeodomain;PF00046
+R95K;Homeodomain;PF00046
+R95L;Homeodomain;PF00046
+R95M;Homeodomain;PF00046
+R95N;Homeodomain;PF00046
+R95P;Homeodomain;PF00046
+R95Q;Homeodomain;PF00046
+R95S;Homeodomain;PF00046
+R95T;Homeodomain;PF00046
+R95V;Homeodomain;PF00046
+R95W;Homeodomain;PF00046
+R95Y;Homeodomain;PF00046
+Q96A;Homeodomain;PF00046
+Q96C;Homeodomain;PF00046
+Q96D;Homeodomain;PF00046
+Q96E;Homeodomain;PF00046
+Q96F;Homeodomain;PF00046
+Q96G;Homeodomain;PF00046
+Q96H;Homeodomain;PF00046
+Q96I;Homeodomain;PF00046
+Q96K;Homeodomain;PF00046
+Q96L;Homeodomain;PF00046
+Q96M;Homeodomain;PF00046
+Q96N;Homeodomain;PF00046
+Q96P;Homeodomain;PF00046
+Q96R;Homeodomain;PF00046
+Q96S;Homeodomain;PF00046
+Q96T;Homeodomain;PF00046
+Q96V;Homeodomain;PF00046
+Q96W;Homeodomain;PF00046
+Q96Y;Homeodomain;PF00046
+Q97A;Not found;NA
+Q97C;Not found;NA
+Q97D;Not found;NA
+Q97E;Not found;NA
+Q97F;Not found;NA
+Q97G;Not found;NA
+Q97H;Not found;NA
+Q97I;Not found;NA
+Q97K;Not found;NA
+Q97L;Not found;NA
+Q97M;Not found;NA
+Q97N;Not found;NA
+Q97P;Not found;NA
+Q97R;Not found;NA
+Q97S;Not found;NA
+Q97T;Not found;NA
+Q97V;Not found;NA
+Q97W;Not found;NA
+Q97Y;Not found;NA
+R98A;Not found;NA
+R98C;Not found;NA
+R98D;Not found;NA
+R98E;Not found;NA
+R98F;Not found;NA
+R98G;Not found;NA
+R98H;Not found;NA
+R98I;Not found;NA
+R98K;Not found;NA
+R98L;Not found;NA
+R98M;Not found;NA
+R98N;Not found;NA
+R98P;Not found;NA
+R98Q;Not found;NA
+R98S;Not found;NA
+R98T;Not found;NA
+R98V;Not found;NA
+R98W;Not found;NA
+R98Y;Not found;NA
+Q99A;Not found;NA
+Q99C;Not found;NA
+Q99D;Not found;NA
+Q99E;Not found;NA
+Q99F;Not found;NA
+Q99G;Not found;NA
+Q99H;Not found;NA
+Q99I;Not found;NA
+Q99K;Not found;NA
+Q99L;Not found;NA
+Q99M;Not found;NA
+Q99N;Not found;NA
+Q99P;Not found;NA
+Q99R;Not found;NA
+Q99S;Not found;NA
+Q99T;Not found;NA
+Q99V;Not found;NA
+Q99W;Not found;NA
+Q99Y;Not found;NA
+Q100A;Not found;NA
+Q100C;Not found;NA
+Q100D;Not found;NA
+Q100E;Not found;NA
+Q100F;Not found;NA
+Q100G;Not found;NA
+Q100H;Not found;NA
+Q100I;Not found;NA
+Q100K;Not found;NA
+Q100L;Not found;NA
+Q100M;Not found;NA
+Q100N;Not found;NA
+Q100P;Not found;NA
+Q100R;Not found;NA
+Q100S;Not found;NA
+Q100T;Not found;NA
+Q100V;Not found;NA
+Q100W;Not found;NA
+Q100Y;Not found;NA
+Q101A;Not found;NA
+Q101C;Not found;NA
+Q101D;Not found;NA
+Q101E;Not found;NA
+Q101F;Not found;NA
+Q101G;Not found;NA
+Q101H;Not found;NA
+Q101I;Not found;NA
+Q101K;Not found;NA
+Q101L;Not found;NA
+Q101M;Not found;NA
+Q101N;Not found;NA
+Q101P;Not found;NA
+Q101R;Not found;NA
+Q101S;Not found;NA
+Q101T;Not found;NA
+Q101V;Not found;NA
+Q101W;Not found;NA
+Q101Y;Not found;NA
+K102A;Not found;NA
+K102C;Not found;NA
+K102D;Not found;NA
+K102E;Not found;NA
+K102F;Not found;NA
+K102G;Not found;NA
+K102H;Not found;NA
+K102I;Not found;NA
+K102L;Not found;NA
+K102M;Not found;NA
+K102N;Not found;NA
+K102P;Not found;NA
+K102Q;Not found;NA
+K102R;Not found;NA
+K102S;Not found;NA
+K102T;Not found;NA
+K102V;Not found;NA
+K102W;Not found;NA
+K102Y;Not found;NA
+Q103A;Not found;NA
+Q103C;Not found;NA
+Q103D;Not found;NA
+Q103E;Not found;NA
+Q103F;Not found;NA
+Q103G;Not found;NA
+Q103H;Not found;NA
+Q103I;Not found;NA
+Q103K;Not found;NA
+Q103L;Not found;NA
+Q103M;Not found;NA
+Q103N;Not found;NA
+Q103P;Not found;NA
+Q103R;Not found;NA
+Q103S;Not found;NA
+Q103T;Not found;NA
+Q103V;Not found;NA
+Q103W;Not found;NA
+Q103Y;Not found;NA
+Q104A;Not found;NA
+Q104C;Not found;NA
+Q104D;Not found;NA
+Q104E;Not found;NA
+Q104F;Not found;NA
+Q104G;Not found;NA
+Q104H;Not found;NA
+Q104I;Not found;NA
+Q104K;Not found;NA
+Q104L;Not found;NA
+Q104M;Not found;NA
+Q104N;Not found;NA
+Q104P;Not found;NA
+Q104R;Not found;NA
+Q104S;Not found;NA
+Q104T;Not found;NA
+Q104V;Not found;NA
+Q104W;Not found;NA
+Q104Y;Not found;NA
