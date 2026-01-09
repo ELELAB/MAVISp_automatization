@@ -26,7 +26,8 @@ stars = {'practice guideline':'4',
          'no interpretation for the single variant':'0',
          'no assertion criteria provided':'0', 
          'no assertion provided':'0',
-         'no classification provided':'0'}
+         'no classification provided':'0',
+         'no classifications from unflagged records':'0'}
 
 
 
