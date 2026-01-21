@@ -1,5 +1,0 @@
-variant_id;variant_name;genomic_annotation;gene_name;interpretation;condition;number_of_stars;name;site;type;function;reference;genomic_mutations
-4133389;NM_006198.3(PCP4):c.17G>T (p.Gly6Val);GRCh37,NC_000021.8:g.41270408G>T GRCh38,NC_000021.9:g.39898483G>T;PCP4;Uncertain significance;not specified;1;;p.Gly6Val;mutation;;;hg19,21:g.41270408G>T hg38,21:g.39898483G>T
-3929726;NM_006198.3(PCP4):c.179C>G (p.Ser60Cys);GRCh37,NC_000021.8:g.41301026C>G GRCh38,NC_000021.9:g.39929101C>G;PCP4;Uncertain significance;not specified;1;;p.Ser60Cys;mutation;;;hg19,21:g.41301026C>G hg38,21:g.39929101C>G
-3887011;NM_006198.3(PCP4):c.104A>G (p.Asp35Gly);GRCh37,NC_000021.8:g.41300951A>G GRCh38,NC_000021.9:g.39929026A>G;PCP4;Uncertain significance;not specified;1;;p.Asp35Gly;mutation;;;hg19,21:g.41300951A>G hg38,21:g.39929026A>G
-3210424;NM_006198.3(PCP4):c.82G>A (p.Glu28Lys);GRCh37,NC_000021.8:g.41300929G>A GRCh38,NC_000021.9:g.39929004G>A;PCP4;Uncertain significance;not specified;1;;p.Glu28Lys;mutation;;;hg19,21:g.41300929G>A hg38,21:g.39929004G>A

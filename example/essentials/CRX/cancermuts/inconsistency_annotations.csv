@@ -1,0 +1,2 @@
+variant_id,variant_name,genomic_annotation,gene_name,interpretation,condition,review_status,methods
+829982,NM_000554.6(CRX):c.898T>C (p.Ter300Gln),"GRCh38,NC_000019.10:g.47839965T>C GRCh37,NC_000019.9:g.48343222T>C",CRX,Uncertain significance,"['Cone-rod dystrophy 2', 'Cone-rod dystrophy 2']","criteria provided, single submitter",['not provided']

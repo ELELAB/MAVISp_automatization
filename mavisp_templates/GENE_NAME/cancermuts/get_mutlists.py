@@ -349,12 +349,12 @@ def main():
     df = df[df['alt_aa'].isin(aa1)]
 
     # Filter out lines with aa_position not covered by the structure
-    filtered_df = pd.DataFrame()
+    parts = []
     for r in args.domain:
         n, c = r.split(':')
-        filtered_df = filtered_df.append(df[df.aa_position.between(left=int(n), 
-                                                                   right=int(c), 
-                                                                   inclusive='both')])
+        parts.append(df[df["aa_position"].between(left=int(n), right=int(c), inclusive="both")])
+
+    filtered_df = pd.concat(parts, ignore_index=False) if parts else df.iloc[0:0].copy()
 
     # Convert letter code of wt and mutant residues
     filtered_df['wt_3L'] = filtered_df['ref_aa'].apply(seq3)

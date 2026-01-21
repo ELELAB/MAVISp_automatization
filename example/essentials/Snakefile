@@ -145,116 +145,6 @@ modules['mutations_aggregation']['cancermuts'].update({"readme" : cancermuts_rea
                                                        "script_pancancer" : cancermuts_pancancer_script,
                                                        "script_plot" : cancermuts_plot_script})
 
-#--------------------------------- ClinVar ---------------------------------#
-
-clinvar_gene_script = f"mavisp_templates/GENE_NAME/"\
-                      f"clinvar_gene/clinvar.py"
-clinvar_gene_readme = f"mavisp_templates/GENE_NAME/"\
-                      f"clinvar_gene/readme.txt"
-clinvar_gene_bash =   f"mavisp_templates/GENE_NAME/"\
-                      f"clinvar_gene/run.sh"
-
-modules.update({"ClinVar_database":{"clinvar_gene":\
-                                         {"script" : clinvar_gene_script,
-                                          "readme" : clinvar_gene_readme,
-                                          "bash"   : clinvar_gene_bash}}})
-
-column_names = ['name',
-                'site',
-                'type',
-                'function',
-                'reference',
-                'genomic_mutations']
-
-HGVSp_re = re.compile('\((p.[A-Z][a-z]{2}[0-9]+[A-Z][a-z]{2})\)')
-
-GRCh_to_hg = {'GRCh37' : 'hg19',
-              'GRCh38' : 'hg38'}
-
-refseq_to_UCSC = {'hg38': {
-                        "NC_000001.11" : "1",
-                        "NC_000002.12" : "2",
-                        "NC_000003.12" : "3",
-                        "NC_000004.12" : "4",
-                        "NC_000005.10" : "5",
-                        "NC_000006.12" : "6",
-                        "NC_000007.14" : "7",
-                        "NC_000008.11" : "8",
-                        "NC_000009.12" : "9",
-                        "NC_000010.11" : "10",
-                        "NC_000011.10" : "11",
-                        "NC_000012.12" : "12",
-                        "NC_000013.11" : "13",
-                        "NC_000014.9"  : "14",
-                        "NC_000015.10" : "15",
-                        "NC_000016.10" : "16",
-                        "NC_000017.11" : "17",
-                        "NC_000018.10" : "18",
-                        "NC_000019.10" : "19",
-                        "NC_000020.11" : "20",
-                        "NC_000021.9"  : "21",
-                        "NC_000022.11" : "22",
-                        "NC_000023.11" : "X",
-                        "NC_000024.10" : "Y"
-                }, 'hg19' : {
-                        "NC_000001.10" : "1",
-                        "NC_000002.11" : "2",
-                        "NC_000003.11" : "3",
-                        "NC_000004.11" : "4",
-                        "NC_000005.9"  : "5",
-                        "NC_000006.11" : "6",
-                        "NC_000007.13" : "7",
-                        "NC_000008.10" : "8",
-                        "NC_000009.11" : "9",
-                        "NC_000010.10" : "10",
-                        "NC_000011.9"  : "11",
-                        "NC_000012.11" : "12",
-                        "NC_000013.10" : "13",
-                        "NC_000014.8"  : "14",
-                        "NC_000015.9"  : "15",
-                        "NC_000016.9"  : "16",
-                        "NC_000017.10" : "17",
-                        "NC_000018.9"  : "18",
-                        "NC_000019.9"  : "19",
-                        "NC_000020.10" : "20",
-                        "NC_000021.8"  : "21",
-                        "NC_000022.10" : "22",
-                        "NC_000023.10" : "X",
-                        "NC_000024.9"  : "Y"
-                }
-}
-
-def variant_name_to_HGVSp(row):
-    hgvsps = re.findall(HGVSp_re, row['variant_name'])
-    if len(hgvsps) != 1:
-        print(f"WARNING: skipping {row.variant_id}, {row.variant_name}")
-        return 'unexpected'
-    if hgvsps[0].endswith('Ter'):
-        print(f"WARNING: skipping {row.variant_id}, {row.variant_name}")
-        return 'unexpected'
-
-    return hgvsps[0]
-
-def HGVSg_to_cancermuts(row):
-    hgvsgs = row['genomic_annotation'].split()
-    out = []
-
-    for hgvsg in hgvsgs:
-        build, variant = hgvsg.split(',')
-        ref_seq, coords = variant.split(':')
-
-        try:
-            build = GRCh_to_hg[build]
-        except KeyError:
-            print(f"WARNING: unexpected genome build for {row['variant_id']} ({ref_seq}). Genomic mutation won't be annotated. ")
-            continue
-
-        ref_seq = refseq_to_UCSC[build][ref_seq]
-
-        out.append(f"{build},{ref_seq}:{coords}")
-
-    return " ".join(out)
-
 #------------------------------- Mutlist -----------------------------------#
 
 mutlist_script = f"mavisp_templates/GENE_NAME/"\
@@ -882,31 +772,6 @@ rule efoldmine:
 
 ################## mutations retrieval and aggregation ######################
 
-rule clinvar:
-    output:
-        "{hugo_name}/clinvar_gene/genes_output.csv"
-    run:
-        # create the input for the clinvar.py script
-        clinvar_input = df[['protein', 'ref_seq']]
-        clinvar_input.rename(columns={'protein' : 'gene',
-                                      'ref_seq' : 'isoform'}, inplace=True)
-        clinvar_input = clinvar_input[(clinvar_input['gene'] == \
-                                       wildcards.hugo_name)]
-        clinvar_input.to_csv(os.path.join(wildcards.hugo_name,
-                                          "clinvar_gene",
-                                          "gene.csv"),
-                                           sep=";",
-                                           index=False)
-        script=modules['ClinVar_database']['clinvar_gene']['script']
-        readme=modules['ClinVar_database']['clinvar_gene']['readme']
-        bash=modules['ClinVar_database']['clinvar_gene']['bash']
-        shell(
-            f"cd {os.path.join(wildcards.hugo_name, 'clinvar_gene')} && "
-            f"cp ../../{readme} . && "
-            f"cp ../../{script} . && "
-            f"cp ../../{bash} . && "
-            f"bash run.sh")
-
 rule saturation_list:
     output:
         "{hugo_name}/saturation_mutlist/saturation_mutlist.txt"
@@ -928,7 +793,6 @@ rule saturation_list:
 
 rule cancermuts:
     input:
-        clinvar_output="{hugo_name}/clinvar_gene/genes_output.csv",
         saturation_mutlist=lambda wcs: f"{wcs.hugo_name}/saturation_mutlist/saturation_mutlist.txt" if modules['mutations_aggregation']['cancermuts']['saturation'] else [],
     output:
         f"{modules['mutations_aggregation']['cancermuts']['folder_name']}"+
@@ -964,33 +828,6 @@ rule cancermuts:
             shutil.copy(input.saturation_mutlist, path)
 
 
-        ##################### mutation list from clinvar ####################
-
-        # read the mutation list in output from the clinvar.py script
-        df_clinvar=pd.read_csv(input.clinvar_output,sep=";")
-
-        # if there are mutations reported in clinvar create the corresponding
-        # input file for the cancermuts run
-
-        if not df_clinvar.empty:
-            df_clinvar['name'] = ''
-
-            df_clinvar['site'] = df_clinvar.apply(variant_name_to_HGVSp, axis=1)
-            df_clinvar = df_clinvar[ df_clinvar['site'] != 'unexpected' ]
-
-            df_clinvar['type'] = 'mutation'
-            df_clinvar['function'] = ''
-            df_clinvar['reference'] = ''
-
-            df_clinvar['genomic_mutations'] = df_clinvar.apply(HGVSg_to_cancermuts, axis=1)
-
-            df_clinvar.to_csv(f'{path}/clinvar.csv',
-                                sep=";",
-                                index=False)
-
-        else:
-            print("No mutations reported in Clinvar, Cancermuts will be run without the clinvar.csv")
-
          ################ mutation list from external sources ###############
 
         # write the cancermuts input file in which the mutations
@@ -1023,6 +860,13 @@ rule cancermuts:
                             'uniprot_id'].iloc[0]
         uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
                             'uniprot_ac'].iloc[0]
+        ref_seq = df.loc[df['protein'] == wildcards.hugo_name,\
+                            'ref_seq'].iloc[0]
+        if pd.isna(ref_seq) or ref_seq == '':
+            clinvar_option = ''
+        else:
+            clinvar_option = f'-r {ref_seq}'
+
         script = os.path.abspath(modules["mutations_aggregation"]\
                                         ["cancermuts"]\
                                         ["script_pancancer"])
@@ -1042,10 +886,6 @@ rule cancermuts:
         if input.saturation_mutlist:
             saturation_csv = os.path.splitext(os.path.basename(input.saturation_mutlist))[0] + ".csv"
 
-            if df_clinvar.empty:
-                clinvar_option = ''
-            else:
-                clinvar_option = '-c clinvar.csv'
 
             shell("cd {path}/ &&"\
                   "python input_csv.py $(basename {input.saturation_mutlist}) && "\
@@ -1054,49 +894,31 @@ rule cancermuts:
                   "python {script} -p {wildcards.hugo_name}\
                                                -i {uniprot_id} \
                                                -a {uniprot_ac} \
-                                               {clinvar_option} \
+                                                  {clinvar_option} \
                                                -e {saturation_csv}")
-
-        elif input_files:
-            external_mutation_list=[]
-            for mutlist in input_files:
-                final_mutlist=mutlist.split(".")[0]+"_input.csv"
-                external_mutation_list.append(final_mutlist)
-
-        # pancancer_clinvar_others
-        elif input_files and not df_clinvar.empty:
-            external_mutation_list=" ".join(external_mutation_list)
-            shell("cd {path} &&"\
-                  " set +eu && . {env} &&"\
-                  " set -eu && python {script} -p {wildcards.hugo_name}\
-                                               -i {uniprot_id} \
-                                               -a {uniprot_ac} \
-                                               -c clinvar.csv \
-                                               -e {external_mutation_list}")
-        # pancancer_clinvar
-        elif not input_files and not df_clinvar.empty:
-            shell("cd {path} &&"\
-                  " set +eu && . {env} &&"\
-                  " set -eu && python {script} -p {wildcards.hugo_name} \
-                                               -i {uniprot_id} \
-                                               -a {uniprot_ac} \
-                                               -c clinvar.csv")
-        # pancancer_others
-        elif input_files and df_clinvar.empty:
-            external_mutation_list=" ".join(external_mutation_list)
-            shell("cd {path} &&"\
-                  " set +eu && . {env} &&"\
-                  " set -eu && python {script} -p {wildcards.hugo_name} \
-                                               -i {uniprot_id} \
-                                               -a {uniprot_ac} \
-                                               -e {external_mutation_list}")
-        # pancancer
-        elif not input_files and df_clinvar.empty:
-            shell("cd {path} &&"\
-                  " set +eu && . {env} &&"\
-                  " set -eu && python {script} -p {wildcards.hugo_name} \
-                                               -i {uniprot_id} \
-                                               -a {uniprot_ac}")
+        else:
+            # pancancer_others
+            if input_files:
+                external_mutation_list=[]
+                for mutlist in input_files:
+                    final_mutlist=mutlist.split(".")[0]+"_input.csv"
+                    external_mutation_list.append(final_mutlist)
+                external_mutation_list=" ".join(external_mutation_list)
+                shell("cd {path} &&"\
+                      " set +eu && . {env} &&"\
+                      " set -eu && python {script} -p {wildcards.hugo_name}\
+                                                   -i {uniprot_id} \
+                                                   -a {uniprot_ac} \
+                                                      {clinvar_option} \
+                                                   -e {external_mutation_list}")
+            # pancancer
+            else:
+                shell("cd {path} &&"\
+                      " set +eu && . {env} &&"\
+                      " set -eu && python {script} -p {wildcards.hugo_name} \
+                                                   -i {uniprot_id} \
+                                                      {clinvar_option} \
+                                                   -a {uniprot_ac}")
 
 ################ Mutlists generation and protein annotations ################
 
@@ -1161,7 +983,6 @@ rule mutlist:
 
         path = modules['mutations_aggregation']['cancermuts']['folder_name']
 
-        mutlist_clinvar = f"{path}/{wildcards.hugo_name}/clinvar.csv"
 
         external_mutlist = f"{wildcards.hugo_name}/"\
                             f"external_mutation_lists"
@@ -1173,26 +994,29 @@ rule mutlist:
         t_obj = time.strptime(s_ti)
         date=time.strftime("%d%m%Y", t_obj)
 
-        if os.path.exists(mutlist_clinvar) and\
-            os.path.exists(external_mutlist):
-            cancermode="pancancer_clinvar_others"
-
-        if not os.path.exists(mutlist_clinvar) and\
-            os.path.exists(external_mutlist):
+        if os.path.exists(external_mutlist):
             cancermode="pancancer_others"
-
-        if not os.path.exists(external_mutlist):
-            cancermode="pancancer_clinvar_saturation"
+        else:
+            cancermode="pancancer_saturation"
 
         final_path = f"{path}/{research_field}/{wildcards.hugo_name.lower()}/"\
                         f"{cancermode}/{date}"
+
+        acc_clinvar = 'variants_to_check.csv entry_not_found.csv inconsistency_annotations.csv'
 
         shell("mkdir -p {final_path} &&"\
                 " mv {path}/{wildcards.hugo_name}/* {final_path} &&"\
                 " rm -r {path}/{wildcards.hugo_name} &&"\
                 " cp "\
                 "{final_path}/metatable_pancancer_{wildcards.hugo_name}.csv\
-                {wildcards.hugo_name}/cancermuts")
+                {wildcards.hugo_name}/cancermuts ; "\
+                f" for f in {acc_clinvar} ; do"\
+                " if [ -f {final_path}/$f ] ; then"\
+                " cp "\
+                f"{final_path}/$f "\
+                "{wildcards.hugo_name}/cancermuts ;"\
+                " fi ; "\
+                " done ")
 
 
 rule domains:
@@ -1704,7 +1528,7 @@ rule metadata:
         trimmed_list  = df.loc[df['protein'] == gene, 'trimmed'].iloc[0]
         starting_list = [f"{structure_source}_{part}" for part in trimmed_list]
         cancermuts_path = config["modules"]["mutations_aggregation"]["cancermuts"]["folder_name"]
-        base_dir = os.path.join(cancermuts_path, project, gene.lower(), "pancancer_clinvar_saturation")
+        base_dir = os.path.join(cancermuts_path, project, gene.lower(), "pancancer_saturation")
         candidates = []
         for name in os.listdir(base_dir):
             path = os.path.join(base_dir, name)
@@ -1732,7 +1556,6 @@ rule metadata:
 
 rule collect_outputs:
     input:
-        clinvar_genes=lambda wcs: f"{wcs.hugo_name}/clinvar_gene/genes_output.csv",
         ptm_stability = lambda wcs: [
             f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{resrange}/mutatex/summary_stability.txt"
             for resrange in df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]],
@@ -1765,12 +1588,7 @@ rule collect_outputs:
         out  = Path(hn) / "simple_mode"
         out.mkdir(parents=True, exist_ok=True)
 
-        # 1) clinvar
-        cdir = out / "clinvar"
-        cdir.mkdir(parents=True, exist_ok=True)
-        shutil.copy(input.clinvar_genes, cdir / "variants_output.csv")
-
-	# 2) PTM stability
+	# 1) PTM stability
 	ptm_dir = out / "ptm"
 	ptm_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1783,7 +1601,7 @@ rule collect_outputs:
             with open(ptm_dir / "summary_stability.txt", "w") as fw:
                 fw.writelines(stability_contents)
 
-	# 3) PTM sasa.rsa
+	# 2) PTM sasa.rsa
         rsa_files = sorted(input.ptm_sas,
         key=lambda p: int(Path(p).parent.parent.name.split("_", 1)[1].split("-", 1)[1]))
         first, last = rsa_files[0], rsa_files[-1]
@@ -1804,49 +1622,49 @@ rule collect_outputs:
             fout.writelines(res_lines)
             fout.writelines(tail)
 
-	# 4) PTM metatable
+	# 3) PTM metatable
         meta_src = Path(input.cancermuts) / f"metatable_pancancer_{hn}.csv"
         shutil.copy(meta_src, ptm_dir / "metatable.csv")
 
-        # 5) copy SAS into its own folder
+        # 4) copy SAS into its own folder
         sas_dir = out / "sas"
         sas_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(sasa_out, sas_dir / "sasa.rsa")
 
-        # 6) demask
+        # 5) demask
         dem_dir = out / "demask"
         dem_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.demask, dem_dir / "myquery_predictions.txt")
 
-        # 7) alphamissense
+        # 6) alphamissense
         am_dir = out / "alphamissense"
         am_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.alphamissense, am_dir / "am.tsv.gz")
 
-        # 8) cancermuts
+        # 7) cancermuts
         cm_dir = out / "cancermuts"
         cm_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(meta_src, cm_dir / meta_src.name)
 
-        # 9) efoldmine
+        # 8) efoldmine
         ef_dir = out / "efoldmine"
         ef_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.efoldmine, ef_dir / Path(input.efoldmine).name)
 
-        # 10) metadata.yaml
+        # 9) metadata.yaml
         shutil.copy(Path(hn) / "metadata" / "metadata.yaml", out / "metadata.yaml")
 
-        # 11) pfam
+        # 10) pfam
         pf_dir = out / "pfam"
         pf_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.pfam, pf_dir / "summary.csv")
 
-        # 12) ted
+        # 11) ted
         ted_dir = out / "ted"
         ted_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(input.ted, ted_dir / "results.csv")
 
-        # 13) alphafold
+        # 12) alphafold
         af_dir_path = Path(input.alphafold)
         af_csv = af_dir_path / f"{wildcards.hugo_name.lower()}/{wildcards.uniprot_ac}.csv"
 
@@ -1855,13 +1673,13 @@ rule collect_outputs:
             af_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy(af_csv, af_dir / af_csv.name)
 
-	# 14) merge stability
+	# 13) merge stability
         ranges = sorted([Path(r).parent.name.split('_',1)[1] for r in input.structure_rasp],
             key=lambda x: int(x.split('-',1)[0]))
         merged_range = "_".join(ranges)
         base = out / "stability" / f"{wildcards.structure_source}_{merged_range}" / wildcards.structure_source / f"model_{wildcards.model}"
 
-        # 15) rasp predictions
+        # 14) rasp predictions
         rasp_out = base / "rasp" / "post_processed.csv"
         (rasp_out.parent).mkdir(parents=True, exist_ok=True)
         rasp_files = []
@@ -1878,7 +1696,7 @@ rule collect_outputs:
                     header_written = True
                 fout.writelines(lines[1:])
 
-	# 16) foldx5 energies
+	# 15) foldx5 energies
         fx_out = base / "foldx5" / "energies.csv"
         (fx_out.parent).mkdir(parents=True, exist_ok=True)
 
@@ -1899,7 +1717,7 @@ rule collect_outputs:
             fout.write(header)
             fout.writelines(fx_lines)
 
-        # 17) mutation_list
+        # 16) mutation_list
         ml_dir = out / "mutation_list"
         ml_dir.mkdir(parents=True, exist_ok=True)
         all_ml = glob.glob(f"{hn}/cancermuts/mutlist_*.txt")
@@ -1911,12 +1729,11 @@ rule collect_outputs:
             for line in fi:
                 fo.write(f"{line.rstrip()}\thttps://doi.org/10.1101/2022.10.22.513328\n")
 
-        # 18) touch the done‐file
+        # 17) touch the done‐file
         Path(output[0]).touch()
 
 rule collect_outputs_idps:
     input:
-        clinvar_genes=lambda wcs: f"{wcs.hugo_name}/clinvar_gene/genes_output.csv",
         demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
         alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
         cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/",
@@ -1931,11 +1748,6 @@ rule collect_outputs_idps:
         hn   = wildcards.hugo_name
         out  = Path(hn) / "simple_mode"
         out.mkdir(parents=True, exist_ok=True)
-
-        # 1) clinvar
-        cdir = out / "clinvar"
-        cdir.mkdir(parents=True, exist_ok=True)
-        shutil.copy(input.clinvar_genes, cdir / "variants_output.csv")
 
         # 6) demask
         dem_dir = out / "demask"

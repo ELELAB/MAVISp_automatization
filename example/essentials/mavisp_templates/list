@@ -21,10 +21,6 @@
 ./GENE_NAME/cancermuts
 ./GENE_NAME/cancermuts/get_mutlists.py
 ./GENE_NAME/cancermuts/readme.txt
-./GENE_NAME/clinvar
-./GENE_NAME/clinvar/clinvar.py
-./GENE_NAME/clinvar/run.sh
-./GENE_NAME/clinvar/readme.txt
 ./GENE_NAME/membrane_filtering
 ./GENE_NAME/membrane_filtering/opm
 ./GENE_NAME/membrane_filtering/opm/embedded_residues.txt
@@ -140,11 +136,6 @@
 ./GENE_NAME/metadata
 ./GENE_NAME/metadata/metadata.yaml
 ./GENE_NAME/metadata/readme.txt
-./GENE_NAME/clinvar_gene
-./GENE_NAME/clinvar_gene/gene.csv
-./GENE_NAME/clinvar_gene/clinvar.py
-./GENE_NAME/clinvar_gene/run.sh
-./GENE_NAME/clinvar_gene/readme.txt
 ./GENE_NAME/saturation_list
 ./GENE_NAME/saturation_list/do.sh
 ./GENE_NAME/saturation_list/saturation_mutlist_29-110.txt
