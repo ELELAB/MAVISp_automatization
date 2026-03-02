@@ -575,14 +575,13 @@ rule structure_selection:
                 shell("python {script_trim} {gene_dir}/{uniprot_ac}.pdb A {start} {end} {out_pdb}")
 
         # ---------------- Run AF scoring script ONLY for AF/MutateX ---------------- #
-        if pd.isna(pdb_custom):
+        af_sources = {"AFDB", "AF2", "AF3"}
+        if ss in af_sources:
             cfg = {
                 "dssp_exec": dssp_exec,
                 "plddt_cutoff": 70,
                 "uniprot_ids": {
-                    uniprot_ac: {
-                        "dir_name": gene_lc
-                    }
+                    uniprot_ac: {"dir_name": gene_lc}
                 }
             }
             cfg_path = os.path.join(root_dir, "config_alphafolddb.yaml")
