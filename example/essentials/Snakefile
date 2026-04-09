@@ -9,6 +9,7 @@ import urllib
 from Bio.Data import IUPACData
 import glob
 from datetime import datetime
+from pathlib import Path
 
 def mutation_converter(x):
     return f"p.{IUPACData.protein_letters_1to3.get(x[0])}{x[1:-1]}\
@@ -127,6 +128,29 @@ def mutatex_trimmed_inputs(w):
         for res in resranges
     ]
 
+def fetch_foldx_version(modules, df, gene):
+    row = df.loc[df['protein'] == gene].iloc[0]
+    versions= set()
+    for resrange in row['trimmed']:
+        log_path = (f"{modules['mutations_aggregation']['mutatex']['repository']}/"
+                    f"{row['research_field']}/{gene.lower()}/free/stability/mutatex_runs/"
+                    f"{row['structure_source']}_{resrange}/model_{row['model']}/saturation/"
+                    f"{row['uniprot_ac']}_scan/repair/repair_{row['uniprot_ac']}_trimmed_model0_checked/FoldXrun.log")
+        log_path = Path(log_path)
+        if not log_path.exists():
+            return None
+        with open(log_path) as f:
+            lines = f.readlines()
+        m = re.search(r"FoldX[^0-9]*([0-9]+(?:\.[0-9]+)?)", lines[2])
+        if not m:
+            raise ValueError(f"Unexpected FoldX log format for file {log_path}")
+        version = m.group(1)
+        if version not in {"5", "5.1"}:
+            raise ValueError(f"Unexpected FoldX version in {log_path}: {version}")
+        versions.add(version)
+        if len(versions) > 1:
+            raise ValueError(f"Inconsistent FoldX versions for {gene}: {sorted(versions)}")
+    return versions.pop()
 
 #---------------------------- Aggregation step -----------------------------#
 
@@ -1518,6 +1542,7 @@ rule metadata:
             'structure_source': structure_source,
             'linker_design': False,
             'pdb_id': pdb_id,
+            'stability_foldx_version': fetch_foldx_version(modules, df, gene)
         }
         with open(output.metadata, 'w') as fh:
             yaml.safe_dump(metadata_dict, fh, sort_keys=False)
