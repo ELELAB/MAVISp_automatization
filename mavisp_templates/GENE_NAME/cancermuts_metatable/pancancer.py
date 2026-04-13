@@ -39,8 +39,15 @@ cosmic = COSMIC(targeted_database_file='/data/databases/cosmic-v102/Cosmic_Compl
 				classification_database_file='/data/databases/cosmic-v102/Cosmic_Classification_v102_GRCh38.tsv',
 				database_encoding='latin1', lazy_load_db=True,
                 )
-cosmic.add_mutations(seq, genome_assembly_version='GRCh38', metadata=['genomic_coordinates', 'genomic_mutations',
+try:
+    cosmic.add_mutations(seq, genome_assembly_version='GRCh38', metadata=['genomic_coordinates', 'genomic_mutations',
                                                 'cancer_site', 'cancer_histology'])
+except ValueError as e:
+    if "is not present in the database files" in str(e):
+        print(f"WARNING: Skipping COSMIC for {args.prt}: gene not found in COSMIC.")
+    else:
+        raise
+
 #add mutations from ClinVar:
 if args.refseq:
     seq.aliases["refseq"] = args.refseq
