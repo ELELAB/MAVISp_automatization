@@ -17,4 +17,4 @@ review_status: 0
 structure_source: AFDB
 linker_design: false
 pdb_id: ''
-stability_foldx_version: '5'
+stability_foldx_version: foldx5

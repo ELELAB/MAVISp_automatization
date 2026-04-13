@@ -144,8 +144,8 @@ def fetch_foldx_version(modules, df, gene):
         m = re.search(r"FoldX[^0-9]*([0-9]+(?:\.[0-9]+)?)", lines[2])
         if not m:
             raise ValueError(f"Unexpected FoldX log format for file {log_path}")
-        version = m.group(1)
-        if version not in {"5", "5.1"}:
+        version = "foldx"+ m.group(1)
+        if version not in {"foldx5", "foldx5.1"}:
             raise ValueError(f"Unexpected FoldX version in {log_path}: {version}")
         versions.add(version)
         if len(versions) > 1:
