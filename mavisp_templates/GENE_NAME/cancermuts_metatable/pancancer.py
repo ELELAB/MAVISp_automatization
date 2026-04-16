@@ -92,7 +92,7 @@ dp = dbPTM('/data/databases/dbPTM/')
 dp.add_position_properties(seq)
 
 # add annotations from GlyGen
-gg = GlyGen('/data/databases/GlyGen/')
+gg = GlyGen('/data/databases/GlyGen/', database_file='human_proteoform_glycosylation_sites_uniprotkb_filtered.csv')
 gg.add_position_properties(seq)
 
 # add annotations from MobiDB

@@ -168,7 +168,7 @@ Notice that when using the `idps` target rule, the PDB file always needs to be s
 - **Cancermuts step**: The pipeline aggregates cancer mutations from cBioPortal, COSMIC, and ClinVar databases, along with structural information (SLiMs, secondary structure, Post Translational Modification sites PTMs) of the protein. In case multiple entrez IDs are found for one protein, no gene ID will be assigned and mutation retrieval from cBioPortal will be skipped. The output is stored in a path specified in the config.yaml file.
 
 - **Creation of MutateX, Rosetta, and CabsFlex compatible mutation lists**: Using the "metatable.csv" file from the cancermuts output and the residue range from the trimmed model, 
-  mutation lists are created in the appropriate format for the following calculations: protein stability through the FoldX energy function (MutateX), protein stability through the Rosetta energy function Ref2015, and conformational structural ensemble generation of mutants and WT through CabsFlex (used with the ensemble mode). Additionally, a mutation list with potential phospho residues for the MutateX calculation is created. Finally, a mutation list with mutations expressed in one-letter code is created for other annotation steps. The files are stored in the "cancermuts" folder.
+  mutation lists are created in the appropriate format for the following calculations: protein stability through the FoldX energy function (MutateX), protein stability through the Rosetta energy function Ref2015, and conformational structural ensemble generation of mutants and WT through CabsFlex (used with the ensemble mode). Additionally, a mutation list with potential phospho residues for the MutateX calculation is created. Also, mutation lists containing mutations occurring at positions annotated as glycosylated in the cancermuts metatable (O-, N-, C-, and S-linked) are generated. Finally, a mutation list with mutations expressed in one-letter code is created for other annotation steps. The files are stored in the "cancermuts" folder.
 
 - **Domain annotations based on the mutation list**: The mutation list obtained in the previous step is used to retrieve information about the domains in the protein under investigation. 
   The readouts are stored in the "structure_selection/domain_annotations/" path.
@@ -225,6 +225,10 @@ BLM
 │   ├── get_mutlists.py
 │   ├── mutlist_08092023.txt
 │   ├── mutlist_ELM_08092023.txt
+│   ├── mutlist_Gly_C_08092023.txt
+│   ├── mutlist_Gly_N_08092023.txt
+│   ├── mutlist_Gly_O_08092023.txt
+│   ├── mutlist_Gly_S_08092023.txt
 │   ├── mutlist_hgvs_08092023.txt
 │   ├── mutlist_mutatex_08092023.txt
 │   ├── mutlist_mutatex_P_08092023.txt
