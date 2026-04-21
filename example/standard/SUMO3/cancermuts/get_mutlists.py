@@ -163,6 +163,18 @@ def mutatexP_format(dataframe, chain, day):
     return pd.concat([phospho_dataframe["mutatex_mutation"], phospho_dataframe["mutatex_P_mutation"].drop_duplicates()], \
                 axis = 0).to_csv(f'mutlist_mutatex_P_{day}.txt', header=None, index=None)
 
+def Gly_mutlist(dataframe, subtype, chain, day):
+    
+    #Filter dataframe for positions supporting glycosylation
+    glyco_O_dataframe = dataframe[(dataframe['glycosylation_site'] == 'Gly') & (dataframe['glycosylation_subtype'].astype(str).str.startswith(subtype + "-"))].copy()
+    
+    #Add mutations column
+    glyco_O_dataframe['mutatex_mutation'] = glyco_O_dataframe['ref_aa'] + \
+                                            chain + \
+                                            glyco_O_dataframe["aa_position"].astype(str) + \
+                                            glyco_O_dataframe["alt_aa"]
+    return (glyco_O_dataframe['mutatex_mutation']).to_csv(f'mutlist_Gly_{subtype}_{day}.txt', header=None, index=None)
+
 def rosetta_format(dataframe, chain, domain, day, multi):
     '''Mutation format: chain.wt.position.mut  chain (e.g., A.A.75.C A).
     The function returns both the full length mutlist and the '''
@@ -380,6 +392,12 @@ def main():
     if args.mutatex:
         mutatex_format(input_df, args.chain, date)
         mutatexP_format(input_df, args.chain, date)
+
+    # Generate Glycosylation mutlist
+    Gly_mutlist(input_df, "O", args.chain, date)
+    Gly_mutlist(input_df, "N", args.chain, date)
+    Gly_mutlist(input_df, "C", args.chain, date)
+    Gly_mutlist(input_df, "S", args.chain, date)
 
     # Generate HGV mutlist
     if args.hgvs:

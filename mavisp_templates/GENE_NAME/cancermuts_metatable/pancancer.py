@@ -4,7 +4,7 @@ from cancermuts.datasources import UniProt
 from cancermuts.datasources import cBioPortal, COSMIC, ClinVar
 from cancermuts.datasources import MyVariant
 from cancermuts.datasources import gnomAD
-from cancermuts.datasources import PhosphoSite, MobiDB
+from cancermuts.datasources import PhosphoSite, dbPTM, GlyGen, MobiDB
 from cancermuts.datasources import ggetELMPredictions
 from cancermuts.table import Table
 import pandas as pd
@@ -93,6 +93,14 @@ gnomad.add_metadata(seq, md_type=['gnomad_exome_allele_frequency',
 # add annotations from PhosphoSite
 ps = PhosphoSite('/data/databases/phosphosite/')
 ps.add_position_properties(seq)
+
+# add annotations from dbPTM
+dp = dbPTM('/data/databases/dbPTM/')
+dp.add_position_properties(seq)
+
+# add annotations from GlyGen
+gg = GlyGen('/data/databases/GlyGen/', database_file='human_proteoform_glycosylation_sites_uniprotkb_filtered.csv')
+gg.add_position_properties(seq)
 
 # add annotations from MobiDB
 #mdb = MobiDB()

@@ -72,7 +72,7 @@ where:
 "uniprot_ac" is the uniprot accession number of the protein
 "trimmed" represents the residues range of your trimmed model (in case of multiple models specify the ranges "_" separeted)
 "ref_seq" is the ref seq code associated with the isoform used by cancermuts (usually the first one). The RefSeq associated with the first isoform can be accessed through the Uniprot database in the "Sequence & isoforms" or "Sequence" section (depending on the protein being investigated) under the field "Sequence databases". The RefSeq code required by the pipeline consists of the "NP" followed by all subsequent characters until the dot, excluding it. There may be multiple RefSeq codes available. The one associated with the correct isoform includes the isoform code, which is enclosed in square brackets, corresponding to the canonical isoform. Verify by clicking on it that it corresponds to the correct isoform.
-"research field" is the project or the research field in which the protein is involved (this is the name of the folder in which the cancermuts and rasp calculation will be organized).
+"research_field" is the project or the research field in which the protein is involved (this is the name of the folder in which the cancermuts and rasp calculation will be organized).
 "input_pdb" is an optional input pdb file the user provides. Notice that this is mandatory when using the `idp` rule target.
 "structure_source" the source of the input structure, it needs to follow the nameing of this dictionary:
 AFDB: "AlphaFold database",
@@ -168,7 +168,7 @@ Notice that when using the `idps` target rule, the PDB file always needs to be s
 - **Cancermuts step**: The pipeline aggregates cancer mutations from cBioPortal, COSMIC, and ClinVar databases, along with structural information (SLiMs, secondary structure, Post Translational Modification sites PTMs) of the protein. In case multiple entrez IDs are found for one protein, no gene ID will be assigned and mutation retrieval from cBioPortal will be skipped. The output is stored in a path specified in the config.yaml file.
 
 - **Creation of MutateX, Rosetta, and CabsFlex compatible mutation lists**: Using the "metatable.csv" file from the cancermuts output and the residue range from the trimmed model, 
-  mutation lists are created in the appropriate format for the following calculations: protein stability through the FoldX energy function (MutateX), protein stability through the Rosetta energy function Ref2015, and conformational structural ensemble generation of mutants and WT through CabsFlex (used with the ensemble mode). Additionally, a mutation list with potential phospho residues for the MutateX calculation is created. Finally, a mutation list with mutations expressed in one-letter code is created for other annotation steps. The files are stored in the "cancermuts" folder.
+  mutation lists are created in the appropriate format for the following calculations: protein stability through the FoldX energy function (MutateX), protein stability through the Rosetta energy function Ref2015, and conformational structural ensemble generation of mutants and WT through CabsFlex (used with the ensemble mode). Additionally, a mutation list with potential phospho residues for the MutateX calculation is created. Also, mutation lists containing mutations occurring at positions annotated as glycosylated in the cancermuts metatable (O-, N-, C-, and S-linked) are generated. Finally, a mutation list with mutations expressed in one-letter code is created for other annotation steps. The files are stored in the "cancermuts" folder.
 
 - **Domain annotations based on the mutation list**: The mutation list obtained in the previous step is used to retrieve information about the domains in the protein under investigation. 
   The readouts are stored in the "structure_selection/domain_annotations/" path.
@@ -225,15 +225,18 @@ BLM
 │   ├── get_mutlists.py
 │   ├── mutlist_08092023.txt
 │   ├── mutlist_ELM_08092023.txt
+│   ├── mutlist_Gly_C_08092023.txt
+│   ├── mutlist_Gly_N_08092023.txt
+│   ├── mutlist_Gly_O_08092023.txt
+│   ├── mutlist_Gly_S_08092023.txt
 │   ├── mutlist_hgvs_08092023.txt
 │   ├── mutlist_mutatex_08092023.txt
 │   ├── mutlist_mutatex_P_08092023.txt
 │   ├── mutlist_rosetta_08092023.txt
 │   ├── readme.txt
 │   ├── metatable_pancancer_BLM.csv  
-│   ├── entry_not_found.csv
-│   ├── variants_to_check.csv
-│   └── inconsistency.annotations.csv
+│   ├── inconsistency_annotations.csv
+│   └── .snakemake_timestamp
 │
 ├── demask
 │   ├── P54132.blast.json
