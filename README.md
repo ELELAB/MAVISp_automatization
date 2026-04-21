@@ -72,7 +72,7 @@ where:
 "uniprot_ac" is the uniprot accession number of the protein
 "trimmed" represents the residues range of your trimmed model (in case of multiple models specify the ranges "_" separeted)
 "ref_seq" is the ref seq code associated with the isoform used by cancermuts (usually the first one). The RefSeq associated with the first isoform can be accessed through the Uniprot database in the "Sequence & isoforms" or "Sequence" section (depending on the protein being investigated) under the field "Sequence databases". The RefSeq code required by the pipeline consists of the "NP" followed by all subsequent characters until the dot, excluding it. There may be multiple RefSeq codes available. The one associated with the correct isoform includes the isoform code, which is enclosed in square brackets, corresponding to the canonical isoform. Verify by clicking on it that it corresponds to the correct isoform.
-"research field" is the project or the research field in which the protein is involved (this is the name of the folder in which the cancermuts and rasp calculation will be organized).
+"research_field" is the project or the research field in which the protein is involved (this is the name of the folder in which the cancermuts and rasp calculation will be organized).
 "input_pdb" is an optional input pdb file the user provides. Notice that this is mandatory when using the `idp` rule target.
 "structure_source" the source of the input structure, it needs to follow the nameing of this dictionary:
 AFDB: "AlphaFold database",
@@ -235,9 +235,8 @@ BLM
 │   ├── mutlist_rosetta_08092023.txt
 │   ├── readme.txt
 │   ├── metatable_pancancer_BLM.csv  
-│   ├── entry_not_found.csv
-│   ├── variants_to_check.csv
-│   └── inconsistency.annotations.csv
+│   ├── inconsistency_annotations.csv
+│   └── .snakemake_timestamp
 │
 ├── demask
 │   ├── P54132.blast.json
