@@ -18,7 +18,7 @@
 # Compatibility of the mutlist:
 # one letter code (R13L) - automatically generated
 # mutatex (RA13L) - generated if the '-M' flag is used (required -ch flag [default = A)]
-# glycosylation mutlists - automatically generated (O-, N-, C-, S-linked glycosylation sites
+# glycosylation mutlists - automatically generated (O-, N-, C-, S-linked glycosylation sites)
 # rosetta (A.R.13.L A) - generated if the '-R' flag is used (required -ch flag with the chain [default = A])
 # hgvs (p.Arg13Leu) - generated if the '-H' flag is used 
 # cabsflex (4P7A.pdb A 13 ARG LEU) - generated if the '-C' flag is used (required the -ch [default = A])
