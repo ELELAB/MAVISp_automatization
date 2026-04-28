@@ -4,7 +4,7 @@ from cancermuts.datasources import UniProt
 from cancermuts.datasources import cBioPortal, COSMIC, ClinVar
 from cancermuts.datasources import MyVariant
 from cancermuts.datasources import gnomAD
-from cancermuts.datasources import PhosphoSite, MobiDB
+from cancermuts.datasources import PhosphoSite, MobiDB, dbPTM, GlyGen, NetPhos
 from cancermuts.datasources import ggetELMPredictions
 from cancermuts.table import Table
 import pandas as pd
@@ -39,8 +39,15 @@ cosmic = COSMIC(targeted_database_file='/data/databases/cosmic-v102/Cosmic_Compl
 				classification_database_file='/data/databases/cosmic-v102/Cosmic_Classification_v102_GRCh38.tsv',
 				database_encoding='latin1', lazy_load_db=True,
                 )
-cosmic.add_mutations(seq, genome_assembly_version='GRCh38', metadata=['genomic_coordinates', 'genomic_mutations',
+try:
+    cosmic.add_mutations(seq, genome_assembly_version='GRCh38', metadata=['genomic_coordinates', 'genomic_mutations',
                                                 'cancer_site', 'cancer_histology'])
+except ValueError as e:
+    if "is not present in the database files" in str(e):
+        print(f"WARNING: Skipping COSMIC for {args.prt}: gene not found in COSMIC.")
+    else:
+        raise
+
 #add mutations from ClinVar:
 if args.refseq:
     seq.aliases["refseq"] = args.refseq
@@ -86,6 +93,19 @@ gnomad.add_metadata(seq, md_type=['gnomad_exome_allele_frequency',
 # add annotations from PhosphoSite
 ps = PhosphoSite('/data/databases/phosphosite/')
 ps.add_position_properties(seq)
+
+# add annotations from dbPTM
+dp = dbPTM('/data/databases/dbPTM/')
+dp.add_position_properties(seq)
+
+# add annotations from GlyGen
+gg = GlyGen('/data/databases/GlyGen/', database_file='human_proteoform_glycosylation_sites_uniprotkb_filtered.csv')
+gg.add_position_properties(seq)
+
+# add annotations from NetPhos
+np = NetPhos('/data/databases/netphos_human_proteome/netphos_human_isoforms/raw/')
+np.add_position_properties(seq)
+
 
 # add annotations from MobiDB
 #mdb = MobiDB()
