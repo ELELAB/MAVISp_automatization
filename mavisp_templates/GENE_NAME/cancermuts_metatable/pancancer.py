@@ -14,6 +14,7 @@ parser=argparse.ArgumentParser(description='Pancancer: run Cancermuts"\
 parser.add_argument("-p", "--prt", dest="prt", help="hugo name of your protein")
 parser.add_argument("-i", "--uniprotID", dest="uniprotID", help="uniprot_id of your protein (the one ending with _HUMAN)")
 parser.add_argument("-a", "--uniprotAC", dest="uniprotAC", default= None, help="uniprot_ac of your protein")
+parser.add_argument("-f", "--isoform", dest="isoform", default=None, help="UniProt isoform ID, e.g. P61812-1")
 parser.add_argument("-r", "--refseq", dest="refseq", required=False, help="RefSeq isoform ID required for ClinVar mapping")
 parser.add_argument("-e", "--external_mutations", dest="external_mutations", nargs='+', default= None, help="csv file containing the external mutations to study")
 
@@ -22,7 +23,7 @@ args=parser.parse_args()
 up = UniProt()
 
 # get the sequence for the protein
-seq = up.get_sequence(args.prt, upid=args.uniprotID, upac=args.uniprotAC)
+seq = up.get_sequence(args.prt, upid=args.uniprotID, upac=args.uniprotAC, isoform=args.isoform)
 print(seq.sequence)
 
 # add mutations from cBioPortal
