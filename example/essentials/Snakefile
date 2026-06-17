@@ -1601,6 +1601,11 @@ rule collect_outputs:
             f"mutatex_runs/{wcs.structure_source}_{resrange}/model_{wcs.model}/"
             f"saturation/{wcs.uniprot_ac}_table/energies.csv"
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
+        structure_foldx5_std=lambda wcs: [
+            f"{mutatex_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/"
+            f"mutatex_runs/{wcs.structure_source}_{resrange}/model_{wcs.model}/"
+            f"saturation/{wcs.uniprot_ac}_table/energies_std.csv"
+            for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
         pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
         ted=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/results.csv",
         alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/",
@@ -1721,25 +1726,28 @@ rule collect_outputs:
                 fout.writelines(lines[1:])
 
 	# 15) foldx5 energies
-        fx_out = base / "foldx5" / "energies.csv"
-        (fx_out.parent).mkdir(parents=True, exist_ok=True)
+        fx_dir = base / "foldx5"
+        fx_dir.mkdir(parents=True, exist_ok=True)
 
-        fx_files = sorted(Path(f) for f in input.structure_foldx5)
+        def merge_foldx_csv(files, out_file):
+            fx_files = sorted(Path(f) for f in files)
 
-        fx_lines = []
-        header = None
-        for fx in fx_files:
-            lines = Path(fx).read_text().splitlines(keepends=True)
-            if header is None:
-                header = lines[0]
-            fx_lines.extend(lines[1:])  # drop each file’s header
+            fx_lines = []
+            header = None
+            for fx in fx_files:
+                lines = fx.read_text().splitlines(keepends=True)
+                if header is None:
+                    header = lines[0]
+                fx_lines.extend(lines[1:])  # drop each file's header
 
-        fx_lines.sort(key=lambda l: int(l.split(",")[2]))
+            fx_lines.sort(key=lambda l: int(l.split(",")[2]))
 
-        fx_out.parent.mkdir(parents=True, exist_ok=True)
-        with open(fx_out, "w") as fout:
-            fout.write(header)
-            fout.writelines(fx_lines)
+            with open(out_file, "w") as fout:
+                fout.write(header)
+                fout.writelines(fx_lines)
+
+        merge_foldx_csv(input.structure_foldx5, fx_dir / "energies.csv")
+        merge_foldx_csv(input.structure_foldx5_std, fx_dir / "energies_std.csv")
 
         # 16) mutation_list
         ml_dir = out / "mutation_list"
