@@ -58,7 +58,7 @@ P    8      Planar group         TYR
      2A  37 ARG24 111.3864
      2A  37 ARG25 107.7447
      2A  37 ARG31 110.7683
-     2A  37 ARG 1   0.0008  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+     2A  37 ARG 1   0.0008  PLANE /data/user/elenikia/MAVISp_automatizatio
      2A  37 ARG 1 117.2993 A  37 ARG A  38 LYS
      2A  37 ARG 4 123.5080 A  37 ARG A  38 LYS
      3A  38 LYS 6   1.3420 A  37 ARG A  38 LYS
@@ -83,7 +83,7 @@ P    8      Planar group         TYR
      4A  39 GLN24 112.0431
      4A  39 GLN25 109.1760
      4A  39 GLN31 111.3871
-     4A  39 GLN 4   0.0078  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+     4A  39 GLN 4   0.0078  PLANE /data/user/elenikia/MAVISp_automatizatio
      4A  39 GLN 1 116.1193 A  39 GLN A  40 ARG
      4A  39 GLN 4 121.9865 A  39 GLN A  40 ARG
      5A  40 ARG 6   1.3319 A  39 GLN A  40 ARG
@@ -96,7 +96,7 @@ P    8      Planar group         TYR
      5A  40 ARG24 113.4759
      5A  40 ARG25 108.7870
      5A  40 ARG31 107.9049
-     5A  40 ARG 1   0.0035  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+     5A  40 ARG 1   0.0035  PLANE /data/user/elenikia/MAVISp_automatizatio
      5A  40 ARG 1 117.4795 A  40 ARG A  41 ARG
      5A  40 ARG 4 123.0424 A  40 ARG A  41 ARG
      6A  41 ARG 6   1.3395 A  40 ARG A  41 ARG
@@ -109,7 +109,7 @@ P    8      Planar group         TYR
      6A  41 ARG24 111.4243
      6A  41 ARG25 111.5043
      6A  41 ARG31 110.4015
-     6A  41 ARG 1   0.0028  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+     6A  41 ARG 1   0.0028  PLANE /data/user/elenikia/MAVISp_automatizatio
      6A  41 ARG 1 115.6615 A  41 ARG A  42 GLU
      6A  41 ARG 4 124.0352 A  41 ARG A  42 GLU
      7A  42 GLU 6   1.3306 A  41 ARG A  42 GLU
@@ -122,7 +122,7 @@ P    8      Planar group         TYR
      7A  42 GLU24 111.3445
      7A  42 GLU25 114.1868
      7A  42 GLU31 110.9063
-     7A  42 GLU 5   0.0223  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+     7A  42 GLU 5   0.0223  PLANE /data/user/elenikia/MAVISp_automatizatio
      7A  42 GLU 1 114.5713 A  42 GLU A  43 ARG
      7A  42 GLU 4 122.6119 A  42 GLU A  43 ARG
      8A  43 ARG 6   1.3377 A  42 GLU A  43 ARG
@@ -135,7 +135,7 @@ P    8      Planar group         TYR
      8A  43 ARG24 111.8676
      8A  43 ARG25 109.4395
      8A  43 ARG31 110.6286
-     8A  43 ARG 1   0.0017  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+     8A  43 ARG 1   0.0017  PLANE /data/user/elenikia/MAVISp_automatizatio
      8A  43 ARG 1 115.9909 A  43 ARG A  44 THR
      8A  43 ARG 4 122.9296 A  43 ARG A  44 THR
      9A  44 THR 6   1.3260 A  43 ARG A  44 THR
@@ -172,7 +172,7 @@ P    8      Planar group         TYR
     11A  46 PHE24 111.2369
     11A  46 PHE25 109.3230
     11A  46 PHE31 110.0326
-    11A  46 PHE 7   0.0056  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    11A  46 PHE 7   0.0056  PLANE /data/user/elenikia/MAVISp_automatizatio
     11A  46 PHE 1 118.4336 A  46 PHE A  47 THR
     11A  46 PHE 4 122.3563 A  46 PHE A  47 THR
     12A  47 THR 6   1.3327 A  46 PHE A  47 THR
@@ -197,7 +197,7 @@ P    8      Planar group         TYR
     13A  48 ARG24 113.1838
     13A  48 ARG25 112.6072
     13A  48 ARG31 108.9894
-    13A  48 ARG 1   0.0017  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    13A  48 ARG 1   0.0017  PLANE /data/user/elenikia/MAVISp_automatizatio
     13A  48 ARG 1 117.8510 A  48 ARG A  49 SER
     13A  48 ARG 4 123.2579 A  48 ARG A  49 SER
     14A  49 SER 6   1.3344 A  48 ARG A  49 SER
@@ -222,7 +222,7 @@ P    8      Planar group         TYR
     15A  50 GLN24 108.6339
     15A  50 GLN25 111.9599
     15A  50 GLN31 110.7237
-    15A  50 GLN 4   0.0007  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    15A  50 GLN 4   0.0007  PLANE /data/user/elenikia/MAVISp_automatizatio
     15A  50 GLN 1 118.3197 A  50 GLN A  51 LEU
     15A  50 GLN 4 121.7505 A  50 GLN A  51 LEU
     16A  51 LEU 6   1.3403 A  50 GLN A  51 LEU
@@ -247,7 +247,7 @@ P    8      Planar group         TYR
     17A  52 GLU24 113.4947
     17A  52 GLU25 112.1230
     17A  52 GLU31 109.2363
-    17A  52 GLU 5   0.0305  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    17A  52 GLU 5   0.0305  PLANE /data/user/elenikia/MAVISp_automatizatio
     17A  52 GLU 1 119.0358 A  52 GLU A  53 GLU
     17A  52 GLU 4 121.5987 A  52 GLU A  53 GLU
     18A  53 GLU 6   1.3368 A  52 GLU A  53 GLU
@@ -260,7 +260,7 @@ P    8      Planar group         TYR
     18A  53 GLU24 109.6699
     18A  53 GLU25 112.2476
     18A  53 GLU31 108.9819
-    18A  53 GLU 5   0.0072  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    18A  53 GLU 5   0.0072  PLANE /data/user/elenikia/MAVISp_automatizatio
     18A  53 GLU 1 117.4290 A  53 GLU A  54 LEU
     18A  53 GLU 4 120.7964 A  53 GLU A  54 LEU
     19A  54 LEU 6   1.3392 A  53 GLU A  54 LEU
@@ -285,7 +285,7 @@ P    8      Planar group         TYR
     20A  55 GLU24 114.7959
     20A  55 GLU25 112.2428
     20A  55 GLU31 110.8349
-    20A  55 GLU 5   0.0257  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    20A  55 GLU 5   0.0257  PLANE /data/user/elenikia/MAVISp_automatizatio
     20A  55 GLU 1 118.9027 A  55 GLU A  56 ALA
     20A  55 GLU 4 122.0015 A  55 GLU A  56 ALA
     21A  56 ALA 6   1.3366 A  55 GLU A  56 ALA
@@ -322,7 +322,7 @@ P    8      Planar group         TYR
     23A  58 PHE24 110.9870
     23A  58 PHE25 113.4447
     23A  58 PHE31 109.8500
-    23A  58 PHE 7   0.0080  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    23A  58 PHE 7   0.0080  PLANE /data/user/elenikia/MAVISp_automatizatio
     23A  58 PHE 1 118.0818 A  58 PHE A  59 ALA
     23A  58 PHE 4 122.4171 A  58 PHE A  59 ALA
     24A  59 ALA 6   1.3367 A  58 PHE A  59 ALA
@@ -371,7 +371,7 @@ P    8      Planar group         TYR
     27A  62 GLN24 110.5167
     27A  62 GLN25 112.7989
     27A  62 GLN31 110.2292
-    27A  62 GLN 4   0.0040  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    27A  62 GLN 4   0.0040  PLANE /data/user/elenikia/MAVISp_automatizatio
     27A  62 GLN 1 118.2537 A  62 GLN A  63 TYR
     27A  62 GLN 4 122.4614 A  62 GLN A  63 TYR
     28A  63 TYR 6   1.3361 A  62 GLN A  63 TYR
@@ -384,7 +384,7 @@ P    8      Planar group         TYR
     28A  63 TYR24 112.0063
     28A  63 TYR25 109.6376
     28A  63 TYR31 109.8436
-    28A  63 TYR 9   0.0106  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    28A  63 TYR 9   0.0106  PLANE /data/user/elenikia/MAVISp_automatizatio
     28A  63 TYR 1 118.9135 A  63 TYR A  64 PRO
     28A  63 TYR 4 121.5465 A  63 TYR A  64 PRO
     29A  64 PRO 7   1.3462 A  63 TYR A  64 PRO
@@ -409,7 +409,7 @@ P    8      Planar group         TYR
     30A  65 ASP24 113.5236
     30A  65 ASP25 112.0114
     30A  65 ASP31 107.5221
-    30A  65 ASP 3   0.0292  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    30A  65 ASP 3   0.0292  PLANE /data/user/elenikia/MAVISp_automatizatio
     30A  65 ASP 1 119.1825 A  65 ASP A  66 VAL
     30A  65 ASP 4 120.2968 A  65 ASP A  66 VAL
     31A  66 VAL 6   1.3377 A  65 ASP A  66 VAL
@@ -434,7 +434,7 @@ P    8      Planar group         TYR
     32A  67 TYR24 110.7941
     32A  67 TYR25 112.8780
     32A  67 TYR31 108.7680
-    32A  67 TYR 9   0.0067  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    32A  67 TYR 9   0.0067  PLANE /data/user/elenikia/MAVISp_automatizatio
     32A  67 TYR 1 117.8495 A  67 TYR A  68 ALA
     32A  67 TYR 4 121.1264 A  67 TYR A  68 ALA
     33A  68 ALA 6   1.3375 A  67 TYR A  68 ALA
@@ -459,7 +459,7 @@ P    8      Planar group         TYR
     34A  69 ARG24 110.0734
     34A  69 ARG25 111.9394
     34A  69 ARG31 111.2764
-    34A  69 ARG 1   0.0016  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    34A  69 ARG 1   0.0016  PLANE /data/user/elenikia/MAVISp_automatizatio
     34A  69 ARG 1 118.5704 A  69 ARG A  70 GLU
     34A  69 ARG 4 123.4716 A  69 ARG A  70 GLU
     35A  70 GLU 6   1.3277 A  69 ARG A  70 GLU
@@ -472,7 +472,7 @@ P    8      Planar group         TYR
     35A  70 GLU24 112.1188
     35A  70 GLU25 111.7129
     35A  70 GLU31 109.5134
-    35A  70 GLU 5   0.0082  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    35A  70 GLU 5   0.0082  PLANE /data/user/elenikia/MAVISp_automatizatio
     35A  70 GLU 1 118.6885 A  70 GLU A  71 GLU
     35A  70 GLU 4 121.5583 A  70 GLU A  71 GLU
     36A  71 GLU 6   1.3363 A  70 GLU A  71 GLU
@@ -485,7 +485,7 @@ P    8      Planar group         TYR
     36A  71 GLU24 110.6107
     36A  71 GLU25 111.6269
     36A  71 GLU31 109.5931
-    36A  71 GLU 5   0.0071  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    36A  71 GLU 5   0.0071  PLANE /data/user/elenikia/MAVISp_automatizatio
     36A  71 GLU 1 117.9499 A  71 GLU A  72 VAL
     36A  71 GLU 4 121.3854 A  71 GLU A  72 VAL
     37A  72 VAL 6   1.3417 A  71 GLU A  72 VAL
@@ -558,7 +558,7 @@ P    8      Planar group         TYR
     42A  77 ASN24 114.5768
     42A  77 ASN25 113.7121
     42A  77 ASN31 110.2293
-    42A  77 ASN 2   0.0028  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    42A  77 ASN 2   0.0028  PLANE /data/user/elenikia/MAVISp_automatizatio
     42A  77 ASN 1 117.5891 A  77 ASN A  78 LEU
     42A  77 ASN 4 120.8822 A  77 ASN A  78 LEU
     43A  78 LEU 6   1.3388 A  77 ASN A  78 LEU
@@ -595,7 +595,7 @@ P    8      Planar group         TYR
     45A  80 GLU24 111.7535
     45A  80 GLU25 112.2215
     45A  80 GLU31 107.7305
-    45A  80 GLU 5   0.0192  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    45A  80 GLU 5   0.0192  PLANE /data/user/elenikia/MAVISp_automatizatio
     45A  80 GLU 1 118.0281 A  80 GLU A  81 SER
     45A  80 GLU 4 120.7355 A  80 GLU A  81 SER
     46A  81 SER 6   1.3397 A  80 GLU A  81 SER
@@ -620,7 +620,7 @@ P    8      Planar group         TYR
     47A  82 ARG24 108.7838
     47A  82 ARG25 110.7519
     47A  82 ARG31 110.2885
-    47A  82 ARG 1   0.0007  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    47A  82 ARG 1   0.0007  PLANE /data/user/elenikia/MAVISp_automatizatio
     47A  82 ARG 1 117.5232 A  82 ARG A  83 VAL
     47A  82 ARG 4 123.7660 A  82 ARG A  83 VAL
     48A  83 VAL 6   1.3349 A  82 ARG A  83 VAL
@@ -645,7 +645,7 @@ P    8      Planar group         TYR
     49A  84 GLN24 109.9009
     49A  84 GLN25 112.6151
     49A  84 GLN31 109.8573
-    49A  84 GLN 4   0.0106  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    49A  84 GLN 4   0.0106  PLANE /data/user/elenikia/MAVISp_automatizatio
     49A  84 GLN 1 117.7105 A  84 GLN A  85 VAL
     49A  84 GLN 4 121.3305 A  84 GLN A  85 VAL
     50A  85 VAL 6   1.3389 A  84 GLN A  85 VAL
@@ -670,7 +670,7 @@ P    8      Planar group         TYR
     51A  86 TRP24 112.1926
     51A  86 TRP25 111.0058
     51A  86 TRP31 110.3687
-    51A  86 TRP 8   0.0346  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    51A  86 TRP 8   0.0346  PLANE /data/user/elenikia/MAVISp_automatizatio
     51A  86 TRP 1 118.8352 A  86 TRP A  87 PHE
     51A  86 TRP 4 121.6013 A  86 TRP A  87 PHE
     52A  87 PHE 6   1.3382 A  86 TRP A  87 PHE
@@ -683,7 +683,7 @@ P    8      Planar group         TYR
     52A  87 PHE24 111.5021
     52A  87 PHE25 112.2239
     52A  87 PHE31 110.1609
-    52A  87 PHE 7   0.0277  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    52A  87 PHE 7   0.0277  PLANE /data/user/elenikia/MAVISp_automatizatio
     52A  87 PHE 1 118.6892 A  87 PHE A  88 LYS
     52A  87 PHE 4 121.1153 A  87 PHE A  88 LYS
     53A  88 LYS 6   1.3428 A  87 PHE A  88 LYS
@@ -708,7 +708,7 @@ P    8      Planar group         TYR
     54A  89 ASN24 112.5176
     54A  89 ASN25 112.0481
     54A  89 ASN31 108.7733
-    54A  89 ASN 2   0.0039  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    54A  89 ASN 2   0.0039  PLANE /data/user/elenikia/MAVISp_automatizatio
     54A  89 ASN 1 118.8765 A  89 ASN A  90 ARG
     54A  89 ASN 4 121.3071 A  89 ASN A  90 ARG
     55A  90 ARG 6   1.3401 A  89 ASN A  90 ARG
@@ -721,7 +721,7 @@ P    8      Planar group         TYR
     55A  90 ARG24 112.9729
     55A  90 ARG25 111.1434
     55A  90 ARG31 108.8517
-    55A  90 ARG 1   0.0019  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    55A  90 ARG 1   0.0019  PLANE /data/user/elenikia/MAVISp_automatizatio
     55A  90 ARG 1 118.4367 A  90 ARG A  91 ARG
     55A  90 ARG 4 121.6019 A  90 ARG A  91 ARG
     56A  91 ARG 6   1.3443 A  90 ARG A  91 ARG
@@ -734,7 +734,7 @@ P    8      Planar group         TYR
     56A  91 ARG24 110.3519
     56A  91 ARG25 112.6403
     56A  91 ARG31 111.2669
-    56A  91 ARG 1   0.0023  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    56A  91 ARG 1   0.0023  PLANE /data/user/elenikia/MAVISp_automatizatio
     56A  91 ARG 1 119.2891 A  91 ARG A  92 ALA
     56A  91 ARG 4 121.7283 A  91 ARG A  92 ALA
     57A  92 ALA 6   1.3359 A  91 ARG A  92 ALA
@@ -783,7 +783,7 @@ P    8      Planar group         TYR
     60A  95 ARG24 110.4528
     60A  95 ARG25 112.6470
     60A  95 ARG31 111.8348
-    60A  95 ARG 1   0.0001  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    60A  95 ARG 1   0.0001  PLANE /data/user/elenikia/MAVISp_automatizatio
     60A  95 ARG 1 118.5652 A  95 ARG A  96 GLN
     60A  95 ARG 4 123.1463 A  95 ARG A  96 GLN
     61A  96 GLN 6   1.3340 A  95 ARG A  96 GLN
@@ -796,7 +796,7 @@ P    8      Planar group         TYR
     61A  96 GLN24 110.8254
     61A  96 GLN25 111.6469
     61A  96 GLN31 109.5316
-    61A  96 GLN 4   0.0061  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    61A  96 GLN 4   0.0061  PLANE /data/user/elenikia/MAVISp_automatizatio
     61A  96 GLN 1 118.3053 A  96 GLN A  97 GLN
     61A  96 GLN 4 121.7933 A  96 GLN A  97 GLN
     62A  97 GLN 6   1.3355 A  96 GLN A  97 GLN
@@ -809,7 +809,7 @@ P    8      Planar group         TYR
     62A  97 GLN24 112.2643
     62A  97 GLN25 111.7511
     62A  97 GLN31 107.7467
-    62A  97 GLN 4   0.0021  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    62A  97 GLN 4   0.0021  PLANE /data/user/elenikia/MAVISp_automatizatio
     62A  97 GLN 1 117.9404 A  97 GLN A  98 ARG
     62A  97 GLN 4 121.3529 A  97 GLN A  98 ARG
     63A  98 ARG 6   1.3434 A  97 GLN A  98 ARG
@@ -822,7 +822,7 @@ P    8      Planar group         TYR
     63A  98 ARG24 109.6985
     63A  98 ARG25 114.0563
     63A  98 ARG31 110.0180
-    63A  98 ARG 1   0.0024  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    63A  98 ARG 1   0.0024  PLANE /data/user/elenikia/MAVISp_automatizatio
     63A  98 ARG 1 119.1161 A  98 ARG A  99 GLN
     63A  98 ARG 4 121.6942 A  98 ARG A  99 GLN
     64A  99 GLN 6   1.3346 A  98 ARG A  99 GLN
@@ -835,7 +835,7 @@ P    8      Planar group         TYR
     64A  99 GLN24 111.6131
     64A  99 GLN25 111.1758
     64A  99 GLN31 110.1899
-    64A  99 GLN 4   0.0006  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    64A  99 GLN 4   0.0006  PLANE /data/user/elenikia/MAVISp_automatizatio
     64A  99 GLN 1 118.2401 A  99 GLN A 100 GLN
     64A  99 GLN 4 122.4463 A  99 GLN A 100 GLN
     65A 100 GLN 6   1.3352 A  99 GLN A 100 GLN
@@ -848,7 +848,7 @@ P    8      Planar group         TYR
     65A 100 GLN24 111.2171
     65A 100 GLN25 111.7741
     65A 100 GLN31 108.7529
-    65A 100 GLN 4   0.0072  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    65A 100 GLN 4   0.0072  PLANE /data/user/elenikia/MAVISp_automatizatio
     65A 100 GLN 1 118.0880 A 100 GLN A 101 GLN
     65A 100 GLN 4 121.7958 A 100 GLN A 101 GLN
     66A 101 GLN 6   1.3385 A 100 GLN A 101 GLN
@@ -861,7 +861,7 @@ P    8      Planar group         TYR
     66A 101 GLN24 109.9735
     66A 101 GLN25 112.6802
     66A 101 GLN31 108.9137
-    66A 101 GLN 4   0.0036  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    66A 101 GLN 4   0.0036  PLANE /data/user/elenikia/MAVISp_automatizatio
     66A 101 GLN 1 118.3651 A 101 GLN A 102 LYS
     66A 101 GLN 4 121.3251 A 101 GLN A 102 LYS
     67A 102 LYS 6   1.3428 A 101 GLN A 102 LYS
@@ -886,7 +886,7 @@ P    8      Planar group         TYR
     68A 103 GLN24 111.9544
     68A 103 GLN25 110.8168
     68A 103 GLN31 110.0287
-    68A 103 GLN 4   0.0013  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    68A 103 GLN 4   0.0013  PLANE /data/user/elenikia/MAVISp_automatizatio
     68A 103 GLN 1 117.9962 A 103 GLN A 104 GLN
     68A 103 GLN 4 122.1188 A 103 GLN A 104 GLN
     69A 104 GLN 6   1.3374 A 103 GLN A 104 GLN
@@ -899,4 +899,4 @@ P    8      Planar group         TYR
     69A 104 GLN24 110.3427
     69A 104 GLN25 113.9001
     69A 104 GLN31 108.8610
-    69A 104 GLN 4   0.0057  PLANE /data/user/pablosanchezb/devel/MAVISp_au
+    69A 104 GLN 4   0.0057  PLANE /data/user/elenikia/MAVISp_automatizatio

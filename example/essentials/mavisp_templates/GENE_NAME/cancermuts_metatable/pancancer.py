@@ -74,10 +74,7 @@ if args.external_mutations:
         # add mutations to the seq object
         ma.add_mutations(seq)
 
-        # add PTM annotations to the sequence object
-        ma.add_position_properties(seq)
-
-        # add structure or linear motif annotation to the sequence object
+        # add annotations to the sequence object
         ma.add_sequence_properties(seq)
 
 
@@ -92,24 +89,24 @@ gnomad.add_metadata(seq, md_type=['gnomad_exome_allele_frequency',
 
 # add annotations from PhosphoSite
 ps = PhosphoSite('/data/databases/phosphosite/')
-ps.add_position_properties(seq)
+ps.add_sequence_properties(seq)
 
 # add annotations from dbPTM
 dp = dbPTM('/data/databases/dbPTM/')
-dp.add_position_properties(seq)
+dp.add_sequence_properties(seq)
 
 # add annotations from GlyGen
 gg = GlyGen('/data/databases/GlyGen/', database_file='human_proteoform_glycosylation_sites_uniprotkb_filtered.csv')
-gg.add_position_properties(seq)
+gg.add_sequence_properties(seq)
 
 # add annotations from NetPhos
 np = NetPhos('/data/databases/netphos_human_proteome/netphos_human_isoforms/raw/')
-np.add_position_properties(seq)
+np.add_sequence_properties(seq)
 
 
 # add annotations from MobiDB
 #mdb = MobiDB()
-#mdb.add_position_properties(seq)
+#mdb.add_sequence_properties(seq)
 
 # add annotations from ELM
 elm = ggetELMPredictions()
