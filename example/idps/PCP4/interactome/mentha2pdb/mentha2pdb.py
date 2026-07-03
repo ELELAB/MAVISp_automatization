@@ -221,7 +221,7 @@ def get_experiment(pdb):
     data = make_request(url, "get", pdb)
     resolution = ''
 
-    if data is None:
+    if not data or data == {"message": "Requested endpoint does not contains any data"}:
         resolution = 'none'
         # print("########")
         # print("EXPERIMENT CALL ERROR -> no data")
@@ -259,7 +259,7 @@ def get_summary(pdb):
     # data None -> means that we have no data from the request
     # no data -> no title
     # no title -> fused = ''
-    if data is None:
+    if not data or data == {"message": "Requested endpoint does not contains any data"}:
         title = 'NO TITLE'
         dna = 'none'
         ligands = 'none'
@@ -320,7 +320,7 @@ def get_mappings_data(pdb, targetProtein, interactorProtein):
     otherInteractors = []
 
     # Check if there is data
-    if not mappings_data:
+    if not mappings_data or mappings_data == {"message": "Requested endpoint does not contains any data"}:
         # print("NA")
         mappings_data = ['NA']
         return 'none', 'none', 'none', 'none', 'none', 'none', 'none'
