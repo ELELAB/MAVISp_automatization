@@ -34,9 +34,9 @@ except TypeError:
 
 
 # add mutations from COSMIC
-cosmic = COSMIC(targeted_database_file='/data/databases/cosmic-v102/Cosmic_CompleteTargetedScreensMutant_v102_GRCh38.tsv',
-				screen_mutant_database_file='/data/databases/cosmic-v102/Cosmic_GenomeScreensMutant_v102_GRCh38.tsv',
-				classification_database_file='/data/databases/cosmic-v102/Cosmic_Classification_v102_GRCh38.tsv',
+cosmic = COSMIC(targeted_database_file='/data/databases/cosmic-v104/Cosmic_CompleteTargetedScreensMutant_v104_GRCh38.tsv',
+				screen_mutant_database_file='/data/databases/cosmic-v104/Cosmic_GenomeScreensMutant_v104_GRCh38.tsv',
+				classification_database_file='/data/databases/cosmic-v104/Cosmic_Classification_v104_GRCh38.tsv',
 				database_encoding='latin1', lazy_load_db=True,
                 )
 try:

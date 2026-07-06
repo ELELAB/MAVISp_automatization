@@ -1,5 +1,5 @@
-2026-01-08 13:38:33,134 - INFO - PDBminer is starting
-2026-01-08 13:38:33,338 - INFO - input file created based on hugo name and uniprot id, file name: input_file.csv
-2026-01-08 13:38:33,338 - INFO - Pipeline is starting
-2026-01-08 13:38:37,590 - INFO - total runtime: 0:00:04.455491
-2026-01-08 13:38:37,590 - INFO - PDBminer has finished.
+2026-07-03 14:40:37,252 - INFO - PDBminer is starting
+2026-07-03 14:40:37,469 - INFO - input file created based on hugo name and uniprot id, file name: input_file.csv
+2026-07-03 14:40:37,469 - INFO - Pipeline is starting
+2026-07-03 14:40:41,943 - INFO - total runtime: 0:00:04.690902
+2026-07-03 14:40:41,944 - INFO - PDBminer has finished.
