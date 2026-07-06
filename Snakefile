@@ -15,6 +15,49 @@ def mutation_converter(x):
     return f"p.{IUPACData.protein_letters_1to3.get(x[0])}{x[1:-1]}\
                         {IUPACData.protein_letters_1to3.get(x[-1])}"
 
+def isoform_split(identifier):
+    """Parses identifiers that may include Uniprot-style isoform suffix."""
+    if pd.isna(identifier):
+        return None, None
+    full_id = str(identifier).strip()
+    match = re.match(r"^P<base>id>.+-(?P<isoform_numner>\d+)$", full_id)
+
+    if match:
+        return (
+            match.group("base"),
+            match.group("isoform_number"),
+        )
+    return identifier, None
+
+def split_isoform_suffix(identifier):
+    """Parses the identifier and separates it into Identifier and Isoform number."""
+
+    if pd.isna(identifier):
+        return None, None
+
+    identifier = str(identifier).strip()
+
+    match = re.match(r"^(?P<base>.+)-(?P<isoform_number>\d+)$", identifier)
+
+    if match:
+        return match.group("base"), match.group("isoform_number")
+
+    return identifier, None
+
+def isoform_parser(row):
+    """Parse isoform information from the protein and uniprot_ac columns."""
+
+    base_id, protein_isoform_number = split_isoform_suffix(row["protein"])
+    base_ac, ac_isoform_number = split_isoform_suffix(row["uniprot_ac"])
+
+    if protein_isoform_number != ac_isoform_number:
+        raise ValueError(
+            "Inconsistent isoform information between protein and uniprot_ac:\n"
+            f"protein={row['protein']} gives isoform {protein_isoform_number}; "
+            f"uniprot_ac={row['uniprot_ac']} gives isoform {ac_isoform_number}"
+        )
+
+    return base_id, base_ac, protein_isoform_number
 
 configfile: "config.yaml"
 
@@ -301,6 +344,9 @@ modules.update({"allosigma":{"allosigma1":{"aminoacids":allosigma_aminoacid,
 
 df = pd.read_csv(config['input']['path'])
 
+# Isoform
+df[["base_id", "base_ac", "isoform_number"]] = df.apply(isoform_parser, axis=1, result_type="expand")
+
 # Rasp
 rasp_path=modules['rasp']['output_path_folder']
 df['output_path_folder'] = rasp_path
@@ -441,6 +487,38 @@ rule all:
                zip,
                hugo_name = df['protein'].str.upper(),
                uniprot_ac = df['uniprot_ac'].str.upper())
+
+###################### Target rule for isoform processing #######################
+
+rule isoforms:
+    input: "isoform_identification.tsv"
+
+rule isoform_identification:
+    output: "isoform_identification.tsv"
+    run:
+        isoform_summary = df[
+            [
+                "protein",
+                "uniprot_ac",
+                "base_id",
+                "base_ac",
+                "isoform_number"
+            ]
+        ].copy()
+        isoform_summary["is_isoform"] = isoform_summary["isoform_number"].notna()
+
+        isoform_summary["message"] = isoform_summary.apply(
+            lambda row: (
+                f"Isoform has been identified "
+                f"Protein is {row['base_id']} with isoform number {row['isoform_number']}"
+                if row['is_isoform']
+                else f"No isoform has been identified for protein {row['base_id']}"
+            ),
+            axis=1
+        )
+        for message in isoform_summary["message"]:
+            print(message)
+        isoform_summary.to_csv(output[0], sep="\t", index=False)
 
 ###################### Target rule for IDP processing #######################
 
