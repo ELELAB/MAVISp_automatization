@@ -16,7 +16,7 @@ def mutation_converter(x):
                         {IUPACData.protein_letters_1to3.get(x[-1])}"
 
 def isoform_split(identifier):
-    """Parses identifiers that may include Uniprot-style isoform suffix."""
+    """Parses identifiers that may include Uniprot-style isoform suffix and notes down base name and isoform number."""
     if pd.isna(identifier):
         return None, None
     full_id = str(identifier).strip()
