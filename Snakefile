@@ -15,20 +15,6 @@ def mutation_converter(x):
     return f"p.{IUPACData.protein_letters_1to3.get(x[0])}{x[1:-1]}\
                         {IUPACData.protein_letters_1to3.get(x[-1])}"
 
-def isoform_split(identifier):
-    """Parses identifiers that may include Uniprot-style isoform suffix and notes down base name and isoform number."""
-    if pd.isna(identifier):
-        return None, None
-    full_id = str(identifier).strip()
-    match = re.match(r"^P<base>id>.+-(?P<isoform_numner>\d+)$", full_id)
-
-    if match:
-        return (
-            match.group("base"),
-            match.group("isoform_number"),
-        )
-    return identifier, None
-
 def split_isoform_suffix(identifier):
     """Parses the identifier and separates it into Identifier and Isoform number."""
 
@@ -47,17 +33,20 @@ def split_isoform_suffix(identifier):
 def isoform_parser(row):
     """Parse isoform information from the protein and uniprot_ac columns."""
 
-    base_id, protein_isoform_number = split_isoform_suffix(row["protein"])
-    base_ac, ac_isoform_number = split_isoform_suffix(row["uniprot_ac"])
+    entry_id = row["protein"]
+    uniprot_ac = row["uniprot_ac"]
+
+    base_id, protein_isoform_number = split_isoform_suffix(entry_id)
+    base_ac, ac_isoform_number = split_isoform_suffix(uniprot_ac)
 
     if protein_isoform_number != ac_isoform_number:
         raise ValueError(
             "Inconsistent isoform information between protein and uniprot_ac:\n"
-            f"protein={row['protein']} gives isoform {protein_isoform_number}; "
-            f"uniprot_ac={row['uniprot_ac']} gives isoform {ac_isoform_number}"
+            f"protein={entry_id} gives isoform {protein_isoform_number}; "
+            f"uniprot_ac={unipro_ac} gives isoform {ac_isoform_number}"
         )
 
-    return base_id, base_ac, protein_isoform_number
+    return (entry_id, base_id, base_ac, protein_isoform_number)
 
 configfile: "config.yaml"
 
@@ -345,7 +334,9 @@ modules.update({"allosigma":{"allosigma1":{"aminoacids":allosigma_aminoacid,
 df = pd.read_csv(config['input']['path'])
 
 # Isoform
-df[["base_id", "base_ac", "isoform_number"]] = df.apply(isoform_parser, axis=1, result_type="expand")
+df[["entry_id","base_id","base_ac","isoform_number",]] = df.apply(isoform_parser,axis=1,result_type="expand",)
+
+isoform_df = df[df["isoform_number"].notna()].copy()
 
 # Rasp
 rasp_path=modules['rasp']['output_path_folder']
@@ -490,35 +481,9 @@ rule all:
 
 ###################### Target rule for isoform processing #######################
 
-rule isoforms:
-    input: "isoform_identification.tsv"
-
-rule isoform_identification:
-    output: "isoform_identification.tsv"
-    run:
-        isoform_summary = df[
-            [
-                "protein",
-                "uniprot_ac",
-                "base_id",
-                "base_ac",
-                "isoform_number"
-            ]
-        ].copy()
-        isoform_summary["is_isoform"] = isoform_summary["isoform_number"].notna()
-
-        isoform_summary["message"] = isoform_summary.apply(
-            lambda row: (
-                f"Isoform has been identified "
-                f"Protein is {row['base_id']} with isoform number {row['isoform_number']}"
-                if row['is_isoform']
-                else f"No isoform has been identified for protein {row['base_id']}"
-            ),
-            axis=1
-        )
-        for message in isoform_summary["message"]:
-            print(message)
-        isoform_summary.to_csv(output[0], sep="\t", index=False)
+# rule isoforms:
+#     input:
+#         []
 
 ###################### Target rule for IDP processing #######################
 
@@ -957,12 +922,26 @@ rule cancermuts:
 
         #### run cancermuts depending on the input files availability ###
         env = modules["mutations_aggregation"]["cancermuts"]["source"]
-        uniprot_id = df.loc[df['protein'] == wildcards.hugo_name,\
-                            'uniprot_id'].iloc[0]
-        uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
-                            'uniprot_ac'].iloc[0]
-        ref_seq = df.loc[df['protein'] == wildcards.hugo_name,\
-                            'ref_seq'].iloc[0]
+        # uniprot_id = df.loc[df['protein'] == wildcards.hugo_name,\
+        #                     'uniprot_id'].iloc[0]
+        # uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
+        #                     'uniprot_ac'].iloc[0]
+        # ref_seq = df.loc[df['protein'] == wildcards.hugo_name,\
+        #                     'ref_seq'].iloc[0]
+        row = df.loc[df['entry_id'] == wildcards.hugo_name.iloc[0]]
+        entry_id = row["entry_id"]
+        base_id = row["base_id"]
+        uniprot_id = row["uniprot_id"]
+        uniprot_ac = row["uniprot_ac"]
+        ref_seq = row["ref_seq"]
+
+        is_isoform = pd.notna(row["isoform_number"])
+
+        if is_isoform:
+            sequence_option = (f"-- isoform {uniprot_ac}")
+        else:
+            sequence_option = (f"-i {uniprot_id} " f"-a {unipro_ac}")
+
         if pd.isna(ref_seq) or ref_seq == '':
             clinvar_option = ''
         else:
@@ -1020,6 +999,7 @@ rule cancermuts:
                                                    -i {uniprot_id} \
                                                       {clinvar_option} \
                                                    -a {uniprot_ac}")
+    #
 
 ################ Mutlists generation and protein annotations ################
 
