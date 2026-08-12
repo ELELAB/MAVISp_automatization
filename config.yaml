@@ -30,6 +30,14 @@ modules:
             saturation: true
             ELM_connections_per_run: 1
             folder_name: /data/raw_data/computational_data/cancermuts_data/
+
+            local_uta_seqrepo:
+                enabled: true
+                SEQREPO_VERSION: "2024-12-20"
+                HGVS_SEQREPO_DIR: "/data/databases/seqrepo/2024-12-20"
+                UTA_VERSION: "uta_20241220"
+                UTA_PORT: "5433"
+                UTA_DB_URL: "postgresql://anonymous@127.0.0.1:5433/uta/uta_20241220"
         mutlist:
             source: . /usr/local/envs/cancermuts/bin/activate
         mutatex:

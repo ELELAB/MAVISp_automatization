@@ -879,6 +879,16 @@ rule cancermuts:
 
         #### run cancermuts depending on the input files availability ###
         env = modules["mutations_aggregation"]["cancermuts"]["source"]
+        hgvs_config = modules["mutations_aggregation"]["cancermuts"].get("local_uta_seqrepo", {})
+        if hgvs_config.get("enabled", False):
+            hgvs_env = (f'export SEQREPO_VERSION="{hgvs_config["SEQREPO_VERSION"]}" && '
+                        f'export HGVS_SEQREPO_DIR="{hgvs_config["HGVS_SEQREPO_DIR"]}" && '
+                        f'export UTA_VERSION="{hgvs_config["UTA_VERSION"]}" && '
+                        f'export UTA_PORT="{hgvs_config["UTA_PORT"]}" && '
+                        f'export UTA_DB_URL="{hgvs_config["UTA_DB_URL"]}" && ')
+        else:
+            hgvs_env = ""
+
         uniprot_id = df.loc[df['protein'] == wildcards.hugo_name,\
                             'uniprot_id'].iloc[0]
         uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
@@ -914,6 +924,7 @@ rule cancermuts:
                   "python input_csv.py $(basename {input.saturation_mutlist}) && "\
                   "set +eu && . {env} && set -eu && "\
                   "mv input.csv {saturation_csv} && "\
+                  "{hgvs_env}"\
                   "python {script} -p {wildcards.hugo_name}\
                                                -i {uniprot_id} \
                                                -a {uniprot_ac} \
@@ -929,6 +940,7 @@ rule cancermuts:
                 external_mutation_list=" ".join(external_mutation_list)
                 shell("cd {path} &&"\
                       " set +eu && . {env} &&"\
+                      "{hgvs_env}"\
                       " set -eu && python {script} -p {wildcards.hugo_name}\
                                                    -i {uniprot_id} \
                                                    -a {uniprot_ac} \
@@ -938,6 +950,7 @@ rule cancermuts:
             else:
                 shell("cd {path} &&"\
                       " set +eu && . {env} &&"\
+                      "{hgvs_env}"\
                       " set -eu && python {script} -p {wildcards.hugo_name} \
                                                    -i {uniprot_id} \
                                                       {clinvar_option} \
