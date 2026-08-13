@@ -881,11 +881,11 @@ rule cancermuts:
         env = modules["mutations_aggregation"]["cancermuts"]["source"]
         hgvs_config = modules["mutations_aggregation"]["cancermuts"].get("local_uta_seqrepo", {})
         if hgvs_config.get("enabled", False):
-            hgvs_env = (f'export SEQREPO_VERSION="{hgvs_config["SEQREPO_VERSION"]}" && '
-                        f'export HGVS_SEQREPO_DIR="{hgvs_config["HGVS_SEQREPO_DIR"]}" && '
-                        f'export UTA_VERSION="{hgvs_config["UTA_VERSION"]}" && '
-                        f'export UTA_PORT="{hgvs_config["UTA_PORT"]}" && '
-                        f'export UTA_DB_URL="{hgvs_config["UTA_DB_URL"]}" && ')
+            hgvs_env = (f'export seqrepo_version="{hgvs_config["seqrepo_version"]}" && '
+                        f'export hgvs_seqrepo_dir="{hgvs_config["hgvs_seqrepo_dir"]}" && '
+                        f'export uta_version="{hgvs_config["uta_version"]}" && '
+                        f'export uta_port="{hgvs_config["uta_port"]}" && '
+                        f'export uta_db_url="{hgvs_config["uta_db_url"]}" && ')
         else:
             hgvs_env = ""
 
