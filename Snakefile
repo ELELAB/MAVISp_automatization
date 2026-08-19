@@ -23,10 +23,10 @@ def split_isoform_suffix(identifier):
 
     identifier = str(identifier).strip()
 
-    match = re.match(r"^(?P<base>.+)-(?P<isoform_number>\d+)$", identifier)
-
-    if match:
-        return match.group("base"), match.group("isoform_number")
+    if "-" in identifier:
+        base, isoform_number = identifier.rsplit("-", 1)
+        if isoform_number.isdigit():
+            return base, isoform_number
 
     return identifier, None
 
