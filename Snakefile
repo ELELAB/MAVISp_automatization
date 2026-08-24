@@ -922,25 +922,12 @@ rule cancermuts:
 
         #### run cancermuts depending on the input files availability ###
         env = modules["mutations_aggregation"]["cancermuts"]["source"]
-        # uniprot_id = df.loc[df['protein'] == wildcards.hugo_name,\
-        #                     'uniprot_id'].iloc[0]
-        # uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
-        #                     'uniprot_ac'].iloc[0]
-        # ref_seq = df.loc[df['protein'] == wildcards.hugo_name,\
-        #                     'ref_seq'].iloc[0]
-        row = df.loc[df['entry_id'] == wildcards.hugo_name.iloc[0]]
-        entry_id = row["entry_id"]
-        base_id = row["base_id"]
-        uniprot_id = row["uniprot_id"]
-        uniprot_ac = row["uniprot_ac"]
-        ref_seq = row["ref_seq"]
-
-        is_isoform = pd.notna(row["isoform_number"])
-
-        if is_isoform:
-            sequence_option = (f"-- isoform {uniprot_ac}")
-        else:
-            sequence_option = (f"-i {uniprot_id} " f"-a {unipro_ac}")
+        uniprot_id = df.loc[df['protein'] == wildcards.hugo_name,\
+                            'uniprot_id'].iloc[0]
+        uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
+                            'uniprot_ac'].iloc[0]
+        ref_seq = df.loc[df['protein'] == wildcards.hugo_name,\
+                            'ref_seq'].iloc[0]
 
         if pd.isna(ref_seq) or ref_seq == '':
             clinvar_option = ''
