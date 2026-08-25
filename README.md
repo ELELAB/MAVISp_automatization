@@ -428,4 +428,12 @@ module load python/3.10
 snakemake -c 1 essentials
 ```
 
+to use the mode to run only idps essential data:
 
+```
+conda deactivate
+
+module load python/3.10
+
+snakemake -c 1 essentials_idps
+```

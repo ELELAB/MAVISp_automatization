@@ -1,0 +1,5 @@
+dssp_exec: /usr/local/dssp-3.0.10/bin/mkdssp
+plddt_cutoff: 70
+uniprot_ids:
+  P48539:
+    dir_name: pcp4
