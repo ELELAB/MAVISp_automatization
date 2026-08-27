@@ -2,7 +2,7 @@ import argparse
 from cancermuts.datasources import ManualAnnotation
 from cancermuts.datasources import UniProt
 from cancermuts.datasources import cBioPortal, COSMIC, ClinVar
-from cancermuts.datasources import MyVariant
+from cancermuts.datasources import RevelDatabase
 from cancermuts.datasources import gnomAD
 from cancermuts.datasources import PhosphoSite, MobiDB, dbPTM, GlyGen, NetPhos
 from cancermuts.datasources import ggetELMPredictions
@@ -78,9 +78,9 @@ if args.external_mutations:
         ma.add_sequence_properties(seq)
 
 
-# add annotations from MyVariant (REVEL)
-mv = MyVariant()
-mv.add_metadata(seq)
+# add annotations from REVEL:
+revel = RevelDatabase(revel_file="/data/databases/REVEL/revel_with_transcript_ids")
+revel.add_metadata(seq)
 
 # add annotations from gnomAD
 gnomad = gnomAD(version='2.1', reference_genome_fasta="/data/databases/genome_annotation/hg19.fa")
