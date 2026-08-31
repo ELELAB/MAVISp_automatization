@@ -481,9 +481,10 @@ rule all:
 
 ###################### Target rule for isoform processing #######################
 
-# rule isoforms:
-#     input:
-#         []
+rule isoforms:
+    input:
+        expand("{hugo_name}/saturation_mutlist/saturation_mutlist.txt",
+        hugo_name=isoform_df["protein"])
 
 ###################### Target rule for IDP processing #######################
 
