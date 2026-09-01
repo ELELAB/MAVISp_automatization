@@ -484,7 +484,45 @@ rule all:
 rule isoforms:
     input:
         expand("{hugo_name}/saturation_mutlist/saturation_mutlist.txt",
-        hugo_name=isoform_df["protein"])
+               hugo_name = isoform_df["protein"]),
+        
+        expand("{hugo_name}/structure_selection/"\
+               "original_model/",
+               zip,
+               hugo_name = isoform_df['protein'].str.upper(),
+               structure_source = isoform_df['structure_source']),
+
+        expand("{hugo_name}/structure_selection/pdbminer/results/"\
+                "{uniprot_ac}/{uniprot_ac}_all.csv",
+               zip,
+               hugo_name = isoform_df["protein"].str.upper(),
+               uniprot_ac = isoform_df["base_ac"].str.upper()
+            ),
+        
+        expand("{hugo_name}/structure_selection/pdbminer_complexes/"\
+               "{uniprot_ac}_filtered.csv",
+               zip,
+               hugo_name = isoform_df["protein"].str.upper(),
+               uniprot_ac = isoform_df["base_ac"].str.upper()
+            )
+
+        # expand("{hugo_name}/structure_selection/procheck/",
+        #        zip,
+        #        hugo_name=df['protein'].str.upper()),
+
+        # expand("{hugo_name}/structure_selection/"\
+        #        "domain_annotations/"\
+        #        "domains_mutlist.csv",
+        #         zip,
+        #         hugo_name = df['protein'].str.upper(),
+        #         structure_source = df['structure_source']),
+
+        # expand("{hugo_name}/structure_selection/"\
+        #        "domain_annotations/"\
+        #        "results.csv",
+        #         zip,
+        #         hugo_name = df['protein'].str.upper(),
+        #         structure_source = df['structure_source']),
 
 ###################### Target rule for IDP processing #######################
 
@@ -662,6 +700,13 @@ rule pdbminer:
     output:
         "{hugo_name}/structure_selection/pdbminer/results/"\
         "{uniprot_ac}/{uniprot_ac}_all.csv"
+    params:
+        gene = lambda wcs: df.loc[df["protein"].str.upper()== wcs.hugo_name.upper(), "base_id"].iloc[0],
+        uniprot = lambda wcs: df.loc[df["protein"].str.upper() == wcs.hugo_name.upper(), "base_ac"].iloc[0],
+        isoform_flag=lambda wcs: (
+            f"-s {df.loc[df['protein'].str.upper() == wcs.hugo_name.upper(), 'isoform_number'].iloc[0]}"
+            if pd.notna(df.loc[df["protein"].str.upper() == wcs.hugo_name.upper(), "isoform_number"].iloc[0])
+            else "")
     shell:
         '''
         readme={modules[structure_selection][pdbminer][readme]}
@@ -669,7 +714,7 @@ rule pdbminer:
         mkdir -p {wildcards.hugo_name}/structure_selection/pdbminer/
         cd {wildcards.hugo_name}/structure_selection/pdbminer/
         cp ../../../$readme .
-        PDBminer -g {wildcards.hugo_name} -u {wildcards.uniprot_ac} -f csv
+        PDBminer -g {params.gene} -u {params.uniprot} {params.isoform_flag} -f csv
         '''
 
 rule pdbminer_complexes:
