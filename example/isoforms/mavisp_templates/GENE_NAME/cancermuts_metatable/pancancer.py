@@ -1,0 +1,152 @@
+import argparse
+from cancermuts.datasources import ManualAnnotation
+from cancermuts.datasources import UniProt
+from cancermuts.datasources import cBioPortal, COSMIC, ClinVar
+from cancermuts.datasources import MyVariant, RevelDatabase
+from cancermuts.datasources import gnomAD
+from cancermuts.datasources import PhosphoSite, MobiDB, dbPTM, GlyGen, NetPhos
+from cancermuts.datasources import ggetELMPredictions
+from cancermuts.exceptions import *
+from cancermuts.table import Table
+import pandas as pd
+
+parser=argparse.ArgumentParser(description='Pancancer: run Cancermuts"\
+                               "software')
+parser.add_argument("-p", "--prt", dest="prt", help="hugo name of your protein")
+parser.add_argument("-i", "--uniprotID", dest="uniprotID", help="uniprot_id of your protein (the one ending with _HUMAN)")
+parser.add_argument("-a", "--uniprotAC", dest="uniprotAC", default= None, help="uniprot_ac of your protein")
+parser.add_argument("--isoform", dest="isoform", default=None, help="Uniprot Isoform accession (such as Q86Y26-4)")
+parser.add_argument("-r", "--refseq", dest="refseq", required=False, help="RefSeq isoform ID required for ClinVar mapping")
+parser.add_argument("-e", "--external_mutations", dest="external_mutations", nargs='+', default= None, help="csv file containing the external mutations to study")
+
+args=parser.parse_args()
+# create the corresponding uniprot object
+up = UniProt()
+
+# get the sequence for the protein dependent on canonical or isoform
+if args.isoform:
+    seq = up.get_sequence(args.prt, isoform=args.isoform)
+else:
+    seq = up.get_sequence(args.prt, upid=args.uniprotID, upac=args.uniprotAC)
+print(seq.sequence)
+# quick check canonical status
+print("Is the sequence canonical?", seq.is_canonical)
+
+# Ensembl transcript ID saved for Isoforms
+if args.isoform:
+    transcript_id = seq.aliases.get()'ensembl_transcript_id')
+    with open(f"transcript_id_{args.prt}.txt", "w") as fh:
+        fh.write(transcript_id + "\n")
+
+# add mutations from cBioPortal
+cb = cBioPortal()
+try:
+    cb.add_mutations(seq, metadata=['cancer_type', 'cancer_study', 'genomic_mutations'])
+except TypeError:
+    print("WARNING: Skipping cBioPortal due to missing Entrez ID.")
+except UnexpectedIsoformError:
+    print("WARNING: cBioPortal mutations will not be added, as a non-canonical isoform has been provided")
+
+# add mutations from COSMIC
+cosmic = COSMIC(targeted_database_file='/data/databases/cosmic-v104/Cosmic_CompleteTargetedScreensMutant_v104_GRCh38.tsv',
+				screen_mutant_database_file='/data/databases/cosmic-v104/Cosmic_GenomeScreensMutant_v104_GRCh38.tsv',
+				classification_database_file='/data/databases/cosmic-v104/Cosmic_Classification_v104_GRCh38.tsv',
+				database_encoding='latin1', lazy_load_db=True,
+                )
+try:
+    cosmic.add_mutations(seq, genome_assembly_version='GRCh38', metadata=['genomic_coordinates', 'genomic_mutations',
+                                                'cancer_site', 'cancer_histology'])
+except ValueError as e:
+    if "is not present in the database files" in str(e):
+        print(f"WARNING: Skipping COSMIC for {args.prt}: gene not found in COSMIC.")
+    else:
+        raise
+
+#add mutations from ClinVar:
+if args.refseq:
+    seq.aliases["refseq"] = args.refseq
+    clinvar = ClinVar()
+    clinvar_output = clinvar.add_mutations(seq, metadata=['clinvar_germline_classification', 'clinvar_germline_condition', 
+        'clinvar_germline_review_status', 'genomic_mutations', 'clinvar_variant_id', 'genomic_coordinates', 
+        'clinvar_oncogenicity_condition', 'clinvar_oncogenicity_classification', 'clinvar_oncogenicity_review_status', 
+        'clinvar_clinical_impact_condition', 'clinvar_clinical_impact_review_status', 'clinvar_clinical_impact_classification'])
+    entry_not_found = clinvar_output['entry_not_found']
+    variants_to_check = clinvar_output['variants_to_check']
+    inconsistency_annotations = clinvar_output['inconsistency_annotations']
+    
+    if not entry_not_found.empty:
+        entry_not_found.to_csv('entry_not_found.csv', index=False)
+    if not variants_to_check.empty:
+        variants_to_check.to_csv('variants_to_check.csv', index=False)
+    if not inconsistency_annotations.empty:
+        inconsistency_annotations.to_csv('inconsistency_annotations.csv', index=False)
+
+if args.external_mutations:
+    for external_list in args.external_mutations:
+        ma = ManualAnnotation(external_list)
+
+        # add mutations to the seq object
+        ma.add_mutations(seq)
+
+        # add annotations to the sequence object
+        ma.add_sequence_properties(seq)
+
+# add annotations from MyVariant (REVEL)
+if args.isoform:
+    revel = RevelDatabase("/data/databases/REVEL/revel_with_transcript_ids")
+    revel.add_metadata(seq)
+else: 
+    mv = MyVariant()
+    mv.add_metadata(seq)
+
+# add annotations from gnomAD
+gnomad = gnomAD(version='2.1')
+gnomad.add_metadata(seq, md_type=['gnomad_exome_allele_frequency',
+	                              'gnomad_genome_allele_frequency'])
+
+# add annotations from PhosphoSite
+ps = PhosphoSite('/data/databases/phosphosite/')
+try:
+    ps.add_sequence_properties(seq)
+except UnexpectedIsoformError:
+    print("WARNING: PhosphoSite annotations will not be added, as a non-canonical isoform has been provided")
+
+
+# add annotations from dbPTM
+dp = dbPTM('/data/databases/dbPTM/')
+try:
+    dp.add_sequence_properties(seq)
+except UnexpectedIsoformError:
+    print("WARNING: dbPTM annotations will not be added, as a non-canonical isoform has been provided")
+
+# add annotations from GlyGen
+gg = GlyGen('/data/databases/GlyGen/', database_file='human_proteoform_glycosylation_sites_uniprotkb_filtered.csv')
+try: 
+    gg.add_sequence_properties(seq)
+except UnexpectedIsoformError:
+    print("WARNING: GlyGen annotations will not be added, as a non-canonical isoform has been provided")
+
+# add annotations from NetPhos
+np = NetPhos('/data/databases/netphos_human_proteome/netphos_human_isoforms/raw/')
+np.add_sequence_properties(seq)
+
+
+# add annotations from MobiDB
+#mdb = MobiDB()
+#mdb.add_sequence_properties(seq)
+# try:
+#     mdb.add_sequence_properties(seq)
+# except UnexpectedIsoformError:
+#     print("WARNING: MobiDB annotations will not be added, as a non-canonical isoform has been provided")
+
+# add annotations from ELM
+elm = ggetELMPredictions()
+elm.add_sequence_properties(seq,
+			    exclude_elm_classes="MOD_.")
+
+
+# save table
+tbl = Table()
+df = tbl.to_dataframe(seq)
+df.to_csv("metatable_pancancer_"+args.prt+".csv")
+tbl.plot_metatable(df, fname="plot_metatable_pancancer_"+args.prt+".pdf", section_size=50)
