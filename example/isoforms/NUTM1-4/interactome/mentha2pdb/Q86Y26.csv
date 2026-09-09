@@ -1,0 +1,31 @@
+target uniprot id,target uniprot gene,interactor uniprot id,interactor uniprot gene,mentha score,PDB id,fusion,target chain id,target starting residue,target ending residue,interactor chain id,interactor starting residue,interactor ending residue,other interactors,method,resolution,dna chains,num ligands,PMID,pDockQ HuMap,pDockQ HuRI
+Q86Y26,NUTM1,Q9H8W4,PLEKHF2,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.360307,na
+Q86Y26,NUTM1,Q9H7H0,METTL17,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.33565,na
+Q86Y26,NUTM1,Q8IYX1,TBC1D21,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.400989,na
+Q86Y26,NUTM1,Q5W5X9,TTC23,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.518408,na
+Q86Y26,NUTM1,P09913,IFIT2,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.416956,na
+Q86Y26,NUTM1,Q09472,EP300,0.569,7XFG,na,B,403,418,A,1723,1812,na,Solution NMR,na,0.0,1.0,20676058 24875858 ,na,na
+Q86Y26,NUTM1,Q09472,EP300,0.569,7XEZ,na,A,419,470,A,1723,1812,na,Solution NMR,na,0.0,1.0,20676058 24875858 ,na,na
+Q86Y26,NUTM1,Q9UPU9,SAMD4A,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q9NPQ8,RIC8A,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.397895,na
+Q86Y26,NUTM1,Q9H788,SH2D4A,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q96EW2,HSPBAP1,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q8TD31,CCHCR1,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q8TAP4,LMO3,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q8NDC4,MORN4,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.398231,na
+Q86Y26,NUTM1,Q7Z4N8,P4HA3,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.392262,na
+Q86Y26,NUTM1,Q7Z3B3,KANSL1,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q68G74,LHX8,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q3B820,FAM161A,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q14997,PSME4,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q13625,TP53BP2,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,P54646,PRKAA2,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,P52292,KPNA2,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.285307,na
+Q86Y26,NUTM1,P25800,LMO1,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,P25791,LMO2,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,P09917,ALOX5,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,O76041,NEBL,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,O75800,ZMYND10,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,0.559271,na
+Q86Y26,NUTM1,Q9H641,Q9H641,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q8WWA6,ZNF277 {ECO:0000313|EMBL:AAH20626.1},0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
+Q86Y26,NUTM1,Q8IZ03,IFIT2,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,25416956 ,na,na
