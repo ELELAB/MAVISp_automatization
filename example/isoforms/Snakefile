@@ -492,36 +492,14 @@ rule all:
 
 rule isoforms:
     input:
-        expand("{hugo_name}/saturation_mutlist/saturation_mutlist.txt",
-               hugo_name = isoform_df["protein"]),
-        
-        expand("{hugo_name}/structure_selection/"\
-               "original_model/",
-               zip,
-               hugo_name = isoform_df['protein'].str.upper(),
-               structure_source = isoform_df['structure_source']),
-
-        ## commented out because they are now part of the dependency chain of isoform_coverage
-        # expand("{hugo_name}/structure_selection/pdbminer/results/"\
-        #         "{uniprot_ac}/{uniprot_ac}_all.csv",
-        #        zip,
-        #        hugo_name = isoform_df["protein"].str.upper(),
-        #        uniprot_ac = isoform_df["base_ac"].str.upper()
-        #     ),
-        
-        # expand("{hugo_name}/structure_selection/pdbminer_complexes/"\
-        #        "{uniprot_ac}_filtered.csv",
-        #        zip,
-        #        hugo_name = isoform_df["protein"].str.upper(),
-        #        uniprot_ac = isoform_df["base_ac"].str.upper()
-        #     ),
+        expand("{hugo_name}/cancermuts",
+               hugo_name = isoform_df['protein'].str.upper()),
 
         expand("{hugo_name}/interactome/isoform_coverage/"\
                "{uniprot_ac}_aggregated_isoform.csv",
                zip,
-            hugo_name=isoform_df['protein'].str.upper(),
-            uniprot_ac=isoform_df['uniprot_ac'].str.upper()
-            )
+               hugo_name = isoform_df['protein'].str.upper(),
+               uniprot_ac = isoform_df['uniprot_ac'].str.upper())
 
 
 ###################### Target rule for IDP processing #######################
@@ -988,12 +966,26 @@ rule cancermuts:
 
         #### run cancermuts depending on the input files availability ###
         env = modules["mutations_aggregation"]["cancermuts"]["source"]
-        uniprot_id = df.loc[df['protein'] == wildcards.hugo_name,\
-                            'uniprot_id'].iloc[0]
-        uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
-                            'uniprot_ac'].iloc[0]
-        ref_seq = df.loc[df['protein'] == wildcards.hugo_name,\
-                            'ref_seq'].iloc[0]
+        # uniprot_id = df.loc[df['protein'] == wildcards.hugo_name,\
+        #                     'uniprot_id'].iloc[0]
+        # uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
+        #                     'uniprot_ac'].iloc[0]
+        # ref_seq = df.loc[df['protein'] == wildcards.hugo_name,\
+        #                     'ref_seq'].iloc[0]
+        #  changing the above for the below to only do a lookup once (will delete once feedback is given
+        row = df.loc[df["protein"].str.upper() == wildcards.hugo_name.upper()].iloc[0]
+        uniprot_id = row["uniprot_id"]
+        uniprot_ac = row["uniprot_ac"]
+        base_id = row["base_id"]
+        isoform_number = row["isoform_number"]
+        ref_seq = row["ref_seq"]
+        
+        if pd.notna(isoform_number):
+            protein_id = base_id
+            isoform_option = f"--isoform {uniprot_ac}"
+        else:
+            protein_id = wildcards.hugo_name
+            isoform_option = ""
 
         if pd.isna(ref_seq) or ref_seq == '':
             clinvar_option = ''
@@ -1024,9 +1016,10 @@ rule cancermuts:
                   "python input_csv.py $(basename {input.saturation_mutlist}) && "\
                   "set +eu && . {env} && set -eu && "\
                   "mv input.csv {saturation_csv} && "\
-                  "python {script} -p {wildcards.hugo_name}\
+                  "python {script} -p {protein_id}\
                                                -i {uniprot_id} \
                                                -a {uniprot_ac} \
+                                                  {isoform_option} \
                                                   {clinvar_option} \
                                                -e {saturation_csv}")
         else:
@@ -1039,20 +1032,43 @@ rule cancermuts:
                 external_mutation_list=" ".join(external_mutation_list)
                 shell("cd {path} &&"\
                       " set +eu && . {env} &&"\
-                      " set -eu && python {script} -p {wildcards.hugo_name}\
+                      " set -eu && python {script} -p {protein_id}\
                                                    -i {uniprot_id} \
                                                    -a {uniprot_ac} \
+                                                      {isoform_option} \
                                                       {clinvar_option} \
                                                    -e {external_mutation_list}")
             # pancancer
             else:
                 shell("cd {path} &&"\
                       " set +eu && . {env} &&"\
-                      " set -eu && python {script} -p {wildcards.hugo_name} \
+                      " set -eu && python {script} -p {protein_id} \
                                                    -i {uniprot_id} \
+                                                      {isoform_option} \
                                                       {clinvar_option} \
                                                    -a {uniprot_ac}")
     #
+
+        # rename isoform outputs to match Snakemake hugo_name
+        if pd.notna(isoform_number):
+
+            generated_metatable = f"{path}/metatable_pancancer_{base_id}.csv"
+            expected_metatable = f"{path}/metatable_pancancer_{wildcards.hugo_name}.csv"
+
+            if os.path.exists(generated_metatable):
+                os.rename(generated_metatable, expected_metatable)
+
+            generated_plot = f"{path}/plot_metatable_pancancer_{base_id}.pdf"
+            expected_plot = f"{path}/plot_metatable_pancancer_{wildcards.hugo_name}.pdf"
+
+            if os.path.exists(generated_plot):
+                os.rename(generated_plot, expected_plot)
+
+            generated_transcript = f"{path}/transcript_id_{base_id}.txt"
+            expected_transcript = f"{path}/transcript_id_{wildcards.hugo_name}.txt"
+
+            if os.path.exists(generated_transcript):
+                os.rename(generated_transcript, expected_transcript)
 
 ################ Mutlists generation and protein annotations ################
 
