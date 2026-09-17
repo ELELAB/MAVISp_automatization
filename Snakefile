@@ -507,6 +507,9 @@ rule isoforms:
                uniprot_ac = isoform_df['uniprot_ac'].str.upper()),
 
         expand("{hugo_name}/netphos/netphos.out",
+               hugo_name = isoform_df['protein'].str.upper()),
+
+        expand("{hugo_name}/demask/myquery_predictions.txt",
                hugo_name = isoform_df['protein'].str.upper())
 
 ###################### Target rule for IDP processing #######################
