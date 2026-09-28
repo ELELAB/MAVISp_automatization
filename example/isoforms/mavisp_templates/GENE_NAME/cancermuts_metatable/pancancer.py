@@ -2,11 +2,11 @@ import argparse
 from cancermuts.datasources import ManualAnnotation
 from cancermuts.datasources import UniProt
 from cancermuts.datasources import cBioPortal, COSMIC, ClinVar
-from cancermuts.datasources import MyVariant
+from cancermuts.datasources import RevelDatabase
 from cancermuts.datasources import gnomAD
 from cancermuts.datasources import PhosphoSite, MobiDB, dbPTM, GlyGen, NetPhos
 from cancermuts.datasources import ggetELMPredictions
-from cancermuts.exceptions import UnexpectedIsoformError
+from cancermuts.exceptions import *
 from cancermuts.table import Table
 import pandas as pd
 
@@ -37,8 +37,10 @@ else:
 print(seq.sequence)
 
 # add mutations from cBioPortal
-cb = cBioPortal()
 try:
+    if args.isoform: 
+        raise UnexpectedIsoformError
+    cb = cBioPortal()
     cb.add_mutations(seq, metadata=['cancer_type', 'cancer_study', 'genomic_mutations'])
 except TypeError:
     print("WARNING: Skipping cBioPortal due to missing Entrez ID.")
@@ -91,15 +93,17 @@ if args.external_mutations:
         ma.add_sequence_properties(seq)
 
 
-# add annotations from MyVariant (REVEL)
-mv = MyVariant()
-try:
-    mv.add_metadata(seq)
-except UnexpectedIsoformError:
-    print("REVEL annotations will not be added, as a non-canonical isoform has been provided")
+# add annotations from REVEL:
+revel = RevelDatabase(
+    revel_file="/data/databases/REVEL/revel_with_transcript_ids"
+)
+revel.add_metadata(seq)
 
 # add annotations from gnomAD
-gnomad = gnomAD(version='2.1')
+gnomad = gnomAD(
+    version='2.1',
+    reference_genome_fasta="/data/databases/genome_annotation/hg19.fa"
+)
 gnomad.add_metadata(seq, md_type=['gnomad_exome_allele_frequency',
 	                              'gnomad_genome_allele_frequency'])
 
