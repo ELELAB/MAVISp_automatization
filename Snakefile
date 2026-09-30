@@ -573,6 +573,22 @@ rule essentials:
                 resrange = df_exploded['trimmed'],
                 uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
                 model = df_exploded['model'])
+    
+###################### Target rule for simple_mode_idps processing #######################
+
+rule essentials_idps:
+    input:
+        expand(
+            "{hugo_name}/simple_mode/"
+            "collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.idp.done",
+            zip,
+            hugo_name=df_exploded['protein'].str.upper(),
+            research_field=df_exploded['research_field'],
+            structure_source=df_exploded['structure_source'],
+            resrange=df_exploded['trimmed'],
+            uniprot_ac=df_exploded['uniprot_ac'].str.upper(),
+            model=df_exploded['model']
+        )
 
 ###################### Structure selection and trimming ######################
 
@@ -966,13 +982,17 @@ rule cancermuts:
 
         #### run cancermuts depending on the input files availability ###
         env = modules["mutations_aggregation"]["cancermuts"]["source"]
-        # uniprot_id = df.loc[df['protein'] == wildcards.hugo_name,\
-        #                     'uniprot_id'].iloc[0]
-        # uniprot_ac = df.loc[df['protein'] == wildcards.hugo_name,\
-        #                     'uniprot_ac'].iloc[0]
-        # ref_seq = df.loc[df['protein'] == wildcards.hugo_name,\
-        #                     'ref_seq'].iloc[0]
-        #  changing the above for the below to only do a lookup once (will delete once feedback is given
+
+        hgvs_config = modules["mutations_aggregation"]["cancermuts"].get("local_uta_seqrepo", {})
+        if hgvs_config.get("enabled", False):
+            hgvs_env = (f'export SEQREPO_VERSION="{hgvs_config["seqrepo_version"]}" && '
+                        f'export HGVS_SEQREPO_DIR="{hgvs_config["hgvs_seqrepo_dir"]}" && '
+                        f'export UTA_VERSION="{hgvs_config["uta_version"]}" && '
+                        f'export UTA_PORT="{hgvs_config["uta_port"]}" && '
+                        f'export UTA_DB_URL="{hgvs_config["uta_db_url"]}" && ')
+        else:
+            hgvs_env = ""
+
         row = df.loc[df["protein"].str.upper() == wildcards.hugo_name.upper()].iloc[0]
         uniprot_id = row["uniprot_id"]
         uniprot_ac = row["uniprot_ac"]
@@ -1016,7 +1036,8 @@ rule cancermuts:
                   "python input_csv.py $(basename {input.saturation_mutlist}) && "\
                   "set +eu && . {env} && set -eu && "\
                   "mv input.csv {saturation_csv} && "\
-                  "python {script} -p {protein_id}\
+                  "{hgvs_env}"\
+                  "python {script} -p {wildcards.hugo_name}\
                                                -i {uniprot_id} \
                                                -a {uniprot_ac} \
                                                   {isoform_option} \
@@ -1032,7 +1053,8 @@ rule cancermuts:
                 external_mutation_list=" ".join(external_mutation_list)
                 shell("cd {path} &&"\
                       " set +eu && . {env} &&"\
-                      " set -eu && python {script} -p {protein_id}\
+                      "{hgvs_env}"\
+                      " set -eu && python {script} -p {wildcards.hugo_name}\
                                                    -i {uniprot_id} \
                                                    -a {uniprot_ac} \
                                                       {isoform_option} \
@@ -1042,7 +1064,8 @@ rule cancermuts:
             else:
                 shell("cd {path} &&"\
                       " set +eu && . {env} &&"\
-                      " set -eu && python {script} -p {protein_id} \
+                      "{hgvs_env}"\
+                      " set -eu && python {script} -p {wildcards.hugo_name} \
                                                    -i {uniprot_id} \
                                                       {isoform_option} \
                                                       {clinvar_option} \
