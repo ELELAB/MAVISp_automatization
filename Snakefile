@@ -500,12 +500,14 @@ rule isoforms:
                zip,
                hugo_name = isoform_df['protein'].str.upper(),
                uniprot_ac = isoform_df['uniprot_ac'].str.upper()),
-               
+
         expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
                zip,
                hugo_name = isoform_df['protein'].str.upper(),
-               uniprot_ac = isoform_df['uniprot_ac'].str.upper())
+               uniprot_ac = isoform_df['uniprot_ac'].str.upper()),
 
+        expand("{hugo_name}/netphos/netphos.out",
+               hugo_name = isoform_df['protein'].str.upper())
 
 ###################### Target rule for IDP processing #######################
 
