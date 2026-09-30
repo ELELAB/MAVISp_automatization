@@ -271,11 +271,13 @@ modules['mutations_classifier']["demask"].update({"readme":demask_readme,
 
 
 alphamissense_script = f"mavisp_templates/GENE_NAME/alphamissense/do.sh"
+alphamissense_isoform_script = f"mavisp_templates/GENE_NAME/alphamissense/do_isoforms.sh"
 alphamissense_readme = f"mavisp_templates/GENE_NAME/alphamissense/readme.txt"
 
 modules['mutations_classifier']\
        ["alphamissense"].update({"readme":alphamissense_readme,
-                                  "script":alphamissense_script})
+                                  "script":alphamissense_script,
+                                  "isoforms_script":alphamissense_isoform_script})
 
 #------------------------------ Calculations -------------------------------#
 
@@ -510,6 +512,9 @@ rule isoforms:
                hugo_name = isoform_df['protein'].str.upper()),
 
         expand("{hugo_name}/demask/myquery_predictions.txt",
+               hugo_name = isoform_df['protein'].str.upper()),
+
+        expand("{hugo_name}/alphamissense/am.tsv.gz",
                hugo_name = isoform_df['protein'].str.upper())
 
 ###################### Target rule for IDP processing #######################
@@ -992,7 +997,6 @@ rule cancermuts:
 
         #### run cancermuts depending on the input files availability ###
         env = modules["mutations_aggregation"]["cancermuts"]["source"]
-
         hgvs_config = modules["mutations_aggregation"]["cancermuts"].get("local_uta_seqrepo", {})
         if hgvs_config.get("enabled", False):
             hgvs_env = (f'export SEQREPO_VERSION="{hgvs_config["seqrepo_version"]}" && '
@@ -1047,7 +1051,7 @@ rule cancermuts:
                   "set +eu && . {env} && set -eu && "\
                   "mv input.csv {saturation_csv} && "\
                   "{hgvs_env}"\
-                  "python {script} -p {wildcards.hugo_name}\
+                  "python {script} -p {protein_id}\
                                                -i {uniprot_id} \
                                                -a {uniprot_ac} \
                                                   {isoform_option} \
@@ -1064,7 +1068,7 @@ rule cancermuts:
                 shell("cd {path} &&"\
                       " set +eu && . {env} &&"\
                       "{hgvs_env}"\
-                      " set -eu && python {script} -p {wildcards.hugo_name}\
+                      " set -eu && python {script} -p {protein_id}\
                                                    -i {uniprot_id} \
                                                    -a {uniprot_ac} \
                                                       {isoform_option} \
@@ -1075,7 +1079,7 @@ rule cancermuts:
                 shell("cd {path} &&"\
                       " set +eu && . {env} &&"\
                       "{hgvs_env}"\
-                      " set -eu && python {script} -p {wildcards.hugo_name} \
+                      " set -eu && python {script} -p {protein_id} \
                                                    -i {uniprot_id} \
                                                       {isoform_option} \
                                                       {clinvar_option} \
@@ -1199,7 +1203,11 @@ rule mutlist:
                 f"{final_path}/$f "\
                 "{wildcards.hugo_name}/cancermuts ;"\
                 " fi ; "\
-                " done ")
+            " done ; "\
+            " if [ -f {final_path}/transcript_id_{wildcards.hugo_name}.txt ] ; then "\
+            " cp {final_path}/transcript_id_{wildcards.hugo_name}.txt "\
+            "{wildcards.hugo_name}/cancermuts ; "\
+            " fi ")
 
 
 rule domains:
@@ -1422,17 +1430,36 @@ rule demask_prediction:
         """
 
 rule alphamissense:
+    input:
+        cacermuts = lambda wcs: (
+            f"{wcs.hugo_name}/cancermuts"
+            if pd.notna(df.loc[df['protein'] == wcs.hugo_name, 
+                                  'isoform_number'].iloc[0])
+                else []
+        )
     output:
         "{hugo_name}/alphamissense/am.tsv.gz"
     params:
         uniprot_ac = lambda wcs: df.loc[df['protein'] == wcs.hugo_name,
-                                           'uniprot_ac'].iloc[0]
+                                           'uniprot_ac'].iloc[0],
+        is_isoform = lambda wcs: pd.notna(df.loc[df['protein'] == wcs.hugo_name,
+                                            'isoform_number'].iloc[0]),
+        transcript_file = lambda wcs: os.path.abspath(
+            f"{wcs.hugo_name}/cancermuts/"
+            f"transcript_id_{wcs.hugo_name}.txt"
+        )
     shell:
         """
         cd $(dirname {output})
         cp ../../{config[modules][mutations_classifier][alphamissense][readme]} .
-        cp ../../{config[modules][mutations_classifier][alphamissense][script]} .
-        bash do.sh {params.uniprot_ac}
+        if [ "{params.is_isoform}" = "True" ]; then
+            cp ../../{config[modules][mutations_classifier][alphamissense][isoforms_script]} .
+            enst=$(cat {params.transcript_file})
+            bash do_isoforms.sh "$enst"
+        else
+            cp ../../{config[modules][mutations_classifier][alphamissense][script]} .
+            bash do.sh {params.uniprot_ac}
+        fi
         """
 
 ############################## Calculations #################################
