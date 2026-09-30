@@ -499,6 +499,11 @@ rule isoforms:
                "{uniprot_ac}_aggregated_isoform.csv",
                zip,
                hugo_name = isoform_df['protein'].str.upper(),
+               uniprot_ac = isoform_df['uniprot_ac'].str.upper()),
+               
+        expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
+               zip,
+               hugo_name = isoform_df['protein'].str.upper(),
                uniprot_ac = isoform_df['uniprot_ac'].str.upper())
 
 
