@@ -114,8 +114,7 @@ No.  Type Seq  sec  Ramch.  Chi-1 dihedral   Chi-2 Proline Phi  Helix  Chi-3   C
                                                                                                  *                                *
   43A MET  54   T     A       -  211.6    -  171.7    -     -     -      -       -      -    172.6     -      35.1      -
                                     +*                                                           *                               +*
-  44A ARG  55   T     A       -     -  -67.3 183.9    -     -     -      -       -      -    179.8     -      35.3      1
-                                                                                                                        *         *
+  44A ARG  55   T     A       -     -  -67.3 183.9    -     -     -      -       -      -    179.8     -      35.3      -
   45A GLN  56   e     A       -     -  -71.9 171.9    -     -     -      -       -      -    181.6   -2.3     34.7      -
   46A ILE  57   E     B     65.3    -     -  174.3    -     -     -      -       -      -    174.4   -0.6     31.0      -
                                                                                                        +*                        +*
@@ -130,6 +129,8 @@ No.  Type Seq  sec  Ramch.  Chi-1 dihedral   Chi-2 Proline Phi  Helix  Chi-3   C
   52A GLY  63   T     -       -     -     -     -     -     -     -      -       -      -    176.6     -        -       -
   53A GLN  64   E     B       -     -  -60.9 190.1    -     -     -      -       -      -    175.3   -2.3     33.6      -
   54A PRO  65   E     -       -     -     -     -  -68.7    -     -      -       -      -    175.9     -      36.6      -
+  55A ILE  66   e     B       -     -  -50.5 178.3    -     -     -      -       -      -    173.6   -2.5     33.9      -
+                                           *                                                     *                                *
  
 Residue-by-residue listing for P55854_12-90 - Chain A                                                                      Page  3
 ----------------------------------------
@@ -140,8 +141,6 @@ Residue-by-residue listing for P55854_12-90 - Chain A                           
 No.  Type Seq  sec  Ramch.  Chi-1 dihedral   Chi-2 Proline Phi  Helix  Chi-3   Chi-3 Disulph Omega  H-bond Chirality   Bad      Max
   Chain   no. struc  plot   g(-) trans g(+)  trans   phi  helix  psi  rt-hand lf-hand  bond dihedral  en.   C-alpha  contacts   dev
 -----------------------------------------------------------------------------------------------------------------------------------
-  55A ILE  66   e     B       -     -  -50.5 178.3    -     -     -      -       -      -    173.6   -2.5     33.9      -
-                                           *                                                     *                                *
   56A ASN  67   t     B       -     -  -54.1    -     -     -     -      -       -      -    177.8     -      33.6      -
   57A GLU  68   T     A       -     -  -76.5 188.2    -     -     -      -       -      -    179.6     -      35.9      -
   58A THR  69   T     A     51.8    -     -     -     -     -     -      -       -      -    182.6     -      35.0      -
@@ -183,12 +182,12 @@ No.  Type Seq  sec  Ramch.  Chi-1 dihedral   Chi-2 Proline Phi  Helix  Chi-3   C
   79A THR  90         -       -     -  -43.9    -     -     -     -      -       -      -       -    -2.2     33.6      -
                                           +*                                                                                     +*
 -----------------------------------------------------------------------------------------------------------------------------------
-Max deviations:             +***    +*   +**     *     *    +*   +**                          +***     +*        *      *      +*** 
+Max deviations:             +***    +*   +**     *     *    +*   +**                          +***     +*        *             +*** 
 -----------------------------------------------------------------------------------------------------------------------------------
 Mean values:                52.3 190.8 -65.4 180.1 -61.6 -63.7 -40.4     -       -      -    176.9   -2.2     33.6
 Standard deviations:        21.2  12.2  10.3   9.5   8.4   9.8  11.4     -       -      -      5.1    0.8      1.4
 
-Numbers of values:             8    16    45    36     3    11    11      0       0      0      78     50       75      1
+Numbers of values:             8    16    45    36     3    11    11      0       0      0      78     50       75      0
  
 Residue-by-residue listing for P55854_12-90 - Chain A                                                                      Page  4
 ----------------------------------------
@@ -542,22 +541,6 @@ Residue-by-residue listing for P55854_12-90 - Chain A                           
 
 
 
-                                    B  A  D     C  O  N  T  A  C  T  S     L  I  S  T  I  N  G
-
-
-                              .......................................................................
-                                Residue                 Residue       
-                              -----------             -----------     
-                               No.   Type              No.   Type              Contact     Distance
-                                  Chain      Atom          Chain     Atom       type      (Angstroms)
-                              -----------------------------------------------------------------------
-                         1.     55  A ARG    O    -->   88  A GLN    OE1      Main-Side       2.6
- 
-Residue-by-residue listing for P55854_12-90 - Chain A                                                                      Page 12
-----------------------------------------
-
-
-
                                      R A M A C H A N D R A N   P L O T   S T A T I S T I C S
 
                              Residues in most favoured regions      [A,B,L]           66       94.3%
@@ -587,7 +570,7 @@ Residue-by-residue listing for P55854_12-90 - Chain A                           
                       ------------------------    --------    -----     -----    -----    --------- 
                    a. %-tage residues in A, B, L     70        94.3      83.8    10.0        1.0   BETTER 
                    b. Omega angle st dev             78         5.1       6.0     3.0       -0.3   Inside 
-                   c. Bad contacts / 100 residues     1         1.3       4.2    10.0       -0.3   Inside 
+                   c. Bad contacts / 100 residues     0         0.0       4.2    10.0       -0.4   Inside 
                    d. Zeta angle st dev              75         1.4       3.1     1.6       -1.1   BETTER 
                    e. H-bond energy st dev           50         0.8       0.8     0.2       -0.3   Inside 
                    f. Overall G-factor               79         0.1      -0.4     0.3        1.8   BETTER 
@@ -615,7 +598,7 @@ Residue-by-residue listing for P55854_12-90 - Chain A                           
                Chi-1 st.dev.           18.2   6.2       <12.0     <18.2     <24.4     >24.4       10.3       1
                H-bond energy st dev     0.87  0.24      <0.63     <0.87     <1.11     >1.11       0.77       2
  
-Residue-by-residue listing for P55854_12-90 - Chain A                                                                      Page 13
+Residue-by-residue listing for P55854_12-90 - Chain A                                                                      Page 12
 ----------------------------------------
 
 
