@@ -43,7 +43,7 @@ def isoform_parser(row):
         raise ValueError(
             "Inconsistent isoform information between protein and uniprot_ac:\n"
             f"protein={entry_id} gives isoform {protein_isoform_number}; "
-            f"uniprot_ac={unipro_ac} gives isoform {ac_isoform_number}"
+            f"uniprot_ac={uniprot_ac} gives isoform {ac_isoform_number}"
         )
 
     return (entry_id, base_id, base_ac, protein_isoform_number)
@@ -350,17 +350,19 @@ df[["entry_id","base_id","base_ac","isoform_number",]] = df.apply(isoform_parser
 isoform_df = df[df["isoform_number"].notna()].copy()
 
 # Rasp
-rasp_path=modules['rasp']['output_path_folder']
+rasp_path=modules['rasp']['output_path_folder'].rstrip("/")
 df['output_path_folder'] = rasp_path
 
 # Mutatex
 mutatex_path=modules['mutations_aggregation']['mutatex']['repository']
 
 # Rosetta
-rosetta_path=modules['rosetta_relax']['rosetta_folder']
+rosetta_path=modules['rosetta_relax']['rosetta_folder'].rstrip("/")
 df['output_rosetta_folder'] = rosetta_path
 df["trimmed"] = df["trimmed"].str.split("_")
 df_exploded = df.explode("trimmed")
+isoform_df_exploded = df_exploded[
+    df_exploded["isoform_number"].notna()].copy()
 #-------------------------------- Denovo phospho ------------------------------#
 
 
@@ -515,6 +517,51 @@ rule isoforms:
                hugo_name = isoform_df['protein'].str.upper()),
 
         expand("{hugo_name}/alphamissense/am.tsv.gz",
+               hugo_name = isoform_df['protein'].str.upper()),
+
+        expand(
+            "{path}/{research_field}/"
+            "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/",
+            zip,
+            resrange=isoform_df_exploded['trimmed'],
+            hugo_name=isoform_df_exploded['protein'].str.lower(),
+            path=isoform_df_exploded['output_path_folder'],
+            research_field=isoform_df_exploded['research_field'],
+            structure_source=isoform_df_exploded['structure_source'],
+            model=isoform_df_exploded['model']),
+
+        expand("{path}/"\
+               "{research_field}/"\
+               "{hugo_name}/free/"\
+               "{structure_source}_{resrange}/"\
+               "{model}_model/ref2015_cartesian2020/relax/"\
+               "relax_{uniprot_ac}_{resrange}_0001.pdb",
+               zip,
+               uniprot_ac = isoform_df_exploded['uniprot_ac'].str.upper(),
+               hugo_name = isoform_df_exploded['protein'],
+               path = isoform_df_exploded['output_rosetta_folder'],
+               resrange = isoform_df_exploded['trimmed'],
+               research_field = isoform_df_exploded['research_field'],
+               structure_source = isoform_df_exploded['structure_source'],
+               model = isoform_df_exploded['model']),
+
+        expand("{hugo_name}/ptm/{structure_source}_{resrange}/"\
+               "mutatex/summary_stability.txt",
+               zip,
+               hugo_name = isoform_df_exploded['protein'].str.upper(),
+               resrange = isoform_df_exploded['trimmed'],
+               structure_source = isoform_df_exploded['structure_source']),
+
+        expand("{hugo_name}/ptm/{structure_source}_{resrange}/"\
+               "naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
+               zip,
+               hugo_name = isoform_df_exploded['protein'].str.upper(),
+               resrange = isoform_df_exploded['trimmed'],
+               uniprot_ac = isoform_df_exploded['uniprot_ac'].str.upper(),
+               structure_source = isoform_df_exploded['structure_source']),
+
+        expand(["{hugo_name}/metadata/metadata.yaml",
+                "{hugo_name}/metadata/importing.yaml"],
                hugo_name = isoform_df['protein'].str.upper())
 
 ###################### Target rule for IDP processing #######################
@@ -1431,7 +1478,7 @@ rule demask_prediction:
 
 rule alphamissense:
     input:
-        cacermuts = lambda wcs: (
+        cancermuts = lambda wcs: (
             f"{wcs.hugo_name}/cancermuts"
             if pd.notna(df.loc[df['protein'] == wcs.hugo_name, 
                                   'isoform_number'].iloc[0])
@@ -1467,7 +1514,7 @@ rule rasp_workflow:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/original_model/",
     output:
-        directory("{path}{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/")
+        directory("{path}/{research_field}/{hugo_name}/free/""{structure_source}_{resrange}/{model}_model/")
     shell:
         """
         mkdir -p {output}
