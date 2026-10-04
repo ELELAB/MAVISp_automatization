@@ -6,10 +6,13 @@ import time
 import configparser
 import yaml
 import urllib
+import urllib.request
+import json
 from Bio.Data import IUPACData
 import glob
 from datetime import datetime
 from pathlib import Path
+from functools import lru_cache
 
 def mutation_converter(x):
     return f"p.{IUPACData.protein_letters_1to3.get(x[0])}{x[1:-1]}\
@@ -31,22 +34,57 @@ def split_isoform_suffix(identifier):
     return identifier, None
 
 def isoform_parser(row):
-    """Parse isoform information from the protein and uniprot_ac columns."""
+    """Parse isoform information using the UniProt accession as authority."""
 
-    entry_id = row["protein"]
-    uniprot_ac = row["uniprot_ac"]
+    entry_id = str(row["protein"]).strip()
+    uniprot_ac = str(row["uniprot_ac"]).strip()
 
-    base_id, protein_isoform_number = split_isoform_suffix(entry_id)
-    base_ac, ac_isoform_number = split_isoform_suffix(uniprot_ac)
+    base_ac, isoform_number = split_isoform_suffix(uniprot_ac)
+    base_id = entry_id
 
-    if protein_isoform_number != ac_isoform_number:
-        raise ValueError(
-            "Inconsistent isoform information between protein and uniprot_ac:\n"
-            f"protein={entry_id} gives isoform {protein_isoform_number}; "
-            f"uniprot_ac={uniprot_ac} gives isoform {ac_isoform_number}"
-        )
+    # Keep the protein value exactly as supplied for folder/output naming.
+    # If the user also encoded the UniProt isoform suffix in the protein name,
+    # strip that suffix only for the base gene ID used by tools such as
+    # CancerMuts. Do not require the suffix to be present.
+    if isoform_number is not None:
+        suffix = f"-{isoform_number}"
+        if entry_id.endswith(suffix):
+            base_id = entry_id[:-len(suffix)]
 
-    return (entry_id, base_id, base_ac, protein_isoform_number)
+    return (entry_id, base_id, base_ac, isoform_number)
+
+@lru_cache(maxsize=None)
+def get_canonical_isoform_ids(base_ac):
+    """Return the UniProt isoform ID(s) marked as the displayed/canonical sequence."""
+
+    url = f"https://rest.uniprot.org/uniprotkb/{base_ac}.json"
+    try:
+        with urllib.request.urlopen(url, timeout=30) as response:
+            record = json.load(response)
+    except Exception as exc:
+        raise RuntimeError(
+            f"Could not retrieve UniProt JSON for {base_ac}: {exc}"
+        ) from exc
+
+    alternative_products_found = False
+    canonical_ids = []
+
+    for comment in record.get("comments", []):
+        if comment.get("commentType") != "ALTERNATIVE PRODUCTS":
+            continue
+
+        alternative_products_found = True
+        for isoform in comment.get("isoforms", []):
+            if isoform.get("isoformSequenceStatus") == "Displayed":
+                canonical_ids.extend(isoform.get("isoformIds", []))
+
+    if canonical_ids:
+        return frozenset(canonical_ids)
+
+    raise RuntimeError(
+        f"Could not identify the displayed/canonical isoform for {base_ac} "
+        "from the UniProt JSON record."
+    )
 
 configfile: "config.yaml"
 
@@ -344,10 +382,37 @@ modules.update({"allosigma":{"allosigma1":{"aminoacids":allosigma_aminoacid,
 
 df = pd.read_csv(config['input']['path'])
 
-# Isoform
-df[["entry_id","base_id","base_ac","isoform_number",]] = df.apply(isoform_parser,axis=1,result_type="expand",)
+#--------------------------------- Isoform handling -------------------------------#
 
-isoform_df = df[df["isoform_number"].notna()].copy()
+
+df["requested_uniprot_ac"] = df["uniprot_ac"].astype(str).str.strip()
+
+df[["entry_id", "base_id", "base_ac", "isoform_number"]] = df.apply(
+    isoform_parser, axis=1, result_type="expand"
+)
+
+df["explicit_isoform"] = df["isoform_number"].notna()
+
+# No UniProt canonicality lookup is needed for the ordinary legacy case.
+# Query UniProt JSON only for accessions where the user explicitly supplied
+# an isoform suffix (e.g. P12345-2).
+df["is_canonical"] = True
+if df["explicit_isoform"].any():
+    df.loc[df["explicit_isoform"], "is_canonical"] = (df.loc[df["explicit_isoform"]].apply(
+            lambda row: row["requested_uniprot_ac"] in get_canonical_isoform_ids(row["base_ac"]),
+            axis=1))
+
+df["run_as_isoform"] = df["explicit_isoform"] & ~df["is_canonical"]
+
+# If an explicit numbered accession is canonical, run the ordinary MAVISp
+# workflow with the base identifiers. CancerMuts still receives the exact
+# requested accession through requested_uniprot_ac.
+canonical_explicit = df["explicit_isoform"] & df["is_canonical"]
+df.loc[canonical_explicit, "uniprot_ac"] = df.loc[canonical_explicit, "base_ac"]
+
+# Genuine non-canonical isoforms only.
+isoform_df = df[df["run_as_isoform"]].copy()
+standard_df = df[~df["run_as_isoform"]].copy()
 
 # Rasp
 rasp_path=modules['rasp']['output_path_folder'].rstrip("/")
@@ -362,7 +427,8 @@ df['output_rosetta_folder'] = rosetta_path
 df["trimmed"] = df["trimmed"].str.split("_")
 df_exploded = df.explode("trimmed")
 isoform_df_exploded = df_exploded[
-    df_exploded["isoform_number"].notna()].copy()
+    df_exploded["run_as_isoform"]].copy()
+
 #-------------------------------- Denovo phospho ------------------------------#
 
 
@@ -398,15 +464,15 @@ rule all:
                "domain_annotations/"\
                "domains_mutlist.csv",
                 zip,
-                hugo_name = df['protein'].str.upper(),
-                structure_source = df['structure_source']),
+                hugo_name = standard_df['protein'].str.upper(),
+                structure_source = standard_df['structure_source']),
 
         expand("{hugo_name}/structure_selection/"\
                "domain_annotations/"\
                "results.csv",
                 zip,
-                hugo_name = df['protein'].str.upper(),
-                structure_source = df['structure_source']),
+                hugo_name = standard_df['protein'].str.upper(),
+                structure_source = standard_df['structure_source']),
 
         expand("{hugo_name}/netphos/"\
                "netphos.out",
@@ -414,7 +480,7 @@ rule all:
 
         expand("{hugo_name}/interactome/"\
                "hpc_atlas/{hugo_name}.out",
-              hugo_name = df['protein'].str.upper()),
+              hugo_name = standard_df['protein'].str.upper()),
 
         expand("{hugo_name}/demask/"\
                "myquery_predictions.txt",
@@ -470,7 +536,7 @@ rule all:
 
         expand("{hugo_name}/structure_selection/procheck/",
                zip,
-               hugo_name=df['protein'].str.upper()),
+               hugo_name=standard_df['protein'].str.upper()),
 
         expand(["{hugo_name}/metadata/metadata.yaml",
                 "{hugo_name}/metadata/importing.yaml"],
@@ -489,80 +555,15 @@ rule all:
                "aggregate/"\
                "{uniprot_ac}_aggregated.csv",
                zip,
-               hugo_name = df['protein'].str.upper(),
-               uniprot_ac = df['uniprot_ac'].str.upper())
-
-###################### Target rule for isoform processing #######################
-
-rule isoforms:
-    input:
-        expand("{hugo_name}/cancermuts",
-               hugo_name = isoform_df['protein'].str.upper()),
+               hugo_name = standard_df['protein'].str.upper(),
+               uniprot_ac = standard_df['uniprot_ac'].str.upper()),
 
         expand("{hugo_name}/interactome/isoform_coverage/"\
                "{uniprot_ac}_aggregated_isoform.csv",
                zip,
                hugo_name = isoform_df['protein'].str.upper(),
-               uniprot_ac = isoform_df['uniprot_ac'].str.upper()),
+               uniprot_ac = isoform_df['uniprot_ac'].str.upper())
 
-        expand("{hugo_name}/efoldmine/{uniprot_ac}.tabular",
-               zip,
-               hugo_name = isoform_df['protein'].str.upper(),
-               uniprot_ac = isoform_df['uniprot_ac'].str.upper()),
-
-        expand("{hugo_name}/netphos/netphos.out",
-               hugo_name = isoform_df['protein'].str.upper()),
-
-        expand("{hugo_name}/demask/myquery_predictions.txt",
-               hugo_name = isoform_df['protein'].str.upper()),
-
-        expand("{hugo_name}/alphamissense/am.tsv.gz",
-               hugo_name = isoform_df['protein'].str.upper()),
-
-        expand(
-            "{path}/{research_field}/"
-            "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/",
-            zip,
-            resrange=isoform_df_exploded['trimmed'],
-            hugo_name=isoform_df_exploded['protein'].str.lower(),
-            path=isoform_df_exploded['output_path_folder'],
-            research_field=isoform_df_exploded['research_field'],
-            structure_source=isoform_df_exploded['structure_source'],
-            model=isoform_df_exploded['model']),
-
-        expand("{path}/"\
-               "{research_field}/"\
-               "{hugo_name}/free/"\
-               "{structure_source}_{resrange}/"\
-               "{model}_model/ref2015_cartesian2020/relax/"\
-               "relax_{uniprot_ac}_{resrange}_0001.pdb",
-               zip,
-               uniprot_ac = isoform_df_exploded['uniprot_ac'].str.upper(),
-               hugo_name = isoform_df_exploded['protein'],
-               path = isoform_df_exploded['output_rosetta_folder'],
-               resrange = isoform_df_exploded['trimmed'],
-               research_field = isoform_df_exploded['research_field'],
-               structure_source = isoform_df_exploded['structure_source'],
-               model = isoform_df_exploded['model']),
-
-        expand("{hugo_name}/ptm/{structure_source}_{resrange}/"\
-               "mutatex/summary_stability.txt",
-               zip,
-               hugo_name = isoform_df_exploded['protein'].str.upper(),
-               resrange = isoform_df_exploded['trimmed'],
-               structure_source = isoform_df_exploded['structure_source']),
-
-        expand("{hugo_name}/ptm/{structure_source}_{resrange}/"\
-               "naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
-               zip,
-               hugo_name = isoform_df_exploded['protein'].str.upper(),
-               resrange = isoform_df_exploded['trimmed'],
-               uniprot_ac = isoform_df_exploded['uniprot_ac'].str.upper(),
-               structure_source = isoform_df_exploded['structure_source']),
-
-        expand(["{hugo_name}/metadata/metadata.yaml",
-                "{hugo_name}/metadata/importing.yaml"],
-               hugo_name = isoform_df['protein'].str.upper())
 
 ###################### Target rule for IDP processing #######################
 
@@ -572,15 +573,15 @@ rule idps:
                "domain_annotations/"\
                "domains_mutlist.csv",
                 zip,
-                hugo_name = df['protein'].str.upper(),
-                structure_source = df['structure_source']),
+                hugo_name = standard_df['protein'].str.upper(),
+                structure_source = standard_df['structure_source']),
 
         expand("{hugo_name}/structure_selection/"\
                "domain_annotations/"\
                "results.csv",
                 zip,
-                hugo_name = df['protein'].str.upper(),
-                structure_source = df['structure_source']),
+                hugo_name = standard_df['protein'].str.upper(),
+                structure_source = standard_df['structure_source']),
 
         expand("{hugo_name}/netphos/"\
                "netphos.out",
@@ -588,7 +589,7 @@ rule idps:
 
         expand("{hugo_name}/interactome/"\
                "hpc_atlas/{hugo_name}.out",
-              hugo_name = df['protein'].str.upper()),
+              hugo_name = standard_df['protein'].str.upper()),
 
         expand("{hugo_name}/demask/"\
                "myquery_predictions.txt",
@@ -620,8 +621,14 @@ rule idps:
                "aggregate/"\
                "{uniprot_ac}_aggregated.csv",
                zip,
-               hugo_name = df['protein'].str.upper(),
-               uniprot_ac = df['uniprot_ac'].str.upper())
+               hugo_name = standard_df['protein'].str.upper(),
+               uniprot_ac = standard_df['uniprot_ac'].str.upper()),
+
+        expand("{hugo_name}/interactome/isoform_coverage/"\
+               "{uniprot_ac}_aggregated_isoform.csv",
+               zip,
+               hugo_name = isoform_df['protein'].str.upper(),
+               uniprot_ac = isoform_df['uniprot_ac'].str.upper())
 
 ###################### Target rule for simple_mode processing #######################
 
@@ -757,12 +764,17 @@ rule pdbminer:
         "{hugo_name}/structure_selection/pdbminer/results/"\
         "{uniprot_ac}/{uniprot_ac}_all.csv"
     params:
-        gene = lambda wcs: df.loc[df["protein"].str.upper()== wcs.hugo_name.upper(), "base_id"].iloc[0],
+        gene = lambda wcs: df.loc[df["protein"].str.upper() == wcs.hugo_name.upper(), "base_id"].iloc[0],
         uniprot = lambda wcs: df.loc[df["protein"].str.upper() == wcs.hugo_name.upper(), "base_ac"].iloc[0],
-        isoform_flag=lambda wcs: (
+        isoform_flag = lambda wcs: (
             f"-s {df.loc[df['protein'].str.upper() == wcs.hugo_name.upper(), 'isoform_number'].iloc[0]}"
-            if pd.notna(df.loc[df["protein"].str.upper() == wcs.hugo_name.upper(), "isoform_number"].iloc[0])
-            else "")
+            if (
+                df.loc[df["protein"].str.upper() == wcs.hugo_name.upper(), "run_as_isoform"].iloc[0]
+                and wcs.uniprot_ac.upper()
+                == str(df.loc[df["protein"].str.upper() == wcs.hugo_name.upper(), "uniprot_ac"].iloc[0]).upper()
+            )
+            else ""
+        )
     shell:
         '''
         readme={modules[structure_selection][pdbminer][readme]}
@@ -1056,12 +1068,12 @@ rule cancermuts:
 
         row = df.loc[df["protein"].str.upper() == wildcards.hugo_name.upper()].iloc[0]
         uniprot_id = row["uniprot_id"]
-        uniprot_ac = row["uniprot_ac"]
+        uniprot_ac = row["requested_uniprot_ac"] if row["explicit_isoform"] else row["uniprot_ac"]
         base_id = row["base_id"]
-        isoform_number = row["isoform_number"]
+        explicit_isoform = row["explicit_isoform"]
         ref_seq = row["ref_seq"]
         
-        if pd.notna(isoform_number):
+        if explicit_isoform:
             protein_id = base_id
             isoform_option = f"--isoform {uniprot_ac}"
         else:
@@ -1133,8 +1145,8 @@ rule cancermuts:
                                                    -a {uniprot_ac}")
     #
 
-        # rename isoform outputs to match Snakemake hugo_name
-        if pd.notna(isoform_number):
+        # rename explicit-isoform outputs to match Snakemake hugo_name
+        if explicit_isoform:
 
             generated_metatable = f"{path}/metatable_pancancer_{base_id}.csv"
             expected_metatable = f"{path}/metatable_pancancer_{wildcards.hugo_name}.csv"
@@ -1282,7 +1294,7 @@ rule domains:
             if re.match(pattern,filename):
                 mutlist = filename
 
-        # run the script for the domain module
+        # run the domain module (canonical workflow only)
 
         shell("""mkdir -p {wildcards.hugo_name}/structure_selection/domain_annotations/ 
                 cd {wildcards.hugo_name}/structure_selection/domain_annotations/
@@ -1480,8 +1492,8 @@ rule alphamissense:
     input:
         cancermuts = lambda wcs: (
             f"{wcs.hugo_name}/cancermuts"
-            if pd.notna(df.loc[df['protein'] == wcs.hugo_name, 
-                                  'isoform_number'].iloc[0])
+            if df.loc[df['protein'] == wcs.hugo_name,
+                                  'run_as_isoform'].iloc[0]
                 else []
         )
     output:
@@ -1489,8 +1501,8 @@ rule alphamissense:
     params:
         uniprot_ac = lambda wcs: df.loc[df['protein'] == wcs.hugo_name,
                                            'uniprot_ac'].iloc[0],
-        is_isoform = lambda wcs: pd.notna(df.loc[df['protein'] == wcs.hugo_name,
-                                            'isoform_number'].iloc[0]),
+        is_isoform = lambda wcs: df.loc[df['protein'] == wcs.hugo_name,
+                                            'run_as_isoform'].iloc[0],
         transcript_file = lambda wcs: os.path.abspath(
             f"{wcs.hugo_name}/cancermuts/"
             f"transcript_id_{wcs.hugo_name}.txt"
@@ -1613,6 +1625,7 @@ rule rosetta_relax:
                         -r {params.rosetta_module}\
                         -cs {params.mpi}
         """
+
 '''
         expand("{hugo_name}/long_range/"\
                "allosigma2/"\
@@ -1840,8 +1853,14 @@ rule collect_outputs:
             f"mutatex_runs/{wcs.structure_source}_{resrange}/model_{wcs.model}/"
             f"saturation/{wcs.uniprot_ac}_table/energies_std.csv"
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
-        pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
-        ted=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/results.csv",
+        pfam=lambda wcs: (
+            [] if df.loc[df['protein'] == wcs.hugo_name, 'run_as_isoform'].iloc[0]
+            else f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv"
+        ),
+        ted=lambda wcs: (
+            [] if df.loc[df['protein'] == wcs.hugo_name, 'run_as_isoform'].iloc[0]
+            else f"{wcs.hugo_name}/structure_selection/domain_annotations/results.csv"
+        ),
         alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/",
         metadata = lambda wcs: f"{wcs.hugo_name}/metadata/metadata.yaml"
     output:
@@ -1917,15 +1936,16 @@ rule collect_outputs:
         # 9) metadata.yaml
         shutil.copy(Path(hn) / "metadata" / "metadata.yaml", out / "metadata.yaml")
 
-        # 10) pfam
-        pf_dir = out / "pfam"
-        pf_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy(input.pfam, pf_dir / "summary.csv")
+        # 10) domain annotations (not available for non-canonical isoforms)
+        if input.pfam:
+            pf_dir = out / "pfam"
+            pf_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copy(input.pfam, pf_dir / "summary.csv")
 
-        # 11) ted
-        ted_dir = out / "ted"
-        ted_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy(input.ted, ted_dir / "results.csv")
+        if input.ted:
+            ted_dir = out / "ted"
+            ted_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copy(input.ted, ted_dir / "results.csv")
 
         # 12) alphafold
         af_dir_path = Path(input.alphafold)
@@ -2004,8 +2024,14 @@ rule collect_outputs_idps:
         alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
         cancermuts=lambda wcs: f"{wcs.hugo_name}/cancermuts/",
         efoldmine=lambda wcs: f"{wcs.hugo_name}/efoldmine/{wcs.uniprot_ac}.tabular",
-        pfam=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv",
-        ted=lambda wcs: f"{wcs.hugo_name}/structure_selection/domain_annotations/results.csv",
+        pfam=lambda wcs: (
+            [] if df.loc[df['protein'] == wcs.hugo_name, 'run_as_isoform'].iloc[0]
+            else f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv"
+        ),
+        ted=lambda wcs: (
+            [] if df.loc[df['protein'] == wcs.hugo_name, 'run_as_isoform'].iloc[0]
+            else f"{wcs.hugo_name}/structure_selection/domain_annotations/results.csv"
+        ),
         alphafold=lambda wcs: f"{wcs.hugo_name}/structure_selection/original_model/",
         metadata = lambda wcs: f"{wcs.hugo_name}/metadata/metadata.yaml"
     output:
@@ -2039,15 +2065,16 @@ rule collect_outputs_idps:
         # 10) metadata.yaml
         shutil.copy(Path(hn) / "metadata" / "metadata.yaml", out / "metadata.yaml")
 
-        # 11) pfam
-        pf_dir = out / "pfam"
-        pf_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy(input.pfam, pf_dir / "summary.csv")
+        # 11) domain annotations (not available for non-canonical isoforms)
+        if input.pfam:
+            pf_dir = out / "pfam"
+            pf_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copy(input.pfam, pf_dir / "summary.csv")
 
-        # 12) ted
-        ted_dir = out / "ted"
-        ted_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy(input.ted, ted_dir / "results.csv")
+        if input.ted:
+            ted_dir = out / "ted"
+            ted_dir.mkdir(parents=True, exist_ok=True)
+            shutil.copy(input.ted, ted_dir / "results.csv")
 
         # 13) alphafold
         af_dir_path = Path(input.alphafold)
@@ -2072,4 +2099,3 @@ rule collect_outputs_idps:
 
         # 15) touch the done‐file
         Path(output[0]).touch()
-

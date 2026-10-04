@@ -38,8 +38,6 @@ print(seq.sequence)
 
 # add mutations from cBioPortal
 try:
-    if args.isoform: 
-        raise UnexpectedIsoformError
     cb = cBioPortal()
     cb.add_mutations(seq, metadata=['cancer_type', 'cancer_study', 'genomic_mutations'])
 except TypeError:

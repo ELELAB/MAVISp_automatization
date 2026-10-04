@@ -6,4 +6,4 @@ conda deactivate
 
 module load python/3.10/modulefile
 
-tsp -N 4 snakemake -c 4 isoforms
+tsp -N 4 snakemake -c 4 
