@@ -309,13 +309,11 @@ modules['mutations_classifier']["demask"].update({"readme":demask_readme,
 
 
 alphamissense_script = f"mavisp_templates/GENE_NAME/alphamissense/do.sh"
-alphamissense_isoform_script = f"mavisp_templates/GENE_NAME/alphamissense/do_isoforms.sh"
 alphamissense_readme = f"mavisp_templates/GENE_NAME/alphamissense/readme.txt"
 
 modules['mutations_classifier']\
        ["alphamissense"].update({"readme":alphamissense_readme,
-                                  "script":alphamissense_script,
-                                  "isoforms_script":alphamissense_isoform_script})
+                                  "script":alphamissense_script})
 
 #------------------------------ Calculations -------------------------------#
 
@@ -1490,19 +1488,12 @@ rule demask_prediction:
 
 rule alphamissense:
     input:
-        cancermuts = lambda wcs: (
-            f"{wcs.hugo_name}/cancermuts"
-            if df.loc[df['protein'] == wcs.hugo_name,
-                                  'run_as_isoform'].iloc[0]
-                else []
-        )
+        cancermuts = "{hugo_name}/cancermuts"
     output:
         "{hugo_name}/alphamissense/am.tsv.gz"
     params:
         uniprot_ac = lambda wcs: df.loc[df['protein'] == wcs.hugo_name,
                                            'uniprot_ac'].iloc[0],
-        is_isoform = lambda wcs: df.loc[df['protein'] == wcs.hugo_name,
-                                            'run_as_isoform'].iloc[0],
         transcript_file = lambda wcs: os.path.abspath(
             f"{wcs.hugo_name}/cancermuts/"
             f"transcript_id_{wcs.hugo_name}.txt"
@@ -1511,14 +1502,15 @@ rule alphamissense:
         """
         cd $(dirname {output})
         cp ../../{config[modules][mutations_classifier][alphamissense][readme]} .
-        if [ "{params.is_isoform}" = "True" ]; then
-            cp ../../{config[modules][mutations_classifier][alphamissense][isoforms_script]} .
-            enst=$(cat {params.transcript_file})
-            bash do_isoforms.sh "$enst"
+        cp ../../{config[modules][mutations_classifier][alphamissense][script]} .
+
+        if [ -f "{params.transcript_file}" ]; then
+            enst=$(cat "{params.transcript_file}")
         else
-            cp ../../{config[modules][mutations_classifier][alphamissense][script]} .
-            bash do.sh {params.uniprot_ac}
+            enst=""
         fi
+
+        bash do.sh {params.uniprot_ac} "$enst"
         """
 
 ############################## Calculations #################################

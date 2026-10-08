@@ -1,0 +1,3 @@
+File,Residues,Core%,Allow%,Generous%,Disallowed%,BadContacts,BadContacts_per100,CisPeptides,Classification,MissingValues
+Q86Y26-4_trimmed.sum,267,83.2,13.4,3.4,0.0,0,0.0,0,Green,Yes
+SUMMARY,,,,,,,,,"🟢 Green=1, 🟡 Yellow=0, 🔴 Red=0",

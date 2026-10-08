@@ -28,11 +28,16 @@ if args.isoform:
     seq = up.get_sequence(args.prt, isoform=args.isoform)
     # confirm non-canonical status
     print("Is the sequence canonical?", seq.is_canonical)
-    transcript_id = seq.aliases['ensembl_transcript_id']
+else:
+    seq = up.get_sequence(args.prt, upid=args.uniprotID, upac=args.uniprotAC)
+
+# save Ensembl transcript ID
+transcript_id = seq.aliases.get('ensembl_transcript_id')
+if transcript_id:
     with open(f"transcript_id_{args.prt}.txt", "w") as fh:
         fh.write(transcript_id + "\n")
 else:
-    seq = up.get_sequence(args.prt, upid=args.uniprotID, upac=args.uniprotAC)
+    print("WARNING: no Ensembl transcript ID found for: f{args.prt}")
 
 print(seq.sequence)
 
