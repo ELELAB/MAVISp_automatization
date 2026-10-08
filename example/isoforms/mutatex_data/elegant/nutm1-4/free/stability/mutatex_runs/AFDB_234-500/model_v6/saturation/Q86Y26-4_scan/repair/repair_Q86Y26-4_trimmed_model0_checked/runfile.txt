@@ -1,0 +1,5 @@
+command=RepairPDB
+pdb=Q86Y26-4_trimmed_model0_checked.pdb
+temperature=298
+water=-CRYSTAL
+complexWithDNA=true
