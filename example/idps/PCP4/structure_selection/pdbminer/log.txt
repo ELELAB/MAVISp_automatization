@@ -1,5 +1,6 @@
-2026-08-25 11:26:46,647 - INFO - PDBminer is starting
-2026-08-25 11:26:46,858 - INFO - input file created based on hugo name and uniprot id, file name: input_file.csv
-2026-08-25 11:26:46,858 - INFO - Pipeline is starting
-2026-08-25 11:26:50,782 - INFO - total runtime: 0:00:04.134418
-2026-08-25 11:26:50,782 - INFO - PDBminer has finished.
+2026-10-11 21:07:40,359 - INFO - PDBminer is starting
+2026-10-11 21:07:40,542 - INFO - input file created based on hugo name and uniprot id, file name: input_file.csv
+2026-10-11 21:07:40,542 - INFO - Pipeline is starting
+2026-10-11 21:07:53,029 - WARNING - ERROR: Could not connect to PDBe database via API for 2N77, P48539 – network error HTTPSConnectionPool(host='www.ebi.ac.uk', port=443): Read timed out. (read timeout=10). Retrying in 3 seconds (attempt 1/20).
+2026-10-11 21:08:00,485 - INFO - total runtime: 0:00:20.126526
+2026-10-11 21:08:00,485 - INFO - PDBminer has finished.

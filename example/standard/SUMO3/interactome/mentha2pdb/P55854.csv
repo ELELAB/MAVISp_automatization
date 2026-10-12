@@ -1,7 +1,7 @@
 target uniprot id,target uniprot gene,interactor uniprot id,interactor uniprot gene,mentha score,PDB id,fusion,target chain id,target starting residue,target ending residue,interactor chain id,interactor starting residue,interactor ending residue,other interactors,method,resolution,dna chains,num ligands,PMID,pDockQ HuMap,pDockQ HuRI
 P55854,SUMO3,Q96EQ0,SGTB,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.515026
 P55854,SUMO3,O43765,SGTA,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.536771
-P55854,SUMO3,Q9HC62,SENP2,0.917,2IO1,na,B;D;F,14;14;14,103;103;103,A;C;E,364;364;364,589;589;589,na,X-ray diffraction,2.6,0.0,0.0,25416956 17099700 25944111 unassigned1304 12192048 ,0.62064,na
+P55854,SUMO3,Q9HC62,SENP2,0.917,2IO1,na,none,none,none,none,none,none,none,X-ray diffraction,2.6,0.0,0.0,25416956 17099700 25944111 unassigned1304 12192048 ,0.62064,na
 P55854,SUMO3,P63279,UBE2I,0.835,na,na,na,na,na,na,na,na,na,na,na,na,na,11451954 17353931 21949651 28514442 16524884 16620772 26344197 ,na,na
 P55854,SUMO3,Q5W0Q7,USPL1,0.832,7ZJU,na,B;D,2;2,91;91,A;C,218;218,502;502,na,X-ray diffraction,2.17,0.0,5.0,25416956 22878415 ,na,na
 P55854,SUMO3,Q9P0U3,SENP1,0.78,6NNQ,na,B,15,92,A,421,644,na,X-ray diffraction,2.621,0.0,0.0,22878415 16553580 16608850 ,na,na
