@@ -22,6 +22,8 @@ import re
 import requests
 import warnings
 import csv
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 
 def get_pdb_entries_for_uniprot(uniprot_id):
@@ -114,6 +116,12 @@ def make_target_interactor_sequence_files(dataframe_out):
         # get target sequence
         result = make_request(url, 'get', target)
 
+        if result is None:
+            raise RuntimeError(f"UniRef API request failed for target {target} after retries.")
+
+        if result.get('results') is None:
+            raise RuntimeError(f"No UniRef results found for target {target}.")
+
         target_sequence = ''
 
         #CHOSE RIGHT RESULT : Homo sapiens (Human) in organism name and target in id
@@ -125,6 +133,8 @@ def make_target_interactor_sequence_files(dataframe_out):
                 # print(f"result discarded cause {target} not in {res['id']} \n\t "
                 #       f"or \n\t {res['representativeMember']['organismName']} is not Homo sapiens (Human)")
                 pass
+        if not target_sequence:
+            raise RuntimeError(f"No matching human UniRef sequence found for target {target}.")
 
         # fix for uniprot genes of type U2AF1L5 {ECO:0000312|HGNC:HGNC:51830} -> error creating folder
         # covering no space case U2AF1L5{ECO:0000312|HGNC:HGNC:51830} and space case U2AF1L5 {ECO:0000312|HGNC:HGNC:51830}
@@ -140,6 +150,9 @@ def make_target_interactor_sequence_files(dataframe_out):
             # for every interactor make request make dir and then build file
             result = make_request(url, 'get', interactor_id)
             interactor_sequence = ''
+            if result is None:
+                raise RuntimeError(f"UniRef API request failed for interactor {interactor_id} "
+                                   f"of target {target} after retries.")
             if result['results'] != []:
                 ##########CHOSE RIGHT RESULT : Homo sapiens (Human) in organism name and target in id
                 interactor_sequence = ''
@@ -153,6 +166,9 @@ def make_target_interactor_sequence_files(dataframe_out):
                         #       f"or \n\t "
                         #       f"{res['representativeMember']['organismName']} is not Homo sapiens (Human)")
                         pass
+                if not interactor_sequence:
+                    print(f"No matching human UniRef sequence for interactor {interactor_id}, skipping")
+                    continue
             else:
                 print('***INTERACTOR {} of target {} returned NO results, skipping folder/sequence creation'.format(
                     interactor_id, target))
@@ -361,25 +377,22 @@ def get_mappings_data(pdb, targetProtein, interactorProtein):
 
 def make_request(url, mode, pdb_id):
     """
-    This function can make GET and POST requests to
-    the PDBe API
-
-    :param url: String,
-    :param mode: String,
-    :param pdb_id: String
-    :return: JSON or None
+    Make GET and POST API requests.
+    Returns JSON on success, None on failure.
     """
-    if mode == "get":
-        time.sleep(0.01)
-        response = requests.get(url=url + pdb_id)
-    elif mode == "post":
-        time.sleep(0.01)
-        response = requests.post(url, data=pdb_id)
+    try:
+        if mode == "get":
+            response = session.get(url + pdb_id, timeout=30)
+        elif mode == "post":
+            response = session.post(url, data=pdb_id, timeout=30)
 
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print("NA from ", url, " for pdb ", pdb_id)
+        if response.status_code == 200:
+            return response.json()
+
+        print(f"Request failed: HTTP {response.status_code} for {url + pdb_id}")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed for {url + pdb_id}: {e}")
 
     return None
 
@@ -798,6 +811,12 @@ def extract_gene_fromrequest(id):
 
     url = 'https://rest.uniprot.org/uniprotkb/search?query='
     res = make_request(url,'get',id)
+
+    if res is None:
+        raise RuntimeError(f"UniProt API request failed for {id} after retries.")
+    if not res['results']:
+        raise RuntimeError(f"No UniProt results found for {id}.")
+    
     gene = res['results'][0]['genes'][0]['geneName']['value']
 
     return gene
@@ -1123,16 +1142,21 @@ def main(argv):
 THREAD_POOL = 16
 
 # This is how to create a reusable connection pool with python requests.
-session = requests.Session()
-session.mount(
-    'https://rest.uniprot.org/uniprotkb/search?query=',
-    requests.adapters.HTTPAdapter(pool_maxsize=THREAD_POOL,
-                                  max_retries=3,
-                                  pool_block=True)
-)
+retry_strategy = Retry(total=3,
+                       backoff_factor=1,
+                       status_forcelist=[429, 500, 502, 503, 504],
+                       allowed_methods=["GET", "POST"])
 
+session = requests.Session()
+session.mount( "https://",HTTPAdapter(max_retries=retry_strategy,
+                                      pool_maxsize=THREAD_POOL,
+                                      pool_block=True))
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    try:
+        main(sys.argv[1:])
+    except RuntimeError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
