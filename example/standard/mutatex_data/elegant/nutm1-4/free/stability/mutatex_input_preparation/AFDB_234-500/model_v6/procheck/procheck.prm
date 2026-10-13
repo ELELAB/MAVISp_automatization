@@ -1,0 +1,211 @@
+PROCHECK v.3.3  -  Parameter file (procheck.prm)
+---------------------------------
+
+Note: Listing options and colour definitions are given at the end of
+the file.
+
+Colour all plots?
+-----------------
+Y    <- Produce all plots in colour (Y/N)?
+
+Which plots to produce
+----------------------
+Y     <-  1. Ramachandran plot (Y/N)?
+Y     <-  2. Gly & Pro Ramachandran plots (Y/N)?
+Y     <-  3. Chi1-Chi2 plots (Y/N)?
+Y     <-  4. Main-chain parameters (Y/N)?
+Y     <-  5. Side-chain parameters (Y/N)?
+Y     <-  6. Residue properties (Y/N)?
+Y     <-  7. Main-chain bond length distributions (Y/N)?
+Y     <-  8. Main-chain bond angle distributions (Y/N)?
+Y     <-  9. RMS distances from planarity (Y/N)?
+Y     <- 10. Distorted geometry plots (Y/N)?
+
++-----------------+
+| PLOT PARAMETERS |
++-----------------+
+
+1. Ramachandran plot
+--------------------
+Y     <- Shade in the different regions (Y/N)?
+Y     <- Print the letter-codes identifying the different regions (Y/N)?
+Y     <- Draw line-borders around the regions (Y/N)?
+N     <- Show only the core region (Y/N)?
+1     <- Label residues in: 0=disallow,1=generous,2=allow,3=core regions
+N     <- Produce a COLOUR PostScript file (Y/N)?
+WHITE        <- Background colour
+WHITE        <- Region 0: Disallowed
+CREAM        <- Region 1: Generous
+YELLOW       <- Region 2: Allowed
+RED          <- Region 3: Most favourable, core, region
+BLACK        <- Colour of markers in favourable regions
+RED          <- Colour of markers in unfavourable regions
+N     <- Produce "publication version" of Ramachandran plot (Y/N)?
+
+2. Gly & Pro Ramachandran plots
+-------------------------------
+-3.0  <- Cut-off value for labelling of residues
+Y     <- Plot all 20 Ramachandran plots (Y/N)?
+N     <- Produce a COLOUR PostScript file (Y/N)?
+WHITE        <- Background colour
+CREAM        <- Lightest shaded regions on plots
+GREEN        <- Darkest shaded regions on plots
+YELLOW       <- Colour of markers in favourable regions
+RED          <- Colour of markers in unfavourable regions
+
+3. Chi1-Chi2 plots
+------------------
+-3.0  <- Cut-off value for labelling of residues
+N     <- Produce a COLOUR PostScript file (Y/N)?
+WHITE        <- Background colour
+CREAM        <- Lightest shaded regions on plots
+GREEN        <- Darkest shaded regions on plots
+YELLOW       <- Colour of markers in favourable regions
+RED          <- Colour of markers in unfavourable regions
+
+4. Main-chain parameters
+------------------------
+Y     <- Background shading (Y/N)?
+N     <- Produce a COLOUR PostScript file (Y/N)?
+WHITE        <- Background colour
+CREAM        <- Background shading on each graph
+PURPLE       <- Colour of band
+
+5. Side-chain parameters
+------------------------
+Y     <- Background shading (Y/N)?
+N     <- Produce a COLOUR PostScript file (Y/N)?
+WHITE        <- Background colour
+CREAM        <- Background shading on each graph
+PURPLE       <- Colour of band
+
+6. Residue properties
+---------------------
+1 2 3    < Which 3 main graphs to be printed (see Note 1 for full list)
+Y     <- Background shading on main graphs (Y/N)?
+2.0   <- Number of standard deviations for highlighting
+Y     <- Show shading representing estimated accessibility (Y/N)?
+N     <- Produce a COLOUR PostScript file (Y/N)?
+WHITE        <- Background colour
+CREAM        <- Background shading on main graphs
+PURPLE       <- Colour of histogram bars on main graphs
+RED          <- Colour of highlighted histogram bars
+BLUE         <- Minimum accessibility colour (buried regions)
+WHITE        <- Maximum accessibility colour
+RED          <- Region 0: Disallowed
+PINK         <- Region 1: Generous
+GREEN        <- Region 2: Allowed
+SKY BLUE     <- Region 3: Most favourable, core, region
+YELLOW       <- Colour for favourable G-factor scores
+RED          <- Colour for unfavourable G-factor scores
+YELLOW       <- Colour for schematic of the secondary structure
+
+Note 1
+------
+The 3 main graphs on the Residue properties plot can be any 3 from
+the following list of options:-
+       1. Absolute deviation from mean Chi-1 value (excl. Pro)
+       2. Absolute deviation from mean of omega torsion
+       3. C-alpha chirality: abs. deviation of zeta torsion
+       4. Absolute deviation from mean of H-bond energy
+       5. Gamma atom B-value
+       6. Average B-value of main-chain atoms
+       7. Average B-value of side-chain atoms
+       8. G-factor for phi-psi distribution
+       9. G-factor for chi1-chi2 distribution
+      10. Residue-by-residue G-factor
+      11. Approx. accessibility (estimated by Ooi numbers)
+      12. Percentage residue main-chain accessibility
+      13. Standard deviation of main-chain B-values
+      14. Standard deviation of side-chain B-values
+
+7. Main-chain bond length distributions
+---------------------------------------
+Y     <- Background shading on graphs (Y/N)?
+2.0   <- Number of standard deviations for highlighting
+N     <- Produce a COLOUR PostScript file (Y/N)?
+WHITE        <- Background colour of page
+CREAM        <- Background shading on graphs
+PURPLE       <- Colour of histogram bars
+RED          <- Colour of highlighted histogram bars
+
+8. Main-chain bond angle distributions
+--------------------------------------
+Y     <- Background shading on graphs (Y/N)?
+2.0   <- Number of standard deviations for highlighting
+N     <- Produce a COLOUR PostScript file (Y/N)?
+WHITE        <- Background colour of page
+CREAM        <- Background shading on graphs
+PURPLE       <- Colour of histogram bars
+RED          <- Colour of highlighted histogram bars
+
+9. RMS distances from planarity
+-------------------------------
+Y     <- Background shading on graphs (Y/N)?
+0.03  <- RMS distance for highlighting for ring groups 
+0.02  <-  "      "     "       "        "  other groups 
+N     <- Produce a COLOUR PostScript file (Y/N)?
+WHITE        <- Background colour of page
+CREAM        <- Background shading on graphs
+PURPLE       <- Colour of histogram bars
+RED          <- Colour of highlighted histogram bars
+
+10. Distorted geometry plots
+----------------------------
+0.05  <- Deviation from "ideal" bond-length (A)
+10.0  <- Deviation from "ideal" bond-angle (degrees)
+0.03  <- RMS distance from plane for ring atoms
+0.02  <-  "      "      "    "   for other atoms
+N     <- Produce a COLOUR PostScript file (Y/N)?
+CREAM        <- Background colour of page
+BLUE         <- Colour of "ideal" bond-lengths and angles
+RED          <- Colour of actual bond-lengths/angles/planes
+GREEN        <- Colour for lettering showing differences from ideals
+
+
+Listing options
+---------------
+Y   <- Print explanatory text at head of parameters listing (Y/N)
+N   <- Print only asterisks denoting deviations, and not the values (Y/N)
+N   <- Print only highlighted residues (Y/N)
+0.0    <- Min. deviation from ideal required for parameter to be printed
+66     <- Number of lines per page on parameters listing
+Y   <- List the bad contacts (Y/N)
+
+Colours
+-------
+0.0000 0.0000 0.0000 'BLACK'        <- Colour 1
+1.0000 1.0000 1.0000 'WHITE'        <- Colour 2
+1.0000 0.0000 0.0000 'RED'          <- Colour 3
+0.0000 1.0000 0.0000 'GREEN'        <- Colour 4
+0.0000 0.0000 1.0000 'BLUE'         <- Colour 5
+1.0000 1.0000 0.0000 'YELLOW'       <- Colour 6
+0.8000 0.5000 0.0000 'ORANGE'       <- Colour 7
+0.5000 1.0000 0.0000 'LIME GREEN'   <- Colour 8
+0.5000 0.0000 1.0000 'PURPLE'       <- Colour 9
+0.5000 1.0000 1.0000 'CYAN'         <- Colour 10
+1.0000 0.5000 1.0000 'PINK'         <- Colour 11
+0.3000 0.8000 1.0000 'SKY BLUE'     <- Colour 12
+1.0000 1.0000 0.7000 'CREAM'        <- Colour 13
+0.0000 1.0000 1.0000 'TURQUOISE'    <- Colour 14
+1.0000 0.0000 1.0000 'LILAC'        <- Colour 15
+0.8000 0.0000 0.0000 'BRICK RED'    <- Colour 16
+0.5000 0.0000 0.0000 'BROWN'        <- Colour 17
+0.9700 0.9700 0.9700 'LIGHT GREY'   <- Colour 18
+1.0000 1.0000 1.0000 'WHITE'        <- Colour 19
+1.0000 1.0000 1.0000 'WHITE'        <- Colour 20
+
+
+G-factors
+---------
+Y   <- Use Engh & Huber means for bond length/angle G-factors(Y/N)?
+
+
+File-handles
+------------
+N   <- Add 9-character description of plot to each plot filename (Y/N)?
+       (eg p1gcr_01_ramachand.ps, rather than p1gcr_01.ps)
+Y   <- Print name of plotfile in bottom-left corner of plot (Y/N)?
+Y   <- Combine all pages of same plot into single PostScript file (Y/N)?
+
+--------------------------------------------------------------------------

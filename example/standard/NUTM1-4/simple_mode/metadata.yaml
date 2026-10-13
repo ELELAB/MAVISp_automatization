@@ -1,0 +1,20 @@
+curators:
+  Elena Papaleo:
+    affiliation:
+    - DTU, Denmark
+    - DCI, Denmark
+  Pablo Sanchez-Izquierdo:
+    affiliation:
+    - DTU, Denmark
+    - DCI, Denmark
+uniprot_ac: Q86Y26-4
+refseq_id: NP_001271221
+allosigma_distance_cutoff:
+- 5.5
+allosigma_distance_mode:
+- atomic_contacts
+review_status: 0
+structure_source: AFDB
+linker_design: false
+pdb_id: ''
+stability_foldx_version: foldx5.1

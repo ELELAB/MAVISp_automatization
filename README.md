@@ -22,7 +22,7 @@ MAVISp_automatization is a Snakemake pipeline that has been designed to automate
 
 it also contains an alternative target rule (`idps`) that generate targets for
 intrisically disordered proteins, therefore skipping expensive calculations on
-the structure that wouldn't be appropriate for such cases.
+the structure that wouldn't be appropriate for such cases. The pipeline also supports both canonical proteins and UniProt isoforms within the same workflow. Isoform status is automatically determined from the UniProt accession and, when required, isoform-specific identifiers are propagated to the downstream modules.
 
 ## Requirements
 
@@ -69,7 +69,7 @@ The pipeline necessitates a CSV input file, a folder containing the scripts esse
 where:
 "protein" is the hugo name of the protein
 "uniprot_id" is the uniprot id of the protein
-"uniprot_ac" is the uniprot accession number of the protein
+"uniprot_ac" is the uniprot accession number of the protein. For isoforms, the full isoform accession needs to be provided (i.e Q86Y26-4). The pipeline automatically determines whether the accession corresponds to a canonical or non-canonical isoform.
 "trimmed" represents the residues range of your trimmed model (in case of multiple models specify the ranges "_" separeted)
 "ref_seq" is the ref seq code associated with the isoform used by cancermuts (usually the first one). The RefSeq associated with the first isoform can be accessed through the Uniprot database in the "Sequence & isoforms" or "Sequence" section (depending on the protein being investigated) under the field "Sequence databases". The RefSeq code required by the pipeline consists of the "NP" followed by all subsequent characters until the dot, excluding it. There may be multiple RefSeq codes available. The one associated with the correct isoform includes the isoform code, which is enclosed in square brackets, corresponding to the canonical isoform. Verify by clicking on it that it corresponds to the correct isoform.
 "research_field" is the project or the research field in which the protein is involved (this is the name of the folder in which the cancermuts and rasp calculation will be organized).
@@ -186,8 +186,7 @@ Notice that when using the `idps` target rule, the PDB file always needs to be s
 - **Mutation classification using the Demask approach**: The uniprot fasta file, automatically retrieved by the pipeline, is provided to the Demask software to obtain a classification for 
   every possible mutation at each sequence position. The output is stored in the "demask" folder.
 
-- **Mutation classification using the Alphamissense approach**: The uniprot_ac, automatically retrieved by the pipeline, is used to filter the Alphamissense file to obtain a classification for 
-  every possible mutation at each sequence position. The output is stored in the "alphamissense" folder.
+- **Mutation classification using the Alphamissense approach**: The uniprot_ac is used to retrieve Alphamissense predictions for the protein. If no predictions are found using the UniProt accession, the pipeline uses the associated Ensembl transcript ID to query the isoform-specific Alphamissense database. The output is stored in the "alphamissense" folder.
 
 - **Rasp calculation on trimmed models**: The trimmed models obtained in the previous step are provided to the Rasp workflow to obtain stability effect predictions for every possible 
   mutation at each sequence position. The output is stored in the same folder as the "rasp_data" Snakefile.
