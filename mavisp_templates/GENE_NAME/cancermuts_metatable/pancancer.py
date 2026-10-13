@@ -84,8 +84,15 @@ revel.add_metadata(seq)
 
 # add annotations from gnomAD
 gnomad = gnomAD(version='2.1', reference_genome_fasta="/data/databases/genome_annotation/hg19.fa")
-gnomad.add_metadata(seq, md_type=['gnomad_exome_allele_frequency',
-	                              'gnomad_genome_allele_frequency'])
+
+try:
+    gnomad.add_metadata(seq, md_type=['gnomad_exome_allele_frequency',
+    	                              'gnomad_genome_allele_frequency'])
+except RuntimeError as e:
+    if "Gene not found" in str(e):
+        print(f"WARNING: Skipping gnomAD for {args.prt}: gene not found in gnomAD v2.1.")
+    else:
+        raise
 
 # add annotations from PhosphoSite
 ps = PhosphoSite('/data/databases/phosphosite/')
