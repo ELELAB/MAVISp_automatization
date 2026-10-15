@@ -816,7 +816,7 @@ def extract_gene_fromrequest(id):
         raise RuntimeError(f"UniProt API request failed for {id} after retries.")
     if not res['results']:
         raise RuntimeError(f"No UniProt results found for {id}.")
-    
+            
     gene = res['results'][0]['genes'][0]['geneName']['value']
 
     return gene

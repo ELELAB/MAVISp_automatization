@@ -6,6 +6,7 @@ from cancermuts.datasources import RevelDatabase
 from cancermuts.datasources import gnomAD
 from cancermuts.datasources import PhosphoSite, MobiDB, dbPTM, GlyGen, NetPhos
 from cancermuts.datasources import ggetELMPredictions
+from cancermuts.exceptions import *
 from cancermuts.table import Table
 import pandas as pd
 
@@ -16,21 +17,38 @@ parser.add_argument("-i", "--uniprotID", dest="uniprotID", help="uniprot_id of y
 parser.add_argument("-a", "--uniprotAC", dest="uniprotAC", default= None, help="uniprot_ac of your protein")
 parser.add_argument("-r", "--refseq", dest="refseq", required=False, help="RefSeq isoform ID required for ClinVar mapping")
 parser.add_argument("-e", "--external_mutations", dest="external_mutations", nargs='+', default= None, help="csv file containing the external mutations to study")
+parser.add_argument("-f", "--isoform", dest="isoform", default=None, help="UniProt isoform accession (e.g. Q86Y26-4)")
 
 args=parser.parse_args()
 # create the corresponding uniprot object
 up = UniProt()
 
 # get the sequence for the protein
-seq = up.get_sequence(args.prt, upid=args.uniprotID, upac=args.uniprotAC)
+if args.isoform:
+    seq = up.get_sequence(args.prt, isoform=args.isoform)
+    # confirm non-canonical status
+    print("Is the sequence canonical?", seq.is_canonical)
+else:
+    seq = up.get_sequence(args.prt, upid=args.uniprotID, upac=args.uniprotAC)
+
+# save Ensembl transcript ID
+transcript_id = seq.aliases.get('ensembl_transcript_id')
+if transcript_id:
+    with open(f"transcript_id_{args.prt}.txt", "w") as fh:
+        fh.write(transcript_id + "\n")
+else:
+    print("WARNING: no Ensembl transcript ID found for: f{args.prt}")
+
 print(seq.sequence)
 
 # add mutations from cBioPortal
-cb = cBioPortal()
 try:
+    cb = cBioPortal()
     cb.add_mutations(seq, metadata=['cancer_type', 'cancer_study', 'genomic_mutations'])
 except TypeError:
     print("WARNING: Skipping cBioPortal due to missing Entrez ID.")
+except UnexpectedIsoformError:
+    print("cBioPortal mutations will not be added, as a non-canonical isoform has been provided")
 
 
 # add mutations from COSMIC
@@ -95,7 +113,7 @@ gnomad = gnomAD(version='2.1', reference_genome_fasta="/data/databases/genome_an
 
 try:
     gnomad.add_metadata(seq, md_type=['gnomad_exome_allele_frequency',
-    	                              'gnomad_genome_allele_frequency'])
+    	                            'gnomad_genome_allele_frequency'])
 except RuntimeError as e:
     if "Gene not found" in str(e):
         print(f"WARNING: Skipping gnomAD for {args.prt}: gene not found in gnomAD v2.1.")
@@ -104,15 +122,24 @@ except RuntimeError as e:
 
 # add annotations from PhosphoSite
 ps = PhosphoSite('/data/databases/phosphosite/')
-ps.add_sequence_properties(seq)
+try:
+    ps.add_sequence_properties(seq)
+except UnexpectedIsoformError:
+    print("PhosphoSite annotations will not be added, as a non-canonical isoform has been provided")
 
 # add annotations from dbPTM
 dp = dbPTM('/data/databases/dbPTM/')
-dp.add_sequence_properties(seq)
+try:
+    dp.add_sequence_properties(seq)
+except UnexpectedIsoformError:
+    print("dbPTM annotations will not be added, as a non-canonical isoform has been provided")
 
 # add annotations from GlyGen
 gg = GlyGen('/data/databases/GlyGen/', database_file='human_proteoform_glycosylation_sites_uniprotkb_filtered.csv')
-gg.add_sequence_properties(seq)
+try:
+    gg.add_sequence_properties(seq)
+except UnexpectedIsoformError:
+    print("GlyGen annotations will not be added, as a non-canonical isoform has been provided")
 
 # add annotations from NetPhos
 np = NetPhos('/data/databases/netphos_human_proteome/netphos_human_isoforms/raw/')
@@ -121,7 +148,10 @@ np.add_sequence_properties(seq)
 
 # add annotations from MobiDB
 #mdb = MobiDB()
-#mdb.add_sequence_properties(seq)
+# try:
+#     mdb.add_sequence_properties(seq)
+# except UnexpectedIsoformError:
+#     print("MobiDB annotations will not be added, as a non-canonical isoform has been provided")
 
 # add annotations from ELM
 elm = ggetELMPredictions()

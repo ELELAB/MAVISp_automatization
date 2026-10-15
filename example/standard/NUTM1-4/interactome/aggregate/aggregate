@@ -1,0 +1,336 @@
+#!/usr/bin/env python3
+
+# AGGREGATE
+# Copyright (C) 2024  Eleni Kiachaki and Matteo Tiberti, Cancer Structural Biology, Danish Cancer Institute
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+import argparse
+import pandas as pd
+import re
+import os
+
+def process_pdbminer_data(data, final_df, target_column, interactor_column, structure_column, is_complexes=False):
+    """
+    Process pdbminer or pdbminer_complexes data and update final_df.
+
+    Args:
+        data: Input data (pdbminer or pdbminer_complexes).
+        final_df: The main dataframe to update.
+        target_column: Column for target UniProt AC.
+        interactor_column: Column for interactor UniProt AC.
+        structure_column: Column to update with structure IDs.
+        is_complexes: Whether the data is pdbminer_complexes.
+    """
+    
+    if final_df.empty:
+        print("Final dataframe is empty. Skipping pdbminer data processing.")
+        return final_df
+
+    for _, row in data.iterrows():
+        structure_id = row["structure_id"]
+        interactors = []
+
+        if is_complexes:
+            if row['complex_type'] != 'protein complex':
+                continue
+
+            # Parsing pdbminer_complexes:
+            complex_details = {
+                e.split(", ")[2].split('_')[1]: e.split(", ")[1]
+                for e in row['complex_details'].split(";")
+            }
+            # Skip rows with no binding residues
+            residues = str(row.get('residues', '')).strip()
+            if residues in ['', '[]']:
+                continue
+
+            m = re.match(r'^(\S+)\s+residues binding\s+(\S+)$', str(row['binding_partners']).strip())
+            if not m:
+                continue
+            chain_1, chain_2 = m.group(1), m.group(2)
+
+            self_chains = [c.strip() for c in str(row['self_chains']).split(';') if c.strip()]
+            target_uniprot_id = next(complex_details[ch] for ch in self_chains if ch in complex_details)
+            for sc in self_chains:
+                if sc not in complex_details:
+                    complex_details[sc] = target_uniprot_id
+            if chain_1 in self_chains or chain_2 in self_chains:
+                partner_chain = chain_2 if chain_1 in self_chains else chain_1
+                interactors = [complex_details[partner_chain]]
+
+        else:
+            # Parsing pdbminer:
+            target_uniprot_id = row["uniprot_id"]
+            complex_details = row["complex_protein_details"]
+            complex_details = complex_details.strip("[]").split(";")
+            interactors = []
+            for entry in complex_details:
+                uniprot_id = entry.split(", ")[1]
+                if uniprot_id == target_uniprot_id:
+                    continue 
+                interactors.append(uniprot_id)
+            if len(row['chains'].split(';')) > 1:
+                interactors.append(target_uniprot_id)
+
+        for interactor in interactors:
+            # Check if the target and interactor exist in final_df:
+            existing_row = final_df[
+                (final_df[target_column] == target_uniprot_id) &
+                (final_df[interactor_column] == interactor)
+            ]
+
+            if existing_row.empty:
+                # Add a new row for unmatched interactors:
+                target_protein = final_df["Target_protein"].iloc[0]
+                final_df = pd.concat([
+                    final_df,
+                    pd.DataFrame([{
+                        target_column: target_uniprot_id,
+                        "Target_protein": target_protein,
+                        interactor_column: interactor,
+                        "Mentha_score": None,
+                        "String_score": None,
+                        "PPI_Structure": "",
+                        "PDBminer_complexes_structure": "" if structure_column == "PDBminer_structure" else structure_id,
+                        "PDBminer_structure": "" if structure_column == "PDBminer_complexes_structure" else structure_id
+                    }])
+                ], ignore_index=True)
+
+            else:
+                # Update the structure column for existing rows:
+                idx = existing_row.index[0]
+                current_structures = final_df.at[idx, structure_column] or ""
+                final_df.at[idx, structure_column] = ";".join(
+                    sorted(set(filter(None, current_structures.split(";") + [structure_id])))
+                )
+
+
+    return final_df
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Aggregate results from mentha2pdb, string2pdb, pdbminer, and pdbminer_complexes.")
+
+    parser.add_argument(
+        "-m", 
+        required=True,
+        help="Path to the mentha2pdb output csv file.")
+
+    parser.add_argument(
+        "-s",
+        required=True,
+        help="Path to the string2pdb output csv file.")
+    parser.add_argument(
+        "-c",
+        required=True,
+        help="Path to the pdbminer_complexes output csv file.")
+
+    parser.add_argument(
+        "-p",
+        required=True,
+        help="Path to the pdbminer output csv file.")
+
+    parser.add_argument(
+        "-o",
+        help="Specify the output filename. If not provided, a default name will be used based on Target_Uniprot_AC."
+    )
+
+    args = parser.parse_args()
+
+    # Load input files:
+    mentha_df = pd.read_csv(args.m)
+    string_df = pd.read_csv(args.s)
+    pdbminer_c_df = pd.read_csv(args.c)
+    pdbminer_df = pd.read_csv(args.p)
+
+    # Extract UPAC from mentha filename
+    upac_basename = os.path.basename(args.m)        
+    upac_id = os.path.splitext(upac_basename)[0]
+
+    ## MENTHA2PDB OUTPUT PRE-PROCESSING: ##
+    
+    # Replace 'na' values with "":
+    mentha_df.replace('na', "", inplace=True)
+
+    # Keep only the required columns
+    mentha_df = mentha_df[[
+        "target uniprot id", 
+        "target uniprot gene", 
+        "interactor uniprot id", 
+        "interactor uniprot gene", 
+        "mentha score", 
+        "PDB id", 
+        "pDockQ HuMap", 
+        "pDockQ HuRI"
+    ]]
+
+    mentha_df.rename(columns={
+        "target uniprot gene": "Target_protein",
+        "target uniprot id": "Target_Uniprot_AC",
+        "interactor uniprot gene": "Interactor",
+        "interactor uniprot id": "Interactor_UniProt_AC",
+        "mentha score": "Mentha_score"
+    }, inplace=True)
+
+    # Simplify gene names by keeping only the part before the first space or '{' :
+    mentha_df["Target_protein"] = mentha_df["Target_protein"].str.replace(r"[ {].*", "", regex=True)
+    mentha_df["Interactor"] = mentha_df["Interactor"].str.replace(r"[ {].*", "", regex=True)
+
+    # Initialize the "Structure" column with the PDB id values:
+    mentha_df["PPI_Structure"] = mentha_df["PDB id"].fillna("")
+
+    # Add "AF_Huri_HuMAP" to "Structure" if HuMap or HuRI values are not "":
+    if not mentha_df.empty:
+        mentha_df["PPI_Structure"] = mentha_df.apply(
+            lambda row: ";".join(filter(None, [row["PPI_Structure"], "AF_Huri_HuMAP"])) \
+                if row["pDockQ HuMap"] != "" or row["pDockQ HuRI"] != "" 
+                else row["PPI_Structure"],
+            axis=1
+        )
+
+    # Drop columns "PDB id", "pDockQ HuMap", and "pDockQ HuRI":
+    mentha_df.drop(columns=["PDB id", "pDockQ HuMap", "pDockQ HuRI"], inplace=True)
+
+    # Group by all columns except "Structure" and aggregate "Structure" as comma-separated strings
+    mentha_df = mentha_df.groupby([
+        "Target_Uniprot_AC", 
+        "Target_protein", 
+        "Interactor_UniProt_AC", 
+        "Interactor", 
+        "Mentha_score"
+    ], as_index=False).agg({"PPI_Structure": lambda x: ";".join(sorted(set(filter(None, x))))})
+
+    mentha_df.sort_values(by="Mentha_score", ascending=False, inplace=True)
+
+    ## STRING2PDB OUTPUT PRE-PROCESSING: ##
+    
+    string_df = string_df.apply(lambda col: col.fillna("") if col.dtype == "object" else col.fillna(0))
+
+    # Keep only required columns from string_df:
+    string_df = string_df[[
+        "Target_protein", 
+        "Target_Uniprot_AC", 
+        "Interactor", 
+        "Interactor_UniProt_AC", 
+        "String_score", 
+        "PDB_ID"
+    ]]
+
+    # Group by relevant columns and aggregate PDB_IDs:
+    string_df = string_df.groupby([
+        "Target_protein", 
+        "Target_Uniprot_AC", 
+        "Interactor", 
+        "Interactor_UniProt_AC", 
+        "String_score"
+    ], as_index=False).agg({
+    "PDB_ID": lambda x: ";".join(sorted(set(map(str, filter(None, x)))))
+    })
+
+    string_df.sort_values(by="String_score", ascending=False, inplace=True)
+
+    if mentha_df.empty and string_df.empty:
+
+        print(f"Warning: No results found in Mentha and STRING for the query protein")
+    
+    if not string_df.empty and not mentha_df.empty:
+
+        mentha_target_ac = mentha_df["Target_Uniprot_AC"].iloc[0]
+        string_target_ac = string_df["Target_Uniprot_AC"].iloc[0]
+        if mentha_target_ac != string_target_ac:
+            print(f"Error: Target Uniprot ACs do not match between Mentha and STRING outputs.")
+            exit(1)
+
+    ## MERGING ##
+    # Merge mentha_df and string_df:
+    merged_df = pd.merge(
+        mentha_df, 
+        string_df[["Interactor_UniProt_AC", "String_score", "PDB_ID"]], 
+        on="Interactor_UniProt_AC", 
+        how="left"
+    )
+
+    # Update Structure column:
+    merged_df["PPI_Structure"] = merged_df.apply(
+        lambda row: ";".join(filter(None, sorted(set(row["PPI_Structure"].split(";") + row["PDB_ID"].split(";")))))
+            if pd.notna(row["PDB_ID"]) 
+            else row["PPI_Structure"],
+        axis=1
+    )
+
+    # Drop unnecessary columns:
+    merged_df.drop(columns=[ "PDB_ID"], inplace=True)
+
+    merged_df.sort_values(by=["Mentha_score", "String_score"], ascending=[False, False], inplace=True)
+
+    # Find string entries not in mentha:
+    unmatched_string_df = string_df[~string_df["Interactor_UniProt_AC"].isin(mentha_df["Interactor_UniProt_AC"])]
+    unmatched_string_df = unmatched_string_df.rename(columns={"PDB_ID": "PPI_Structure"})
+    unmatched_string_df["Mentha_score"] = None 
+    unmatched_string_df["Mentha_score"] = unmatched_string_df["Mentha_score"].astype("float64")  
+    unmatched_string_df = unmatched_string_df[[
+        "Target_Uniprot_AC", "Target_protein", "Interactor_UniProt_AC", 
+        "Interactor", "Mentha_score", "String_score", "PPI_Structure"
+    ]]
+
+    # Concatenate the unmatched string entries to df:
+    final_df = pd.concat([merged_df, unmatched_string_df], ignore_index=True)
+
+    # Add columns for pdbminer/pdbminer_complexes
+    final_df["PDBminer_complexes_structure"] = ""
+    final_df["PDBminer_structure"] = ""
+
+    final_df = final_df[[
+        "Target_Uniprot_AC", 
+        "Target_protein", 
+        "Interactor_UniProt_AC", 
+        "Interactor", 
+        "Mentha_score", 
+        "String_score", 
+        "PPI_Structure", 
+        "PDBminer_complexes_structure",
+        "PDBminer_structure"
+    ]]
+
+     ## PROCESS PDBMINER_COMPLEXES ##
+    final_df = process_pdbminer_data(
+        pdbminer_c_df, final_df, 
+        target_column="Target_Uniprot_AC", 
+        interactor_column="Interactor_UniProt_AC", 
+        structure_column="PDBminer_complexes_structure", 
+        is_complexes=True
+    )
+
+    ## PROCESS PDBMINER ##
+    protein_complexes = pdbminer_df[pdbminer_df["complex_protein"] == "protein complex"]
+    final_df = process_pdbminer_data(
+        protein_complexes, final_df, 
+        target_column="Target_Uniprot_AC", 
+        interactor_column="Interactor_UniProt_AC", 
+        structure_column="PDBminer_structure", 
+        is_complexes=False
+    )
+    
+    # Use user-specified filename or create default:
+    if args.o:
+        filename = args.o
+    else:
+        filename = f"{upac_id}_aggregated.csv"
+
+    final_df.to_csv(filename, index=False, na_rep="")
+    print("Aggregation complete. Saved as", filename,".")
+
+if __name__ == "__main__":
+    main()
