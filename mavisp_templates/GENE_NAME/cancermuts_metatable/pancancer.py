@@ -63,6 +63,8 @@ try:
 except ValueError as e:
     if "is not present in the database files" in str(e):
         print(f"WARNING: Skipping COSMIC for {args.prt}: gene not found in COSMIC.")
+    elif "ensembl_transcript_id is required" in str(e):
+        print(f"WARNING: Skipping COSMIC for {args.prt}: no Ensembl transcript ID available through UniProt.")
     else:
         raise
 
@@ -98,12 +100,25 @@ if args.external_mutations:
 
 # add annotations from REVEL:
 revel = RevelDatabase(revel_file="/data/databases/REVEL/revel_with_transcript_ids")
-revel.add_metadata(seq)
+try:
+    revel.add_metadata(seq)
+except KeyError as e:
+    if "ensembl_transcript_id" in str(e):
+        print(f"WARNING: Skipping REVEL for {args.prt}: no Ensembl transcript ID available through UniProt.")
+    else:
+        raise
 
 # add annotations from gnomAD
 gnomad = gnomAD(version='2.1', reference_genome_fasta="/data/databases/genome_annotation/hg19.fa")
-gnomad.add_metadata(seq, md_type=['gnomad_exome_allele_frequency',
-	                              'gnomad_genome_allele_frequency'])
+
+try:
+    gnomad.add_metadata(seq, md_type=['gnomad_exome_allele_frequency',
+    	                            'gnomad_genome_allele_frequency'])
+except RuntimeError as e:
+    if "Gene not found" in str(e):
+        print(f"WARNING: Skipping gnomAD for {args.prt}: gene not found in gnomAD v2.1.")
+    else:
+        raise
 
 # add annotations from PhosphoSite
 ps = PhosphoSite('/data/databases/phosphosite/')
