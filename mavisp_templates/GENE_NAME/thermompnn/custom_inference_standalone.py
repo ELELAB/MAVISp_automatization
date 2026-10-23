@@ -1,11 +1,9 @@
-import importlib.util
 import os
-import re
+import sys
 from pathlib import Path
 
 
 ALPHABET = 'ACDEFGHIKLMNPQRSTVWYX'
-SCRIPT_DIR = Path(__file__).resolve().parent
 
 
 def get_chains(pdb):
@@ -17,53 +15,9 @@ def get_chains(pdb):
   return chains
 
 
-def read_pdb_numbering(pdb_path):
-    numbering = {}
-    with Path(pdb_path).open() as handle:
-        for line in handle:
-            if line[:6] != 'ATOM  ' and not (line[:6] == 'HETATM' and line[17:20] == 'MSE'):
-                continue
-            # Same fixed-width chain/residue fields and MSE handling as the model parser.
-            numbering.setdefault(line[21:22], {})[line[22:27].strip()] = None
-    return numbering
-
-
-def infer_offset(pdb_path, chain, offset=None, metadata_only=False):
-    if len(chain) != 1:
-        raise ValueError('Postprocessing requires one selected PDB chain.')
-    if metadata_only:
-        residues = list(read_pdb_numbering(pdb_path).get(chain, {}))
-    else:
-        from protein_mpnn_utils import alt_parse_PDB
-
-        parsed = alt_parse_PDB(str(pdb_path), chain)[0]
-        residues = parsed['resn_list'] if parsed['seq'] else []
-    if not residues:
-        raise ValueError('No protein residues found for chain %s.' % chain)
-    try:
-        numbers = [int(number) for number in residues]
-    except ValueError:
-        raise ValueError('Residue insertion codes require an explicit mapping; one offset is insufficient.') from None
-    if offset is not None:
-        return offset
-
-    match = re.search(r'_(\d+)-(\d+)$', Path(pdb_path).stem)
-    if match is None:
-        raise ValueError('Use a PDB filename ending in _START-END.pdb or provide --offset.')
-    start, end = map(int, match.groups())
-    if start < 1 or end < start:
-        raise ValueError('Invalid residue range in the PDB filename.')
-    first, last = min(numbers), max(numbers)
-    # The parser keeps gaps; either original or 1-based domain numbering can use this offset.
-    if (first == start and last <= end) or (first == 1 and last <= end - start + 1):
-        return start
-    raise ValueError(
-        'Filename range %d-%d does not match chain %s numbering %d-%d; check the input or provide --offset.'
-        % (start, end, chain, first, last)
-    )
-
-
 def main(cfg, args):
+    # Add the external installation before importing its helper modules.
+    sys.path.append(str(args.thermompnn_dir))
     import pandas as pd
     from omegaconf import OmegaConf
     from datasets import Mutation
@@ -117,6 +71,14 @@ def main(cfg, args):
             else:
                 chain = args.chain
             mut_pdb = alt_parse_PDB(input_pdb, chain)
+            if not mut_pdb[0]['seq']:
+                raise ValueError('No protein residues found for chain %s.' % chain)
+            if args.postprocess_output is not None:
+                try:
+                    for number in mut_pdb[0]['resn_list']:
+                        int(number)
+                except ValueError:
+                    raise ValueError('Residue insertion codes cannot be mapped with one offset.') from None
             mutation_list = get_ssm_mutations(mut_pdb[0])
             final_mutation_list = []
 
@@ -160,21 +122,20 @@ def main(cfg, args):
 def parse_args(argv=None):
     import argparse
 
-    model_paths = {'default': SCRIPT_DIR / "thermoMPNN_default.pt"}
     parser = argparse.ArgumentParser(description='Run ThermoMPNN and write raw and MAVISp CSVs.')
     parser.add_argument('--pdb', required=True, help='Trimmed input PDB to use for inference')
+    parser.add_argument(
+        '--thermompnn-dir', required=True, type=Path,
+        help='External installation containing helper modules, postprocessor and model weights'
+    )
     parser.add_argument('--chain', type=str, default='A', help='Chain in input PDB to use.')
     parser.add_argument(
         '--gpu', type=int, metavar='INDEX',
-        help='CUDA index among visible GPUs (e.g. 0 or 1); omitted uses the current CUDA default'
-    )
-    parser.add_argument(
-        '--dry-run', action='store_true',
-        help='Show the plan and check files/package availability without loading a model or writing outputs'
+        help='CUDA index among visible GPUs; omitted uses the current CUDA default'
     )
     parser.add_argument(
         '--output', type=Path,
-        help='Raw prediction CSV path (default: ThermoMPNN_inference_<pdb_id>.csv in the working directory)'
+        help='Raw CSV path (default: ThermoMPNN_inference_<pdb_id>.csv in the working directory)'
     )
     processing_options = parser.add_mutually_exclusive_group()
     processing_options.add_argument(
@@ -185,11 +146,12 @@ def parse_args(argv=None):
         '--raw-only', action='store_true', help='Write only the raw CSV and skip postprocessing'
     )
     parser.add_argument(
-        '--offset', type=int, help='Override the residue offset read from the input PDB filename'
+        '--offset', type=int,
+        help='Starting residue added to zero-based positions; required unless --raw-only'
     )
     model_options = parser.add_mutually_exclusive_group()
     model_options.add_argument(
-        '--model', choices=model_paths, default='default',
+        '--model', choices=['default'], default='default',
         help='Named ThermoMPNN model (default: default)'
     )
     model_options.add_argument(
@@ -198,11 +160,16 @@ def parse_args(argv=None):
     )
 
     args = parser.parse_args(argv)
+    args.thermompnn_dir = args.thermompnn_dir.expanduser().resolve()
+    if not args.thermompnn_dir.is_dir():
+        parser.error('ThermoMPNN installation directory not found: %s' % args.thermompnn_dir)
     if args.gpu is not None and args.gpu < 0:
         parser.error('--gpu must be a non-negative CUDA device index')
     if args.model_path is None:
-        args.model_path = str(model_paths[args.model])
+        args.model_path = str(args.thermompnn_dir / 'thermoMPNN_default.pt')
     args.model_path = str(Path(args.model_path).expanduser().resolve())
+    if not Path(args.model_path).is_file():
+        parser.error('ThermoMPNN checkpoint not found: %s' % args.model_path)
     args.pdb = str(Path(args.pdb).expanduser().resolve())
     if not Path(args.pdb).is_file():
         parser.error('Input PDB not found: %s' % args.pdb)
@@ -211,115 +178,40 @@ def parse_args(argv=None):
     if args.raw_only:
         if args.offset is not None:
             parser.error('--offset cannot be used with --raw-only')
-        if args.dry_run:
-            chains = list(read_pdb_numbering(args.pdb))
-            if not args.chain and chains:
-                args.chain = chains[0]
-            if args.chain not in chains:
-                parser.error('No protein residues found for chain %s.' % args.chain)
     else:
+        if args.offset is None:
+            parser.error('--offset is required for postprocessing; it is not inferred from the PDB filename')
+        if args.chain and len(args.chain) != 1:
+            parser.error('Postprocessing requires one selected PDB chain')
         args.postprocess_output = (
             args.postprocess_output or args.output.with_name(args.output.stem + '_postprocessed.csv')
         ).expanduser().resolve()
-        if not args.chain:
-            chains = list(read_pdb_numbering(args.pdb)) if args.dry_run else get_chains(args.pdb)
-            if not chains:
-                parser.error('No chains found in the input PDB.')
-            args.chain = chains[0]
-        try:
-            args.offset = infer_offset(args.pdb, args.chain, args.offset, metadata_only=args.dry_run)
-        except ValueError as error:
-            parser.error(str(error))
     if args.output == args.postprocess_output:
         parser.error('Raw and postprocessed outputs must use different paths.')
     protected_paths = {
-        Path(args.pdb), Path(args.model_path).expanduser().resolve(),
-        SCRIPT_DIR / 'local.yaml', SCRIPT_DIR / 'vanilla_model_weights' / 'v_48_020.pt',
+        Path(args.pdb), Path(args.model_path),
+        args.thermompnn_dir / 'vanilla_model_weights' / 'v_48_020.pt',
+        Path(__file__).resolve(),
     }
     for output in (args.output, args.postprocess_output):
         if output in protected_paths:
-            parser.error('Output paths must not overwrite the input PDB, configuration or model weights.')
+            parser.error('Output paths must not overwrite the input PDB, inference script or model weights.')
         if output is not None and output.is_dir():
             parser.error('Output path is a directory: %s' % output)
     return args
 
 
-def dry_run(args):
-    print('DRY RUN: no model loaded, no GPU computation, no files or folders written.')
-    print('Shared code/config folder: %s' % SCRIPT_DIR)
-    print('Input PDB: %s' % args.pdb)
-    print('Chain: %s' % (args.chain or '(first chain)'))
-    if args.gpu is not None:
-        print('Requested GPU: cuda:%d (index among visible GPUs; not checked)' % args.gpu)
-    else:
-        print('Requested GPU: current CUDA default (visibility inherited; not checked)')
-    print('ThermoMPNN checkpoint: %s' % args.model_path)
-    print('Raw CSV would be written to: %s' % args.output)
-    if args.postprocess_output is not None:
-        print('Postprocessed CSV would be written to: %s' % args.postprocess_output)
-        print('Residue offset: %d' % args.offset)
-    else:
-        print('Postprocessing: skipped (--raw-only)')
-
-    files = [
-        Path(args.pdb), Path(args.model_path), SCRIPT_DIR / 'local.yaml',
-        SCRIPT_DIR / 'vanilla_model_weights' / 'v_48_020.pt',
-    ]
-    helpers = [
-        'datasets.py', 'protein_mpnn_utils.py', 'thermompnn_benchmarking.py',
-        'train_thermompnn.py', 'transfer_model.py', 'SSM.py', 'model_utils.py', 'cache.py',
-        'postprocess_thermompnn.py',
-    ]
-    files.extend(SCRIPT_DIR / name for name in helpers)
-    errors = []
-    for path in files:
-        if not path.is_file() or not os.access(path, os.R_OK):
-            errors.append('Required file missing or unreadable: %s' % path)
-        elif path.stat().st_size == 0:
-            errors.append('Required file is empty: %s' % path)
-    for output in (args.output, args.postprocess_output):
-        if output is None:
-            continue
-        parent = output.parent
-        while not parent.exists() and parent != parent.parent:
-            parent = parent.parent
-        if not parent.is_dir() or not os.access(parent, os.W_OK | os.X_OK):
-            errors.append('Cannot create output under: %s' % parent)
-        elif output.exists() and not os.access(output, os.W_OK):
-            errors.append('Existing output is not writable: %s' % output)
-        elif output.exists():
-            print('Existing output would be overwritten: %s' % output)
-
-    packages = ['numpy', 'pandas', 'torch', 'omegaconf', 'Bio', 'tqdm', 'pytorch_lightning', 'torchmetrics', 'wandb']
-    missing = []
-    for package in packages:
-        try:
-            available = importlib.util.find_spec(package) is not None
-        except (ImportError, ValueError):
-            available = False
-        if not available:
-            missing.append(package)
-    if missing:
-        errors.append('Python packages missing in this environment: %s' % ', '.join(missing))
-    for error in errors:
-        print('ERROR: %s' % error)
-    print('GPU availability, checkpoint/config compatibility and prediction success are not checked.')
-    print('Preflight checks: %s' % ('FAILED' if errors else 'OK'))
-    return 1 if errors else 0
-
-
 if __name__ == "__main__":
     args = parse_args()
-    if args.dry_run:
-        raise SystemExit(dry_run(args))
     import torch
     from omegaconf import OmegaConf
 
     if args.gpu is not None:
         torch.cuda.set_device(args.gpu)
         print('Selected GPU: cuda:%d (index among visible GPUs)' % args.gpu)
-    cfg = OmegaConf.load(str(SCRIPT_DIR / "local.yaml"))
-    cfg.platform.thermompnn_dir = str(SCRIPT_DIR)
+    cfg = OmegaConf.create({
+        'platform': {'accel': 'gpu', 'thermompnn_dir': str(args.thermompnn_dir)}
+    })
     if args.postprocess_output is not None:
         print('Postprocessing offset: %d' % args.offset)
     with torch.no_grad():

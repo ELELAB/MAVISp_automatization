@@ -1,3 +1,0 @@
-platform:
-  accel: "gpu"
-  thermompnn_dir: "__RUN_DIR__"
