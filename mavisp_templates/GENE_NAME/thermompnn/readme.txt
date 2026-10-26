@@ -1,6 +1,6 @@
 # Copy custom_inference_standalone.py and readme.txt from
 # mavisp_templates/GENE_NAME/thermompnn into the protein folder with the trimmed PDB.
-# Run from that folder on a GPU server (either bioinfo03 or bioinfor04).
+# Run from that folder on a GPU server (either bioinfo03 or bioinfo04).
 
 # Activate ThermoMPNN environment:
 conda activate /usr/local/envs/thermompnn
