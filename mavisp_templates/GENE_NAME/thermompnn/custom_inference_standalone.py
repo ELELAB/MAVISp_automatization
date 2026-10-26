@@ -1,25 +1,89 @@
+import argparse
 import os
 import sys
 from pathlib import Path
-
+import pandas as pd
+import torch
+from omegaconf import OmegaConf
 
 ALPHABET = 'ACDEFGHIKLMNPQRSTVWYX'
 
+def main():
+    parser = argparse.ArgumentParser(description='Run ThermoMPNN and write raw and MAVISp CSVs.')
+    parser.add_argument('--pdb', required=True, help='Trimmed input PDB to use for inference')
+    parser.add_argument(
+        '--thermompnn-dir', required=True, type=Path,
+        help='External model directory containing acessory files and model weights'
+    )
+    parser.add_argument(
+        '--chain', type=str, default='A',
+        choices=list('ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+        help='Chain in input PDB to use.'
+    )
+    parser.add_argument(
+        '--gpu', type=int, metavar='INDEX',
+        help='CUDA index among visible GPUs; omitted uses the current CUDA default'
+    )
+    parser.add_argument(
+        '--output', type=Path,
+        help='Raw CSV path (default: ThermoMPNN_inference_<pdb_id>.csv in the working directory)'
+    )
+    parser.add_argument(
+        '--postprocess-output', type=Path,
+        help='MAVISp CSV path (default: raw filename with _postprocessed.csv)'
+    )
+    parser.add_argument(
+        '--offset', type=int, required=True,
+        help='Residue number of the first position in the trimmed protein'
+    )
+    parser.add_argument(
+    '--model-path', '--model_path', type=str,
+    help='Path to a ThermoMPNN model file'
+    )
 
-def get_chains(pdb):
-  from Bio.PDB import PDBParser
+    args = parser.parse_args()
+    args.thermompnn_dir = args.thermompnn_dir.expanduser().resolve()
+    if not args.thermompnn_dir.is_dir():
+        parser.error(f'ThermoMPNN installation directory not found: {args.thermompnn_dir}')
+    if args.gpu is not None and args.gpu < 0:
+        parser.error('--gpu must be a non-negative CUDA device index')
+    if args.model_path is None:
+        args.model_path = args.thermompnn_dir / 'thermoMPNN_default.pt'
+    args.model_path = Path(args.model_path).expanduser().resolve()
+    if not args.model_path.is_file():
+        parser.error(f'ThermoMPNN model file not found: {args.model_path}')
+    args.pdb = str(Path(args.pdb).expanduser().resolve())
+    if not Path(args.pdb).is_file():
+        parser.error(f'Input PDB not found: {args.pdb}')
+    pdb_id = os.path.basename(args.pdb).rstrip('.pdb')
+    args.output = (args.output or Path(f'ThermoMPNN_inference_{pdb_id}.csv')).expanduser().resolve()
+    args.postprocess_output = (
+        args.postprocess_output or args.output.with_name(args.output.stem + '_postprocessed.csv')
+    ).expanduser().resolve()
+    if args.output == args.postprocess_output:
+        parser.error('Raw and postprocessed outputs must use different paths.')
+    protected_paths = {
+        Path(args.pdb), Path(args.model_path),
+        args.thermompnn_dir / 'vanilla_model_weights' / 'v_48_020.pt',
+        Path(__file__).resolve(),
+    }
+    for output in (args.output, args.postprocess_output):
+        if output in protected_paths:
+            parser.error('Output paths must not overwrite the input PDB, inference script or model weights.')
+        if output is not None and output.is_dir():
+            parser.error(f'Output path is a directory: {output}')
 
-  parser = PDBParser(QUIET=True)
-  structure = parser.get_structure('', pdb)
-  chains = [c.id for c in structure.get_chains()]
-  return chains
+    if args.gpu is not None:
+        torch.cuda.set_device(args.gpu)
+        print(f'Selected GPU: cuda:{args.gpu} (index among visible GPUs)')
+    cfg = OmegaConf.create({
+        'platform': {'accel': 'gpu', 'thermompnn_dir': str(args.thermompnn_dir)}
+    })
+    if args.postprocess_output is not None:
+        print(f'Postprocessing offset: {args.offset}')
 
-
-def main(cfg, args):
-    # Add the external installation before importing its helper modules.
+    # Add path to thermoMPNN model directory
     sys.path.append(str(args.thermompnn_dir))
-    import pandas as pd
-    from omegaconf import OmegaConf
     from datasets import Mutation
     from protein_mpnn_utils import alt_parse_PDB
     from thermompnn_benchmarking import get_trained_model
@@ -66,19 +130,16 @@ def main(cfg, args):
         model = model.eval()
         model = model.cuda()
         for dataset_name, dataset in datasets.items():
-            if len(args.chain) < 1:  # if unspecified, take first chain
-                chain = get_chains(input_pdb)[0]
-            else:
-                chain = args.chain
+            chain = args.chain
             mut_pdb = alt_parse_PDB(input_pdb, chain)
             if not mut_pdb[0]['seq']:
-                raise ValueError('No protein residues found for chain %s.' % chain)
+                raise ValueError(f'No protein residues found for chain {chain}.')
             if args.postprocess_output is not None:
                 try:
                     for number in mut_pdb[0]['resn_list']:
                         int(number)
                 except ValueError:
-                    raise ValueError('Residue insertion codes cannot be mapped with one offset.') from None
+                    raise ValueError('PDB residue numbers must be integers for postprocessing.') from None
             mutation_list = get_ssm_mutations(mut_pdb[0])
             final_mutation_list = []
 
@@ -110,109 +171,11 @@ def main(cfg, args):
                     raw_pred_df.loc[row, 'Dataset'] = dataset_name
                     row += 1
 
-    print(raw_pred_df)
-    output_path = args.output if args.output is not None else Path("ThermoMPNN_inference_%s.csv" % pdb_id)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path = args.output if args.output is not None else Path(f"ThermoMPNN_inference_{pdb_id}.csv")
     raw_pred_df.to_csv(output_path)
     if args.postprocess_output is not None:
-        args.postprocess_output.parent.mkdir(parents=True, exist_ok=True)
         postprocess(output_path, args.postprocess_output, args.offset)
 
-
-def parse_args(argv=None):
-    import argparse
-
-    parser = argparse.ArgumentParser(description='Run ThermoMPNN and write raw and MAVISp CSVs.')
-    parser.add_argument('--pdb', required=True, help='Trimmed input PDB to use for inference')
-    parser.add_argument(
-        '--thermompnn-dir', required=True, type=Path,
-        help='External installation containing helper modules, postprocessor and model weights'
-    )
-    parser.add_argument('--chain', type=str, default='A', help='Chain in input PDB to use.')
-    parser.add_argument(
-        '--gpu', type=int, metavar='INDEX',
-        help='CUDA index among visible GPUs; omitted uses the current CUDA default'
-    )
-    parser.add_argument(
-        '--output', type=Path,
-        help='Raw CSV path (default: ThermoMPNN_inference_<pdb_id>.csv in the working directory)'
-    )
-    processing_options = parser.add_mutually_exclusive_group()
-    processing_options.add_argument(
-        '--postprocess-output', type=Path,
-        help='MAVISp CSV path (default: raw filename with _postprocessed.csv)'
-    )
-    processing_options.add_argument(
-        '--raw-only', action='store_true', help='Write only the raw CSV and skip postprocessing'
-    )
-    parser.add_argument(
-        '--offset', type=int,
-        help='Starting residue added to zero-based positions; required unless --raw-only'
-    )
-    model_options = parser.add_mutually_exclusive_group()
-    model_options.add_argument(
-        '--model', choices=['default'], default='default',
-        help='Named ThermoMPNN model (default: default)'
-    )
-    model_options.add_argument(
-        '--model-path', '--model_path', type=str,
-        help='Path to a ThermoMPNN checkpoint instead of a named model'
-    )
-
-    args = parser.parse_args(argv)
-    args.thermompnn_dir = args.thermompnn_dir.expanduser().resolve()
-    if not args.thermompnn_dir.is_dir():
-        parser.error('ThermoMPNN installation directory not found: %s' % args.thermompnn_dir)
-    if args.gpu is not None and args.gpu < 0:
-        parser.error('--gpu must be a non-negative CUDA device index')
-    if args.model_path is None:
-        args.model_path = str(args.thermompnn_dir / 'thermoMPNN_default.pt')
-    args.model_path = str(Path(args.model_path).expanduser().resolve())
-    if not Path(args.model_path).is_file():
-        parser.error('ThermoMPNN checkpoint not found: %s' % args.model_path)
-    args.pdb = str(Path(args.pdb).expanduser().resolve())
-    if not Path(args.pdb).is_file():
-        parser.error('Input PDB not found: %s' % args.pdb)
-    pdb_id = os.path.basename(args.pdb).rstrip('.pdb')
-    args.output = (args.output or Path('ThermoMPNN_inference_%s.csv' % pdb_id)).expanduser().resolve()
-    if args.raw_only:
-        if args.offset is not None:
-            parser.error('--offset cannot be used with --raw-only')
-    else:
-        if args.offset is None:
-            parser.error('--offset is required for postprocessing; it is not inferred from the PDB filename')
-        if args.chain and len(args.chain) != 1:
-            parser.error('Postprocessing requires one selected PDB chain')
-        args.postprocess_output = (
-            args.postprocess_output or args.output.with_name(args.output.stem + '_postprocessed.csv')
-        ).expanduser().resolve()
-    if args.output == args.postprocess_output:
-        parser.error('Raw and postprocessed outputs must use different paths.')
-    protected_paths = {
-        Path(args.pdb), Path(args.model_path),
-        args.thermompnn_dir / 'vanilla_model_weights' / 'v_48_020.pt',
-        Path(__file__).resolve(),
-    }
-    for output in (args.output, args.postprocess_output):
-        if output in protected_paths:
-            parser.error('Output paths must not overwrite the input PDB, inference script or model weights.')
-        if output is not None and output.is_dir():
-            parser.error('Output path is a directory: %s' % output)
-    return args
-
-
 if __name__ == "__main__":
-    args = parse_args()
-    import torch
-    from omegaconf import OmegaConf
-
-    if args.gpu is not None:
-        torch.cuda.set_device(args.gpu)
-        print('Selected GPU: cuda:%d (index among visible GPUs)' % args.gpu)
-    cfg = OmegaConf.create({
-        'platform': {'accel': 'gpu', 'thermompnn_dir': str(args.thermompnn_dir)}
-    })
-    if args.postprocess_output is not None:
-        print('Postprocessing offset: %d' % args.offset)
     with torch.no_grad():
-        main(cfg, args)
+        main()
