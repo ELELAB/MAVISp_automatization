@@ -19,13 +19,11 @@ else
     echo "No AlphaMissense predictions found for ${upac}; trying transcript fallback"
 
     if [ -z "$enst" ]; then
-        echo "ERROR: no Ensembl transcript ID available for fallback"
-        exit 1
-    fi
-
-    if ! zgrep -P "${enst}" "$isoform_db" >> am.tsv; then
-        echo "ERROR: no AlphaMissense predictions found for transcript ${enst}"
-        exit 1
+        echo "WARNING: no Ensembl transcript ID available for fallback"
+    elif zgrep -P "${enst}" "$isoform_db" >> am.tsv; then
+        echo "AlphaMissense predictions found for transcript ${enst}"
+    else
+        echo "WARNING: no AlphaMissense predictions found for transcript ${enst}"
     fi
 fi
 
