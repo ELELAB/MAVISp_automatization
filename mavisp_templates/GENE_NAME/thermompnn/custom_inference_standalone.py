@@ -10,34 +10,34 @@ ALPHABET = 'ACDEFGHIKLMNPQRSTVWYX'
 
 def main():
     parser = argparse.ArgumentParser(description='Run ThermoMPNN and write raw and MAVISp CSVs.')
-    parser.add_argument('--pdb', required=True, help='Trimmed input PDB to use for inference')
+    parser.add_argument('-i','--pdb', required=True, help='Trimmed input PDB to use for inference')
     parser.add_argument(
-        '--thermompnn-dir', required=True, type=Path,
+        '-d','--thermompnn-dir', required=True, type=Path,
         help='External model directory containing acessory files and model weights'
     )
     parser.add_argument(
-        '--chain', type=str, default='A',
+        '-c','--chain', type=str, default='A',
         choices=list('ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
         help='Chain in input PDB to use.'
     )
     parser.add_argument(
-        '--gpu', type=int, metavar='INDEX',
+        '-g','--gpu', type=int, metavar='INDEX',
         help='CUDA index among visible GPUs; omitted uses the current CUDA default'
     )
     parser.add_argument(
-        '--output', type=Path,
+        '-o','--output', type=Path,
         help='Raw CSV path (default: ThermoMPNN_inference_<pdb_id>.csv in the working directory)'
     )
     parser.add_argument(
-        '--postprocess-output', type=Path,
+        '-p','--postprocess-output', type=Path,
         help='MAVISp CSV path (default: raw filename with _postprocessed.csv)'
     )
     parser.add_argument(
-        '--offset', type=int, required=True,
+        '-r','--offset', type=int, required=True,
         help='Residue number of the first position in the trimmed protein'
     )
     parser.add_argument(
-    '--model-path', '--model_path', type=str,
+    '-m','--model-path', '--model_path', type=str,
     help='Path to a ThermoMPNN model file'
     )
 

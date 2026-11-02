@@ -11,5 +11,8 @@ nvidia-smi
 # Run:
 tsp python custom_inference_standalone.py --pdb P60484_1-351.pdb --chain A --gpu 0 --thermompnn-dir /data/raw_data/computational_data/thermoMPNN_data/templates --offset 1
 
+# or with short flags:
+tsp python custom_inference_standalone.py -i P60484_1-351.pdb -c A -g 0 -d /data/raw_data/computational_data/thermoMPNN_data/templates -r 1 
+
 # --thermompnn-dir points to shared helper scripts and model weights.
 # Replace the PDB, chain, GPU and starting residue (--offset) for your input.
