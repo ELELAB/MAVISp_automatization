@@ -1,0 +1,6 @@
+thermompnn:
+    partition: main
+    gres: gpu:1
+    cpus_per_task: 1
+    output: "slurm_logs/slurm-%j.out"
+    error: "slurm_logs/slurm-%j.err"

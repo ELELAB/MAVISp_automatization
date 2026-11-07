@@ -15,6 +15,7 @@ MAVISp_automatization is a Snakemake pipeline that has been designed to automate
 - retrieval and aggregation of interaction information through two different databases,  
 - protein phosphorylation prediction,
 - RaSP calculation,
+- ThermoMPNN calculation,
 - classification of mutations occurring in protein sequence through different approaches,
 - identification of denovo phosphorylation sites upon mutation
 - early folding regions prediction
@@ -41,6 +42,7 @@ The pipeline requires the following programs:
 - cancermuts
 - pdbminer
 - rasp
+- ThermoMPNN
 - netphos
 - demask
 - RosettaDDGprediction
@@ -131,8 +133,15 @@ modules:
     rasp: 
         conda_activation: /usr/local/miniconda3/bin/activate
         rasp_conda_env: /usr/local/envs/RaSP_workflow
-        output_path_folder: /data/raw_data/computational_data/rasp_testing/
+        output_path_folder: /data/raw_data/computational_data/rasp_data/
         folder_name: rasp
+    thermompnn:
+        conda_activation: /usr/local/miniconda3/bin/activate
+        thermompnn_conda_env: /usr/local/envs/thermompnn
+        output_path_folder: /data/raw_data/computational_data/thermoMPNN_data/
+        template_folder: mavisp_templates/GENE_NAME/thermompnn
+        thermompnn_dir: /data/raw_data/computational_data/thermoMPNN_data/templates/
+        folder_name: thermompnn
     rosetta_relax:
         rosetta_env: /usr/local/envs/rosettaddgprediction/bin/activate
         rosetta_module: /usr/local/rosetta-2022.11/
@@ -141,6 +150,8 @@ modules:
     efoldmine:
         environment: set +eu && . /usr/local/envs/efoldmine/bin/activate && set -eu
 ```
+
+The ThermoMPNN `thermompnn_dir` contains the shared helper scripts and model weights.
 
 Before running the pipeline, please ensure that you customize the configuration file by providing the correct paths for the environment, databases and the location of the cancermuts script template.
 N.B the field ELM_connections_per_run specifiy the number of cancermuts run that can be run in parallell. It's essential to query ELM database once at time, for this reason the parameter needs to be set 1. 
@@ -191,6 +202,8 @@ Notice that when using the `idps` target rule, the PDB file always needs to be s
 
 - **Rasp calculation on trimmed models**: The trimmed models obtained in the previous step are provided to the Rasp workflow to obtain stability effect predictions for every possible 
   mutation at each sequence position. The output is stored in the same folder as the "rasp_data" Snakefile.
+
+- **ThermoMPNN calculation on trimmed models**: The `all` and `essentials` workflows run ThermoMPNN on each trimmed model. The current inference script requires an NVIDIA GPU with CUDA and has no CPU fallback. Raw and postprocessed CSVs are stored under `modules.thermompnn.output_path_folder`; `collect_outputs` also collects the postprocessed predictions in one CSV under `simple_mode/stability/.../thermompnn/`.
 
 - **Protein phosphorylation predictions using NetPhos**: The NetPhos software is used to predict phosphorylatable residues in the protein sequence, along with the corresponding kinases 
   responsible for the phosphorylation and their associated confidence scores. The output is stored in the "netphos" folder.
@@ -396,6 +409,8 @@ BLM
 
 ## Usage
 
+The commands below run Snakemake locally. The `all` and `essentials` targets require a GPU on that server. To let Snakemake submit ThermoMPNN to a GPU node, use the [SLURM command](#slurm) from bioinfo01.
+
 In order to run the pipeline (see example folder):
 
 ```
@@ -437,3 +452,29 @@ module load python/3.10
 
 snakemake -c 1 essentials_idps
 ```
+
+### SLURM
+
+Start Snakemake from `example/standard` on bioinfo01 using Snakemake 7.32.4.
+Snakemake submits `thermompnn` to SLURM, which runs it on a GPU node.
+The other rules run locally on bioinfo01.
+
+```bash
+mkdir -p slurm_logs
+
+snakemake \
+    --snakefile ../../Snakefile \
+    --cluster-config ../../config_slurm.yaml \
+    --cluster "sbatch --parsable --partition={cluster.partition} --gres={cluster.gres} --cpus-per-task={cluster.cpus_per_task} --output={cluster.output} --error={cluster.error}" \
+    --cluster-cancel scancel \
+    --jobs 1 \
+    --cores 1 \
+    --local-cores 1 \
+    --printshellcmds \
+    all
+```
+
+Job logs are written to `slurm_logs/`.
+For `example/essentials`, run the same command from that directory with `essentials` as the final target.
+To queue the Snakemake command with Task Spooler, prefix it with `tsp -N 1`.
+Keep all Snakemake options, including `--cluster-config` and `--cluster`.
