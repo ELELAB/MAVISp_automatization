@@ -1411,6 +1411,7 @@ rule rasp_workflow:
         # Activate conda environment
         set +u; source {config[modules][rasp][conda_activation]}
         conda activate {config[modules][rasp][rasp_conda_env]}; set -u
+        export PATH="{config[modules][rasp][rasp_conda_env]}/bin:$PATH"
 
         # Run RaSP workflow
         RaSP_workflow -i $processed_pdb \
@@ -1699,6 +1700,10 @@ rule collect_outputs:
             f"{rasp_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/"
             f"{wcs.structure_source}_{resrange}/{wcs.model}_model"
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
+        structure_thermompnn=lambda wcs: [
+            f"{thermompnn_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/"
+            f"{wcs.structure_source}_{resrange}/{wcs.model}_model"
+            for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
         structure_foldx5=lambda wcs: [
             f"{mutatex_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/"
             f"mutatex_runs/{wcs.structure_source}_{resrange}/model_{wcs.model}/"
@@ -1822,6 +1827,22 @@ rule collect_outputs:
         with open(rasp_out, "w") as fout:
             header_written = False
             for fp in rasp_files:
+                lines = fp.read_text().splitlines(keepends=True)
+                if not header_written:
+                    fout.write(lines[0])
+                    header_written = True
+                fout.writelines(lines[1:])
+
+        # ThermoMPNN predictions
+        thermompnn_out = base / "thermompnn" / (
+            f"ThermoMPNN_inference_{wildcards.uniprot_ac}_{merged_range}_postprocessed.csv")
+        thermompnn_out.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(thermompnn_out, "w") as fout:
+            header_written = False
+            for r in input.structure_thermompnn:
+                resrange = Path(r).parent.name.split('_', 1)[1]
+                fp = Path(r) / f"ThermoMPNN_inference_{wildcards.uniprot_ac}_{resrange}_postprocessed.csv"
                 lines = fp.read_text().splitlines(keepends=True)
                 if not header_written:
                     fout.write(lines[0])
