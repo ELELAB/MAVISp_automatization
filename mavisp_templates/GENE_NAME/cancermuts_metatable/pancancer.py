@@ -25,7 +25,7 @@ up = UniProt()
 
 # get the sequence for the protein
 if args.isoform:
-    seq = up.get_sequence(args.prt, isoform=args.isoform)
+    seq = up.get_sequence(args.prt, upid=args.uniprotID, isoform=args.isoform)
     # confirm non-canonical status
     print("Is the sequence canonical?", seq.is_canonical)
 else:
