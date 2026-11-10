@@ -1,29 +1,29 @@
-core.init: (0) [2026- 7- 3 14:13:18:] Checking for fconfig files in pwd and ./rosetta/flags 
-core.init: (0) [2026- 7- 3 14:13:18:] Rosetta version information
-core.init: (0) [2026- 7- 3 14:13:18:] Package:                 rosetta.source.release-314
-core.init: (0) [2026- 7- 3 14:13:18:] Testing Server Revision: 314
-core.init: (0) [2026- 7- 3 14:13:18:] PEP-440 Version:         2022.11+release.512e589
-core.init: (0) [2026- 7- 3 14:13:18:] Git Commit:              512e58946eaed9de20d65cdeea465e7690dc9e9a
-core.init: (0) [2026- 7- 3 14:13:18:] URL:                     https://www.rosettacommons.org
-core.init: (0) [2026- 7- 3 14:13:18:] Date:                    2022-03-14T17:54:23.772418
-core.init: (0) [2026- 7- 3 14:13:18:] command: /usr/local/rosetta-2022.11/main/source/bin/rosetta_scripts.mpi.linuxgccrelease @ /data/user/teo/devel/MAVISp_automatization/example/essentials/rosetta_data/tf/CRX/free/AFDB_36-104/v3_model/ref2015_cartesian2020/relax/flags.txt
-basic.random.init_random_generator: (0) [2026- 7- 3 14:13:18:] 'RNG device' seed mode, using '/dev/urandom', seed=-1573966629 seed_offset=0 real_seed=-1573966629
-basic.random.init_random_generator: (0) [2026- 7- 3 14:13:18:] RandomGenerator:init: Normal mode, seed=-1573966629 RG_type=mt19937
-core.init: (0) [2026- 7- 3 14:13:18:] Resolved executable path: /usr/local/rosetta-2022.11/main/source/build/src/release/linux/5.15/64/x86/gcc/11/mpi/rosetta_scripts.mpi.linuxgccrelease
-core.init: (0) [2026- 7- 3 14:13:18:] Looking for database based on location of executable: /usr/local/rosetta-2022.11/main/database/
-protocols.jd2.PDBJobInputter: (0) [2026- 7- 3 14:13:18:] Instantiate PDBJobInputter
-protocols.jd2.PDBJobInputter: (0) [2026- 7- 3 14:13:18:] PDBJobInputter::fill_jobs
-protocols.jd2.PDBJobInputter: (0) [2026- 7- 3 14:13:18:] pushed /data/user/teo/devel/MAVISp_automatization/example/essentials/rosetta_data/tf/CRX/free/AFDB_36-104/v3_model/ref2015_cartesian2020/O43186_36-104.pdb nstruct index 1
-protocols.evaluation.ChiWellRmsdEvaluatorCreator: (0) [2026- 7- 3 14:13:18:] Evaluation Creator active ... 
-protocols.jd2.PDBJobInputter: (0) [2026- 7- 3 14:13:18:] PDBJobInputter::pose_from_job
-protocols.jd2.PDBJobInputter: (0) [2026- 7- 3 14:13:18:] filling pose from PDB /data/user/teo/devel/MAVISp_automatization/example/essentials/rosetta_data/tf/CRX/free/AFDB_36-104/v3_model/ref2015_cartesian2020/O43186_36-104.pdb
-core.chemical.GlobalResidueTypeSet: (0) [2026- 7- 3 14:13:34:] Finished initializing fa_standard residue type set.  Created 983 residue types
-core.chemical.GlobalResidueTypeSet: (0) [2026- 7- 3 14:13:34:] Total time to initialize 1.16583 seconds.
-core.import_pose.import_pose: (0) [2026- 7- 3 14:13:34:] File '/data/user/teo/devel/MAVISp_automatization/example/essentials/rosetta_data/tf/CRX/free/AFDB_36-104/v3_model/ref2015_cartesian2020/O43186_36-104.pdb' automatically determined to be of type PDB
-core.conformation.Conformation: (0) [2026- 7- 3 14:13:34:] [ WARNING ] missing heavyatom:  OXT on residue GLN:CtermProteinFull 69
-protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026- 7- 3 14:13:34:] dock_design_filename=/home/teo/.cache/Python-Eggs/RosettaDDGPrediction-0.0.1-py3.10.egg-tmp/RosettaDDGPrediction/RosettaScripts/Cartddg2020_relax.xml
-protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026- 7- 3 14:13:34:] Variable substitution will occur with the following values: '%%repeats%%'='4';  '%%scfname%%'='ref2015_cart';  
-protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026- 7- 3 14:13:34:] Substituted script:
+core.init: (0) [2026-11- 9 15:38:50:] Checking for fconfig files in pwd and ./rosetta/flags 
+core.init: (0) [2026-11- 9 15:38:50:] Rosetta version information
+core.init: (0) [2026-11- 9 15:38:50:] Package:                 rosetta.source.release-314
+core.init: (0) [2026-11- 9 15:38:50:] Testing Server Revision: 314
+core.init: (0) [2026-11- 9 15:38:50:] PEP-440 Version:         2022.11+release.512e589
+core.init: (0) [2026-11- 9 15:38:50:] Git Commit:              512e58946eaed9de20d65cdeea465e7690dc9e9a
+core.init: (0) [2026-11- 9 15:38:50:] URL:                     https://www.rosettacommons.org
+core.init: (0) [2026-11- 9 15:38:50:] Date:                    2022-03-14T17:54:23.772418
+core.init: (0) [2026-11- 9 15:38:50:] command: /usr/local/rosetta-2022.11/main/source/bin/rosetta_scripts.mpi.linuxgccrelease @ /data/user/teo/devel/MAVISp_automatization/example/essentials/rosetta_data/tf/CRX/free/AFDB_36-104/v3_model/ref2015_cartesian2020/relax/flags.txt
+basic.random.init_random_generator: (0) [2026-11- 9 15:38:50:] 'RNG device' seed mode, using '/dev/urandom', seed=1344877771 seed_offset=0 real_seed=1344877771
+basic.random.init_random_generator: (0) [2026-11- 9 15:38:50:] RandomGenerator:init: Normal mode, seed=1344877771 RG_type=mt19937
+core.init: (0) [2026-11- 9 15:38:50:] Resolved executable path: /usr/local/rosetta-2022.11/main/source/build/src/release/linux/5.15/64/x86/gcc/11/mpi/rosetta_scripts.mpi.linuxgccrelease
+core.init: (0) [2026-11- 9 15:38:50:] Looking for database based on location of executable: /usr/local/rosetta-2022.11/main/database/
+protocols.jd2.PDBJobInputter: (0) [2026-11- 9 15:38:50:] Instantiate PDBJobInputter
+protocols.jd2.PDBJobInputter: (0) [2026-11- 9 15:38:50:] PDBJobInputter::fill_jobs
+protocols.jd2.PDBJobInputter: (0) [2026-11- 9 15:38:50:] pushed /data/user/teo/devel/MAVISp_automatization/example/essentials/rosetta_data/tf/CRX/free/AFDB_36-104/v3_model/ref2015_cartesian2020/O43186_36-104.pdb nstruct index 1
+protocols.evaluation.ChiWellRmsdEvaluatorCreator: (0) [2026-11- 9 15:38:50:] Evaluation Creator active ... 
+protocols.jd2.PDBJobInputter: (0) [2026-11- 9 15:38:50:] PDBJobInputter::pose_from_job
+protocols.jd2.PDBJobInputter: (0) [2026-11- 9 15:38:50:] filling pose from PDB /data/user/teo/devel/MAVISp_automatization/example/essentials/rosetta_data/tf/CRX/free/AFDB_36-104/v3_model/ref2015_cartesian2020/O43186_36-104.pdb
+core.chemical.GlobalResidueTypeSet: (0) [2026-11- 9 15:38:51:] Finished initializing fa_standard residue type set.  Created 983 residue types
+core.chemical.GlobalResidueTypeSet: (0) [2026-11- 9 15:38:51:] Total time to initialize 1.00138 seconds.
+core.import_pose.import_pose: (0) [2026-11- 9 15:38:51:] File '/data/user/teo/devel/MAVISp_automatization/example/essentials/rosetta_data/tf/CRX/free/AFDB_36-104/v3_model/ref2015_cartesian2020/O43186_36-104.pdb' automatically determined to be of type PDB
+core.conformation.Conformation: (0) [2026-11- 9 15:38:51:] [ WARNING ] missing heavyatom:  OXT on residue GLN:CtermProteinFull 69
+protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026-11- 9 15:38:51:] dock_design_filename=/home/teo/.cache/Python-Eggs/RosettaDDGPrediction-0.0.1-py3.10.egg-tmp/RosettaDDGPrediction/RosettaScripts/Cartddg2020_relax.xml
+protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026-11- 9 15:38:51:] Variable substitution will occur with the following values: '%%repeats%%'='4';  '%%scfname%%'='ref2015_cart';  
+protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026-11- 9 15:38:51:] Substituted script:
 <ROSETTASCRIPTS>
     <SCOREFXNS>
         <ScoreFunction name="fullatom" weights="ref2015_cart" symmetric="0">
@@ -38,375 +38,375 @@ protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026- 7- 3 14:13:34:] Subst
     <OUTPUT scorefxn="fullatom"/>
  
 </ROSETTASCRIPTS>
-protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026- 7- 3 14:13:34:] Validating input script...
-protocols.rosetta_scripts.RosettaScriptsSchemaValidator: (0) [2026- 7- 3 14:13:34:] Generating XML Schema for rosetta_scripts...
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:34:] SCOREFUNCTION: ref2015
-core.scoring.etable: (0) [2026- 7- 3 14:13:34:] Starting energy table calculation
-core.scoring.etable: (0) [2026- 7- 3 14:13:34:] smooth_etable: changing atr/rep split to bottom of energy well
-core.scoring.etable: (0) [2026- 7- 3 14:13:34:] smooth_etable: spline smoothing lj etables (maxdis = 6)
-core.scoring.etable: (0) [2026- 7- 3 14:13:34:] smooth_etable: spline smoothing solvation etables (max_dis = 6)
-core.scoring.etable: (0) [2026- 7- 3 14:13:35:] Finished calculating energy tables.
-basic.io.database: (0) [2026- 7- 3 14:13:35:] Database file opened: scoring/score_functions/hbonds/ref2015_params/HBPoly1D.csv
-basic.io.database: (0) [2026- 7- 3 14:13:35:] Database file opened: scoring/score_functions/hbonds/ref2015_params/HBFadeIntervals.csv
-basic.io.database: (0) [2026- 7- 3 14:13:35:] Database file opened: scoring/score_functions/hbonds/ref2015_params/HBEval.csv
-basic.io.database: (0) [2026- 7- 3 14:13:35:] Database file opened: scoring/score_functions/hbonds/ref2015_params/DonStrength.csv
-basic.io.database: (0) [2026- 7- 3 14:13:35:] Database file opened: scoring/score_functions/hbonds/ref2015_params/AccStrength.csv
-basic.io.database: (0) [2026- 7- 3 14:13:35:] Database file opened: scoring/score_functions/rama/fd/all.ramaProb
-basic.io.database: (0) [2026- 7- 3 14:13:36:] Database file opened: scoring/score_functions/rama/fd/prepro.ramaProb
-basic.io.database: (0) [2026- 7- 3 14:13:36:] Database file opened: scoring/score_functions/omega/omega_ppdep.all.txt
-basic.io.database: (0) [2026- 7- 3 14:13:36:] Database file opened: scoring/score_functions/omega/omega_ppdep.gly.txt
-basic.io.database: (0) [2026- 7- 3 14:13:36:] Database file opened: scoring/score_functions/omega/omega_ppdep.pro.txt
-basic.io.database: (0) [2026- 7- 3 14:13:36:] Database file opened: scoring/score_functions/omega/omega_ppdep.valile.txt
-basic.io.database: (0) [2026- 7- 3 14:13:36:] Database file opened: scoring/score_functions/P_AA_pp/P_AA
-basic.io.database: (0) [2026- 7- 3 14:13:36:] Database file opened: scoring/score_functions/P_AA_pp/P_AA_n
-core.scoring.P_AA: (0) [2026- 7- 3 14:13:37:] shapovalov_lib::shap_p_aa_pp_smooth_level of 1( aka low_smooth ) got activated.
-basic.io.database: (0) [2026- 7- 3 14:13:37:] Database file opened: scoring/score_functions/P_AA_pp/shapovalov/10deg/kappa131/a20.prop
-core.select.residue_selector.LayerSelector: (0) [2026- 7- 3 14:13:37:] Setting LayerSelector to use sidechain neighbors to determine burial.
-core.select.residue_selector.LayerSelector: (0) [2026- 7- 3 14:13:37:] Set cutoffs for core and surface to 5.2 and 2, respectively, in LayerSelector.
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:37:] SCOREFUNCTION: ref2015
-core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026- 7- 3 14:13:37:] Skipping corrections:shapovalov_lib:shap_dun10_smooth_level
-core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026- 7- 3 14:13:37:] Skipping corrections:shapovalov_lib:shap_dun10_dir
-core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026- 7- 3 14:13:37:] Skipping corrections:shapovalov_lib:shap_rama_smooth_level
-core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026- 7- 3 14:13:37:] Skipping corrections:shapovalov_lib:shap_rama_map
-core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026- 7- 3 14:13:37:] Skipping corrections:shapovalov_lib:shap_p_aa_pp_smooth_level
-core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026- 7- 3 14:13:37:] Skipping corrections:shapovalov_lib:shap_p_aa_pp
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:37:] SCOREFUNCTION: ref2015
-protocols.task_operations.ConservativeDesignOperation: (0) [2026- 7- 3 14:13:37:] Loading conservative mutational data 
-protocols.task_operations.ConservativeDesignOperation: (0) [2026- 7- 3 14:13:37:] Loading conservative mutational data 
-basic.io.database: (0) [2026- 7- 3 14:13:37:] Database file opened: scoring/score_functions/EnvPairPotential/env_log.txt
-basic.io.database: (0) [2026- 7- 3 14:13:37:] Database file opened: scoring/score_functions/EnvPairPotential/cbeta_den.txt
-basic.io.database: (0) [2026- 7- 3 14:13:37:] Database file opened: scoring/score_functions/EnvPairPotential/pair_log.txt
-basic.io.database: (0) [2026- 7- 3 14:13:38:] Database file opened: scoring/score_functions/EnvPairPotential/cenpack_log.txt
-basic.io.database: (0) [2026- 7- 3 14:13:38:] Database file opened: scoring/score_functions/SecondaryStructurePotential/phi.theta.36.HS.resmooth
-basic.io.database: (0) [2026- 7- 3 14:13:38:] Database file opened: scoring/score_functions/SecondaryStructurePotential/phi.theta.36.SS.resmooth
-basic.io.database: (0) [2026- 7- 3 14:13:38:] Database file opened: scoring/score_functions/InterchainPotential/interchain_env_log.txt
-basic.io.database: (0) [2026- 7- 3 14:13:38:] Database file opened: scoring/score_functions/InterchainPotential/interchain_pair_log.txt
-protocols.simple_moves.BBGaussianMover: (0) [2026- 7- 3 14:13:38:] Final factorA=1
-basic.io.database: (0) [2026- 7- 3 14:13:38:] Database file opened: scoring/score_functions/PairEPotential/pdb_pair_stats_fine
-core.scoring.ramachandran: (0) [2026- 7- 3 14:13:39:] shapovalov_lib::shap_rama_smooth_level of 4( aka highest_smooth ) got activated.
-basic.io.database: (0) [2026- 7- 3 14:13:39:] Database file opened: scoring/score_functions/rama/shapovalov/kappa25/all.ramaProb
-core.scoring.etable: (0) [2026- 7- 3 14:13:39:] Starting energy table calculation
-core.scoring.etable: (0) [2026- 7- 3 14:13:39:] smooth_etable: changing atr/rep split to bottom of energy well
-core.scoring.etable: (0) [2026- 7- 3 14:13:39:] smooth_etable: spline smoothing lj etables (maxdis = 6)
-core.scoring.etable: (0) [2026- 7- 3 14:13:39:] smooth_etable: spline smoothing solvation etables (max_dis = 6)
-core.scoring.etable: (0) [2026- 7- 3 14:13:40:] Finished calculating energy tables.
-core.mm.MMBondAngleLibrary: (0) [2026- 7- 3 14:13:40:] MM bond angle sets added fully assigned: 604; wildcard: 0 and 1 virtual parameter.
-core.pack.dunbrack.RotamerLibrary: (0) [2026- 7- 3 14:13:40:] shapovalov_lib_fixes_enable option is true.
-core.pack.dunbrack.RotamerLibrary: (0) [2026- 7- 3 14:13:40:] shapovalov_lib::shap_dun10_smooth_level of 1( aka lowest_smooth ) got activated.
-core.pack.dunbrack.RotamerLibrary: (0) [2026- 7- 3 14:13:40:] Binary rotamer library selected: /usr/local/rosetta-2022.11/main/database/rotamer/shapovalov/StpDwn_0-0-0/Dunbrack10.lib.bin
-core.pack.dunbrack.RotamerLibrary: (0) [2026- 7- 3 14:13:40:] Using Dunbrack library binary file '/usr/local/rosetta-2022.11/main/database/rotamer/shapovalov/StpDwn_0-0-0/Dunbrack10.lib.bin'.
-core.pack.dunbrack.RotamerLibrary: (0) [2026- 7- 3 14:13:43:] Dunbrack 2010 library took 0.328316 seconds to load from binary
-basic.io.database: (0) [2026- 7- 3 14:13:43:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
-basic.io.database: (0) [2026- 7- 3 14:13:43:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
-basic.io.database: (0) [2026- 7- 3 14:13:44:] Database file opened: scoring/score_functions/centroid_smooth/cen_smooth_params.txt
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:44:] Initializing IdealParametersDatabase with default Ks=300 , 80 , 80 , 10 , 80
-basic.io.database: (0) [2026- 7- 3 14:13:44:] Database file opened: scoring/score_functions/bondlength_bondangle/default-lengths.txt
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:44:] Read 759 bb-independent lengths.
-basic.io.database: (0) [2026- 7- 3 14:13:44:] Database file opened: scoring/score_functions/bondlength_bondangle/default-angles.txt
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:44:] Read 1434 bb-independent angles.
-basic.io.database: (0) [2026- 7- 3 14:13:44:] Database file opened: scoring/score_functions/bondlength_bondangle/default-torsions.txt
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:44:] Read 1 bb-independent torsions.
-basic.io.database: (0) [2026- 7- 3 14:13:44:] Database file opened: scoring/score_functions/bondlength_bondangle/default-improper.txt
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:44:] Read 529 bb-independent improper tors.
-basic.io.database: (0) [2026- 7- 3 14:13:44:] Database file opened: sampling/branch_angle/branch_angle_1.txt
-basic.io.database: (0) [2026- 7- 3 14:13:45:] Database file opened: sampling/branch_angle/branch_angle_2.txt
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-protocols.carbohydrates.CreateGlycanSequonMover: (0) [2026- 7- 3 14:13:45:] Sequons created 
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-protocols.docking.DockingInitialPerturbation: (0) [2026- 7- 3 14:13:45:] Reading options...
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-protocols.docking.DockingInitialPerturbation: (0) [2026- 7- 3 14:13:45:] Reading options...
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:45:] SCOREFUNCTION: ref2015
-core.scoring.etable: (0) [2026- 7- 3 14:13:45:] Starting energy table calculation
-core.scoring.etable: (0) [2026- 7- 3 14:13:45:] smooth_etable: changing atr/rep split to bottom of energy well
-core.scoring.etable: (0) [2026- 7- 3 14:13:45:] smooth_etable: spline smoothing lj etables (maxdis = 6)
-core.scoring.etable: (0) [2026- 7- 3 14:13:45:] smooth_etable: spline smoothing solvation etables (max_dis = 6)
-core.scoring.etable: (0) [2026- 7- 3 14:13:46:] Finished calculating energy tables.
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:48:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:48:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:48:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:48:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:48:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunction: (0) [2026- 7- 3 14:13:48:] ATOM_VDW set to CENTROID_ROT_MIN
-basic.io.database: (0) [2026- 7- 3 14:13:48:] Database file opened: scoring/score_functions/centroid_smooth/cen_rot_pair_params.txt
-basic.io.database: (0) [2026- 7- 3 14:13:48:] Database file opened: scoring/score_functions/centroid_smooth/cen_rot_env_params.txt
-basic.io.database: (0) [2026- 7- 3 14:13:48:] Database file opened: scoring/score_functions/centroid_smooth/cen_rot_cbeta_params.txt
-basic.io.database: (0) [2026- 7- 3 14:13:48:] Database file opened: scoring/score_functions/centroid_smooth/cen_rot_pair_ang_params.txt
-core.scoring.AtomVDW: (0) [2026- 7- 3 14:13:49:] Openning alternative vdw file: /usr/local/rosetta-2022.11/main/database/chemical/atom_type_sets/centroid_rot//min.txt
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-protocols.glycan_docking.GlycanDockProtocol: (0) [2026- 7- 3 14:13:49:] Clearing counters
+protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026-11- 9 15:38:51:] Validating input script...
+protocols.rosetta_scripts.RosettaScriptsSchemaValidator: (0) [2026-11- 9 15:38:51:] Generating XML Schema for rosetta_scripts...
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:51:] SCOREFUNCTION: ref2015
+core.scoring.etable: (0) [2026-11- 9 15:38:51:] Starting energy table calculation
+core.scoring.etable: (0) [2026-11- 9 15:38:52:] smooth_etable: changing atr/rep split to bottom of energy well
+core.scoring.etable: (0) [2026-11- 9 15:38:52:] smooth_etable: spline smoothing lj etables (maxdis = 6)
+core.scoring.etable: (0) [2026-11- 9 15:38:52:] smooth_etable: spline smoothing solvation etables (max_dis = 6)
+core.scoring.etable: (0) [2026-11- 9 15:38:52:] Finished calculating energy tables.
+basic.io.database: (0) [2026-11- 9 15:38:52:] Database file opened: scoring/score_functions/hbonds/ref2015_params/HBPoly1D.csv
+basic.io.database: (0) [2026-11- 9 15:38:52:] Database file opened: scoring/score_functions/hbonds/ref2015_params/HBFadeIntervals.csv
+basic.io.database: (0) [2026-11- 9 15:38:52:] Database file opened: scoring/score_functions/hbonds/ref2015_params/HBEval.csv
+basic.io.database: (0) [2026-11- 9 15:38:52:] Database file opened: scoring/score_functions/hbonds/ref2015_params/DonStrength.csv
+basic.io.database: (0) [2026-11- 9 15:38:52:] Database file opened: scoring/score_functions/hbonds/ref2015_params/AccStrength.csv
+basic.io.database: (0) [2026-11- 9 15:38:52:] Database file opened: scoring/score_functions/rama/fd/all.ramaProb
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/rama/fd/prepro.ramaProb
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/omega/omega_ppdep.all.txt
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/omega/omega_ppdep.gly.txt
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/omega/omega_ppdep.pro.txt
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/omega/omega_ppdep.valile.txt
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/P_AA_pp/P_AA
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/P_AA_pp/P_AA_n
+core.scoring.P_AA: (0) [2026-11- 9 15:38:53:] shapovalov_lib::shap_p_aa_pp_smooth_level of 1( aka low_smooth ) got activated.
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/P_AA_pp/shapovalov/10deg/kappa131/a20.prop
+core.select.residue_selector.LayerSelector: (0) [2026-11- 9 15:38:53:] Setting LayerSelector to use sidechain neighbors to determine burial.
+core.select.residue_selector.LayerSelector: (0) [2026-11- 9 15:38:53:] Set cutoffs for core and surface to 5.2 and 2, respectively, in LayerSelector.
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:53:] SCOREFUNCTION: ref2015
+core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026-11- 9 15:38:53:] Skipping corrections:shapovalov_lib:shap_dun10_smooth_level
+core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026-11- 9 15:38:53:] Skipping corrections:shapovalov_lib:shap_dun10_dir
+core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026-11- 9 15:38:53:] Skipping corrections:shapovalov_lib:shap_rama_smooth_level
+core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026-11- 9 15:38:53:] Skipping corrections:shapovalov_lib:shap_rama_map
+core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026-11- 9 15:38:53:] Skipping corrections:shapovalov_lib:shap_p_aa_pp_smooth_level
+core.simple_metrics.composite_metrics.ProtocolSettingsMetric: (0) [2026-11- 9 15:38:53:] Skipping corrections:shapovalov_lib:shap_p_aa_pp
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:53:] SCOREFUNCTION: ref2015
+protocols.task_operations.ConservativeDesignOperation: (0) [2026-11- 9 15:38:53:] Loading conservative mutational data 
+protocols.task_operations.ConservativeDesignOperation: (0) [2026-11- 9 15:38:53:] Loading conservative mutational data 
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/EnvPairPotential/env_log.txt
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/EnvPairPotential/cbeta_den.txt
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/EnvPairPotential/pair_log.txt
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/EnvPairPotential/cenpack_log.txt
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/SecondaryStructurePotential/phi.theta.36.HS.resmooth
+basic.io.database: (0) [2026-11- 9 15:38:53:] Database file opened: scoring/score_functions/SecondaryStructurePotential/phi.theta.36.SS.resmooth
+basic.io.database: (0) [2026-11- 9 15:38:54:] Database file opened: scoring/score_functions/InterchainPotential/interchain_env_log.txt
+basic.io.database: (0) [2026-11- 9 15:38:54:] Database file opened: scoring/score_functions/InterchainPotential/interchain_pair_log.txt
+protocols.simple_moves.BBGaussianMover: (0) [2026-11- 9 15:38:54:] Final factorA=1
+basic.io.database: (0) [2026-11- 9 15:38:54:] Database file opened: scoring/score_functions/PairEPotential/pdb_pair_stats_fine
+core.scoring.ramachandran: (0) [2026-11- 9 15:38:54:] shapovalov_lib::shap_rama_smooth_level of 4( aka highest_smooth ) got activated.
+basic.io.database: (0) [2026-11- 9 15:38:54:] Database file opened: scoring/score_functions/rama/shapovalov/kappa25/all.ramaProb
+core.scoring.etable: (0) [2026-11- 9 15:38:54:] Starting energy table calculation
+core.scoring.etable: (0) [2026-11- 9 15:38:54:] smooth_etable: changing atr/rep split to bottom of energy well
+core.scoring.etable: (0) [2026-11- 9 15:38:54:] smooth_etable: spline smoothing lj etables (maxdis = 6)
+core.scoring.etable: (0) [2026-11- 9 15:38:54:] smooth_etable: spline smoothing solvation etables (max_dis = 6)
+core.scoring.etable: (0) [2026-11- 9 15:38:54:] Finished calculating energy tables.
+core.mm.MMBondAngleLibrary: (0) [2026-11- 9 15:38:54:] MM bond angle sets added fully assigned: 604; wildcard: 0 and 1 virtual parameter.
+core.pack.dunbrack.RotamerLibrary: (0) [2026-11- 9 15:38:54:] shapovalov_lib_fixes_enable option is true.
+core.pack.dunbrack.RotamerLibrary: (0) [2026-11- 9 15:38:54:] shapovalov_lib::shap_dun10_smooth_level of 1( aka lowest_smooth ) got activated.
+core.pack.dunbrack.RotamerLibrary: (0) [2026-11- 9 15:38:54:] Binary rotamer library selected: /usr/local/rosetta-2022.11/main/database/rotamer/shapovalov/StpDwn_0-0-0/Dunbrack10.lib.bin
+core.pack.dunbrack.RotamerLibrary: (0) [2026-11- 9 15:38:54:] Using Dunbrack library binary file '/usr/local/rosetta-2022.11/main/database/rotamer/shapovalov/StpDwn_0-0-0/Dunbrack10.lib.bin'.
+core.pack.dunbrack.RotamerLibrary: (0) [2026-11- 9 15:38:55:] Dunbrack 2010 library took 0.264396 seconds to load from binary
+basic.io.database: (0) [2026-11- 9 15:38:55:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
+basic.io.database: (0) [2026-11- 9 15:38:55:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
+basic.io.database: (0) [2026-11- 9 15:38:55:] Database file opened: scoring/score_functions/centroid_smooth/cen_smooth_params.txt
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:38:55:] Initializing IdealParametersDatabase with default Ks=300 , 80 , 80 , 10 , 80
+basic.io.database: (0) [2026-11- 9 15:38:55:] Database file opened: scoring/score_functions/bondlength_bondangle/default-lengths.txt
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:38:55:] Read 759 bb-independent lengths.
+basic.io.database: (0) [2026-11- 9 15:38:55:] Database file opened: scoring/score_functions/bondlength_bondangle/default-angles.txt
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:38:55:] Read 1434 bb-independent angles.
+basic.io.database: (0) [2026-11- 9 15:38:55:] Database file opened: scoring/score_functions/bondlength_bondangle/default-torsions.txt
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:38:55:] Read 1 bb-independent torsions.
+basic.io.database: (0) [2026-11- 9 15:38:55:] Database file opened: scoring/score_functions/bondlength_bondangle/default-improper.txt
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:38:55:] Read 529 bb-independent improper tors.
+basic.io.database: (0) [2026-11- 9 15:38:55:] Database file opened: sampling/branch_angle/branch_angle_1.txt
+basic.io.database: (0) [2026-11- 9 15:38:55:] Database file opened: sampling/branch_angle/branch_angle_2.txt
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+protocols.carbohydrates.CreateGlycanSequonMover: (0) [2026-11- 9 15:38:55:] Sequons created 
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+protocols.docking.DockingInitialPerturbation: (0) [2026-11- 9 15:38:55:] Reading options...
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+protocols.docking.DockingInitialPerturbation: (0) [2026-11- 9 15:38:55:] Reading options...
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:55:] SCOREFUNCTION: ref2015
+core.scoring.etable: (0) [2026-11- 9 15:38:55:] Starting energy table calculation
+core.scoring.etable: (0) [2026-11- 9 15:38:55:] smooth_etable: changing atr/rep split to bottom of energy well
+core.scoring.etable: (0) [2026-11- 9 15:38:55:] smooth_etable: spline smoothing lj etables (maxdis = 6)
+core.scoring.etable: (0) [2026-11- 9 15:38:55:] smooth_etable: spline smoothing solvation etables (max_dis = 6)
+core.scoring.etable: (0) [2026-11- 9 15:38:56:] Finished calculating energy tables.
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunction: (0) [2026-11- 9 15:38:56:] ATOM_VDW set to CENTROID_ROT_MIN
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: scoring/score_functions/centroid_smooth/cen_rot_pair_params.txt
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: scoring/score_functions/centroid_smooth/cen_rot_env_params.txt
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: scoring/score_functions/centroid_smooth/cen_rot_cbeta_params.txt
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: scoring/score_functions/centroid_smooth/cen_rot_pair_ang_params.txt
+core.scoring.AtomVDW: (0) [2026-11- 9 15:38:56:] Openning alternative vdw file: /usr/local/rosetta-2022.11/main/database/chemical/atom_type_sets/centroid_rot//min.txt
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+protocols.glycan_docking.GlycanDockProtocol: (0) [2026-11- 9 15:38:56:] Clearing counters
 Preparing score function
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoringManager: (0) [2026- 7- 3 14:13:49:] Creating CHI Energy Function.
-core.scoring.carbohydrates.CHIEnergyFunction: (0) [2026- 7- 3 14:13:49:] Setting up chi sampling
-core.scoring.ScoringManager: (0) [2026- 7- 3 14:13:49:] Creating carbohydrate omega preferences function.
-core.scoring.carbohydrates.OmegaPreferencesFunction: (0) [2026- 7- 3 14:13:49:] Setting up omega preference sampling
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoringManager: (0) [2026-11- 9 15:38:56:] Creating CHI Energy Function.
+core.scoring.carbohydrates.CHIEnergyFunction: (0) [2026-11- 9 15:38:56:] Setting up chi sampling
+core.scoring.ScoringManager: (0) [2026-11- 9 15:38:56:] Creating carbohydrate omega preferences function.
+core.scoring.carbohydrates.OmegaPreferencesFunction: (0) [2026-11- 9 15:38:56:] Setting up omega preference sampling
 score function done
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-protocols.docking.DockingInitialPerturbation: (0) [2026- 7- 3 14:13:49:] Reading options...
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] Reading relax scripts list from database.
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] Looking for MonomerRelax2019.txt
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] ================== Reading script file: /usr/local/rosetta-2022.11/main/database/sampling/relax_scripts/MonomerRelax2019.txt ==================
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] repeat %%nrepeats%%
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] coord_cst_weight 1.0
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] scale:fa_rep 0.040
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] repack
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] scale:fa_rep 0.051
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] min 0.01
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] coord_cst_weight 0.5
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] scale:fa_rep 0.265
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] repack
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] scale:fa_rep 0.280
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] min 0.01
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] coord_cst_weight 0.0
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] scale:fa_rep 0.559
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] repack
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] scale:fa_rep 0.581
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] min 0.01
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] coord_cst_weight 0.0
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] scale:fa_rep 1
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] repack
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] min 0.00001
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] accept_to_best
-protocols.relax.RelaxScriptManager: (0) [2026- 7- 3 14:13:49:] endrepeat
-basic.io.database: (0) [2026- 7- 3 14:13:49:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
-basic.io.database: (0) [2026- 7- 3 14:13:49:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
-basic.io.database: (0) [2026- 7- 3 14:13:49:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
-basic.io.database: (0) [2026- 7- 3 14:13:49:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:49:] SCOREFUNCTION: ref2015
-basic.io.database: (0) [2026- 7- 3 14:13:50:] Database file opened: scoring/score_functions/envsmooth/envdata.txt
-basic.io.database: (0) [2026- 7- 3 14:13:50:] Database file opened: scoring/score_functions/carbon_hbond/ch_o_bond_potential.dat
-basic.io.database: (0) [2026- 7- 3 14:13:50:] Database file opened: scoring/score_functions/custom_pair_distance/pos_charge_repulsion
-basic.io.database: (0) [2026- 7- 3 14:13:50:] Database file opened: scoring/score_functions/custom_pair_distance/neg_charge_repulsion
-core.scoring.custom_pair_distance.FullatomCustomPairDistanceEnergy: (0) [2026- 7- 3 14:13:50:] Added 8 AtomPairFuncList lists
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:50:] SCOREFUNCTION: ref2015
-core.scoring.motif: (0) [2026- 7- 3 14:13:50:] init MotifHashManager
-core.scoring.motif: (0) [2026- 7- 3 14:13:50:] preload_motif_data
-core.scoring.methods.NMerPSSMEnergy: (0) [2026- 7- 3 14:13:50:] checking for NMerPSSMEnergy PSSM list
-core.scoring.methods.NMerPSSMEnergy: (0) [2026- 7- 3 14:13:50:] checking for NMerPSSMEnergy PSSM list
-core.scoring.ScoringManager: (0) [2026- 7- 3 14:13:50:] reading NMerSVM encoding matrix /usr/local/rosetta-2022.11/main/database/sequence/substitution_matrix/BLOSUM62.prob.rescale
-core.scoring.methods.NMerSVMEnergy: (0) [2026- 7- 3 14:13:50:] checking for NMerSVMEnergy SVM list
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:50:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:50:] SCOREFUNCTION: ref2015
-basic.io.database: (0) [2026- 7- 3 14:13:50:] Database file opened: protocol_data/denovo_design/preproline_normalized.gz
-protocols.denovo_design.PreProlineFilter: (0) [2026- 7- 3 14:13:50:] X start: -180 delta: 11.25
-protocols.denovo_design.PreProlineFilter: (0) [2026- 7- 3 14:13:50:] Y start: -180 delta: 11.25
-protocols.denovo_design.PreProlineFilter: (0) [2026- 7- 3 14:13:50:] Spline for preproline residues has been trained from protocol_data/denovo_design/preproline_normalized.gz.
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:50:] SCOREFUNCTION: ref2015
-basic.io.database: (0) [2026- 7- 3 14:13:50:] Database file opened: protocol_data/SDE/GUIP.matrix
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-protocols.simple_filters.RotamerBoltzmannWeight2: (0) [2026- 7- 3 14:13:51:] Created new calculator id: RotamerBoltzmannWeight2_0
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] [ WARNING ] **************************************************************************
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+protocols.docking.DockingInitialPerturbation: (0) [2026-11- 9 15:38:56:] Reading options...
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] Reading relax scripts list from database.
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] Looking for MonomerRelax2019.txt
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] ================== Reading script file: /usr/local/rosetta-2022.11/main/database/sampling/relax_scripts/MonomerRelax2019.txt ==================
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] repeat %%nrepeats%%
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] coord_cst_weight 1.0
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] scale:fa_rep 0.040
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] repack
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] scale:fa_rep 0.051
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] min 0.01
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] coord_cst_weight 0.5
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] scale:fa_rep 0.265
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] repack
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] scale:fa_rep 0.280
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] min 0.01
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] coord_cst_weight 0.0
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] scale:fa_rep 0.559
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] repack
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] scale:fa_rep 0.581
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] min 0.01
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] coord_cst_weight 0.0
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] scale:fa_rep 1
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] repack
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] min 0.00001
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] accept_to_best
+protocols.relax.RelaxScriptManager: (0) [2026-11- 9 15:38:56:] endrepeat
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: protocol_data/crick_parameters/alpha_helix.crick_params
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:56:] SCOREFUNCTION: ref2015
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: scoring/score_functions/envsmooth/envdata.txt
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: scoring/score_functions/carbon_hbond/ch_o_bond_potential.dat
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: scoring/score_functions/custom_pair_distance/pos_charge_repulsion
+basic.io.database: (0) [2026-11- 9 15:38:56:] Database file opened: scoring/score_functions/custom_pair_distance/neg_charge_repulsion
+core.scoring.custom_pair_distance.FullatomCustomPairDistanceEnergy: (0) [2026-11- 9 15:38:56:] Added 8 AtomPairFuncList lists
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.motif: (0) [2026-11- 9 15:38:57:] init MotifHashManager
+core.scoring.motif: (0) [2026-11- 9 15:38:57:] preload_motif_data
+core.scoring.methods.NMerPSSMEnergy: (0) [2026-11- 9 15:38:57:] checking for NMerPSSMEnergy PSSM list
+core.scoring.methods.NMerPSSMEnergy: (0) [2026-11- 9 15:38:57:] checking for NMerPSSMEnergy PSSM list
+core.scoring.ScoringManager: (0) [2026-11- 9 15:38:57:] reading NMerSVM encoding matrix /usr/local/rosetta-2022.11/main/database/sequence/substitution_matrix/BLOSUM62.prob.rescale
+core.scoring.methods.NMerSVMEnergy: (0) [2026-11- 9 15:38:57:] checking for NMerSVMEnergy SVM list
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+basic.io.database: (0) [2026-11- 9 15:38:57:] Database file opened: protocol_data/denovo_design/preproline_normalized.gz
+protocols.denovo_design.PreProlineFilter: (0) [2026-11- 9 15:38:57:] X start: -180 delta: 11.25
+protocols.denovo_design.PreProlineFilter: (0) [2026-11- 9 15:38:57:] Y start: -180 delta: 11.25
+protocols.denovo_design.PreProlineFilter: (0) [2026-11- 9 15:38:57:] Spline for preproline residues has been trained from protocol_data/denovo_design/preproline_normalized.gz.
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+basic.io.database: (0) [2026-11- 9 15:38:57:] Database file opened: protocol_data/SDE/GUIP.matrix
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+protocols.simple_filters.RotamerBoltzmannWeight2: (0) [2026-11- 9 15:38:57:] Created new calculator id: RotamerBoltzmannWeight2_0
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] [ WARNING ] **************************************************************************
 *****************************************************
 ****************************************************
 talaris2013_cart may be a 'talaris' scorefunction, but ScoreFunctionFactory thinks the -restore_talaris_behavior flags weren't set.  Your scorefunction may be garbage!
 **************************************************************************
 *****************************************************
 ****************************************************
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:51:] SCOREFUNCTION: ref2015
-core.scoring.etable: (0) [2026- 7- 3 14:13:51:] Starting energy table calculation
-core.scoring.etable: (0) [2026- 7- 3 14:13:51:] smooth_etable: changing atr/rep split to bottom of energy well
-core.scoring.etable: (0) [2026- 7- 3 14:13:51:] smooth_etable: spline smoothing lj etables (maxdis = 6)
-core.scoring.etable: (0) [2026- 7- 3 14:13:51:] smooth_etable: spline smoothing solvation etables (max_dis = 6)
-core.scoring.etable: (0) [2026- 7- 3 14:13:52:] Finished calculating energy tables.
-core.scoring.etable: (0) [2026- 7- 3 14:13:52:] Using alternate parameters: LK_DGFREE in MembEtable construction.
-core.scoring.etable: (0) [2026- 7- 3 14:13:52:] Using alternate parameters: MEMB_LK_DGFREE in MembEtable construction.
-core.scoring.etable: (0) [2026- 7- 3 14:13:52:] Using alternate parameters: LK_DGREFCE in MembEtable construction.
-core.scoring.etable: (0) [2026- 7- 3 14:13:52:] Using alternate parameters: MEMB_LK_DGREFCE in MembEtable construction.
-core.scoring.etable: (0) [2026- 7- 3 14:13:52:] Starting membrane specific energy table calculation
-basic.io.database: (0) [2026- 7- 3 14:13:52:] Database file opened: scoring/score_functions/MembranePotential/CEN10_Menv_smooth_log.txt
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-basic.io.database: (0) [2026- 7- 3 14:13:52:] Database file opened: sampling/branch_angle/branch_angle_1.txt
-basic.io.database: (0) [2026- 7- 3 14:13:52:] Database file opened: sampling/branch_angle/branch_angle_2.txt
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-basic.io.database: (0) [2026- 7- 3 14:13:52:] Database file opened: scoring/score_functions/P_AA_SS_cen6/P_AA_SS_cen6.txt
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] Using fullatom scorefunction from commandline:
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:57:] SCOREFUNCTION: ref2015
+core.scoring.etable: (0) [2026-11- 9 15:38:57:] Starting energy table calculation
+core.scoring.etable: (0) [2026-11- 9 15:38:57:] smooth_etable: changing atr/rep split to bottom of energy well
+core.scoring.etable: (0) [2026-11- 9 15:38:57:] smooth_etable: spline smoothing lj etables (maxdis = 6)
+core.scoring.etable: (0) [2026-11- 9 15:38:57:] smooth_etable: spline smoothing solvation etables (max_dis = 6)
+core.scoring.etable: (0) [2026-11- 9 15:38:58:] Finished calculating energy tables.
+core.scoring.etable: (0) [2026-11- 9 15:38:58:] Using alternate parameters: LK_DGFREE in MembEtable construction.
+core.scoring.etable: (0) [2026-11- 9 15:38:58:] Using alternate parameters: MEMB_LK_DGFREE in MembEtable construction.
+core.scoring.etable: (0) [2026-11- 9 15:38:58:] Using alternate parameters: LK_DGREFCE in MembEtable construction.
+core.scoring.etable: (0) [2026-11- 9 15:38:58:] Using alternate parameters: MEMB_LK_DGREFCE in MembEtable construction.
+core.scoring.etable: (0) [2026-11- 9 15:38:58:] Starting membrane specific energy table calculation
+basic.io.database: (0) [2026-11- 9 15:38:58:] Database file opened: scoring/score_functions/MembranePotential/CEN10_Menv_smooth_log.txt
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+basic.io.database: (0) [2026-11- 9 15:38:58:] Database file opened: sampling/branch_angle/branch_angle_1.txt
+basic.io.database: (0) [2026-11- 9 15:38:58:] Database file opened: sampling/branch_angle/branch_angle_2.txt
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+basic.io.database: (0) [2026-11- 9 15:38:58:] Database file opened: scoring/score_functions/P_AA_SS_cen6/P_AA_SS_cen6.txt
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] Using fullatom scorefunction from commandline:
 ScoreFunction::show():
 weights: (fa_atr 1) (fa_rep 0.55) (fa_sol 1) (fa_intra_rep 0.005) (fa_intra_sol_xover4 1) (lk_ball_wtd 1) (fa_elec 1) (pro_close 1.25) (hbond_sr_bb 1) (hbond_lr_bb 1) (hbond_bb_sc 1) (hbond_sc 1) (dslf_fa13 1.25) (omega 0.4) (fa_dun 0.7) (p_aa_pp 0.6) (yhh_planarity 0.625) (ref 1) (rama_prepro 0.45)
 energy_method_options: EnergyMethodOptions::show: aa_composition_setup_files: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: mhc_epitope_setup_files: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: netcharge_setup_files: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: aspartimide_penalty_value: 25
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: etable_type: FA_STANDARD_DEFAULT
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: mhc_epitope_setup_files: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: netcharge_setup_files: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: aspartimide_penalty_value: 25
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: etable_type: FA_STANDARD_DEFAULT
 analytic_etable_evaluation: 1
 EnergyMethodOptions::show: method_weights: ref 1.32468 3.25479 -2.14574 -2.72453 1.21829 0.79816 -0.30065 2.30374 -0.71458 1.66147 1.65735 -1.34026 -1.64321 -1.45095 -0.09474 -0.28969 1.15175 2.64269 2.26099 0.58223
 EnergyMethodOptions::show: method_weights: free_res
 EnergyMethodOptions::show: unfolded_energies_type: UNFOLDED_SCORE12
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: split_unfolded_label_type: SPLIT_UNFOLDED_MM
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: split_unfolded_value_type: SPLIT_UNFOLDED_BOLTZ
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: atom_vdw_atom_type_set_name: centroid
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: covalent_labeling_input: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: covalent_labeling_fa_input: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: hrf_dynamics_input: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: depc_ms_input: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: exclude_protein_protein_fa_elec: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: exclude_RNA_RNA_fa_elec: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: exclude_RNA_protein_fa_elec: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: exclude_monomer_fa_elec: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: elec_max_dis: 5.5
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: elec_min_dis: 1.6
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: elec_die: 10
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: elec_no_dis_dep_die: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: elec_sigmoidal_die: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: elec_sigmoidal_D: 80
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: elec_sigmoidal_D0: 6
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: elec_sigmoidal_S: 0.4
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: smooth_fa_elec: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: grpelec_fade_type: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: grpelec_fade_param1: 1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: grpelec_fade_param2: 1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: grpelec_fade_hbond: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: grp_cpfxn: 1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: elec_group_file: /scoring/score_functions/elec_group_def.dat
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: grpelec_context_dependent: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: use_polarization: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: use_gen_kirkwood: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: protein_dielectric: 1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: water_dielectric: 78.3
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: exclude_DNA_DNA: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: exclude_intra_res_protein: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: count_pair_hybrid: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: count_pair_full: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: put_intra_into_total: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: geom_sol_interres_path_distance_cutoff: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: geom_sol_intrares_path_distance_cutoff: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: eval_intrares_elec_ST_only: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: envsmooth_zero_negatives: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: cst_max_seq_sep: 18446744073709551615
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: pb_bound_tag: bound
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: pb_unbound_tag: unbound
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: arg_cation_pi_his_can_be_pi: 1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: ordered_wat_penalty: 1.221
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: ordered_pt_wat_penalty: 2.709
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_ref_seq_length_: 9
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_term_length_: 3
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_pssm_feat_: 1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_scorecut_defined_: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_scorecut_: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_avg_rank_as_energy_: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_aa_matrix_defined_: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_aa_matrix_: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_list_defined_: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_list_: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_defined_: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_rank_list_defined_: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_rank_list_: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_rank_defined_: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: nmer_svm_rank_: 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: voids_penalty_energy_containing_cones_cutoff_:6
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: voids_penalty_energy_cone_distance_cutoff_: 8
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: voids_penalty_energy_cone_dotproduct_cutoff_: 0.1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: voids_penalty_energy_voxel_grid_padding_: 1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: voids_penalty_energy_voxel_size_: 0.5
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: voids_penalty_energy_disabled_except_during_packing_: TRUE
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: hbnet_bonus_ramping_function_: "quadratic"
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: hbnet_max_network_size_: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_hbond_energy_threshold_: -0.25
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_burial_atomic_depth_: 4.5
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_burial_probe_radius_: 2.3
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_burial_resolution_: 0.5
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_oversat_penalty_: 1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_assume_const_backbone_:1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_natural_corrections1_:0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_hbond_bonus_cross_chain_:0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_hbond_bonus_ser_to_helix_bb_:0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_lys_ok_with_1_:0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: target_clash_pdb_:
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: dump_trajectory_prefix_: traj
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: dump_trajectory_gz_: FALSE
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: dump_trajectory_stride_: 1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: bond_angle_central_atoms_to_score:
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] EnergyMethodOptions::show: bond_angle_residue_type_param_set: none
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: hb_max_energy: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: exclude_DNA_DNA: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: exclude_intra_res_protein_: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: exclude_intra_res_RNA_: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: put_intra_into_total_: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: exclude_self_hbonds: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: use_hb_env_dep: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: use_hb_env_dep_DNA: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: smooth_hb_env_dep: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: bb_donor_acceptor_check: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: decompose_bb_hb_into_pair_energies: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: params_database_tag_: ref2015_params
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: use_sp2_chi_penalty_: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: sp2_BAH180_rise_: 0.75
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: sp2_outer_width_: 0.357
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: measure_sp3acc_BAH_from_hvy_: true
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: fade_energy_: 1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: exclude_ether_oxygens_: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: Mbhbond: false 
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HbondOptions::show: mphbond: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: hbond_energy_shift: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] HBondOptions::show: water_hybrid_sf: false
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] RNA_EnergyMethodOptions::show: syn_G_potential_bonus: 0
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] RNA_EnergyMethodOptions::show: torsion_potential: ps_04282011
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] RNA_EnergyMethodOptions::show: suiteness_bonus: Richardson
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] RNA_EnergyMethodOptions::show: rna_base_pair_xy_filename: scoring/rna/rna_base_pair_xy.dat
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] FreeDOF_Options::show: free_suite_bonus: -1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] FreeDOF_Options::show: free_2HOprime_bonus: -0.5
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] FreeDOF_Options::show: free_sugar_bonus: -1
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] FreeDOF_Options::show: pack_phosphate_penalty: 0.25
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] FreeDOF_Options::show: free_side_chain_bonus: -0.5
-protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026- 7- 3 14:13:52:] 
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:52:] SCOREFUNCTION: ref2015
-protocols.rosetta_scripts.RosettaScriptsSchemaValidator: (0) [2026- 7- 3 14:13:52:] ...done
-protocols.rosetta_scripts.RosettaScriptsSchemaValidator: (0) [2026- 7- 3 14:13:52:] Initializing schema validator...
-protocols.rosetta_scripts.RosettaScriptsSchemaValidator: (0) [2026- 7- 3 14:13:55:] ...done
-protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026- 7- 3 14:13:55:] ...done
-protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026- 7- 3 14:13:55:] Parsed script:
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: split_unfolded_label_type: SPLIT_UNFOLDED_MM
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: split_unfolded_value_type: SPLIT_UNFOLDED_BOLTZ
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: atom_vdw_atom_type_set_name: centroid
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: covalent_labeling_input: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: covalent_labeling_fa_input: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: hrf_dynamics_input: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: depc_ms_input: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: exclude_protein_protein_fa_elec: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: exclude_RNA_RNA_fa_elec: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: exclude_RNA_protein_fa_elec: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: exclude_monomer_fa_elec: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: elec_max_dis: 5.5
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: elec_min_dis: 1.6
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: elec_die: 10
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: elec_no_dis_dep_die: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: elec_sigmoidal_die: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: elec_sigmoidal_D: 80
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: elec_sigmoidal_D0: 6
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: elec_sigmoidal_S: 0.4
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: smooth_fa_elec: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: grpelec_fade_type: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: grpelec_fade_param1: 1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: grpelec_fade_param2: 1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: grpelec_fade_hbond: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: grp_cpfxn: 1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: elec_group_file: /scoring/score_functions/elec_group_def.dat
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: grpelec_context_dependent: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: use_polarization: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: use_gen_kirkwood: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: protein_dielectric: 1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: water_dielectric: 78.3
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: exclude_DNA_DNA: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: exclude_intra_res_protein: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: count_pair_hybrid: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: count_pair_full: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: put_intra_into_total: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: geom_sol_interres_path_distance_cutoff: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: geom_sol_intrares_path_distance_cutoff: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: eval_intrares_elec_ST_only: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: envsmooth_zero_negatives: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: cst_max_seq_sep: 18446744073709551615
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: pb_bound_tag: bound
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: pb_unbound_tag: unbound
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: arg_cation_pi_his_can_be_pi: 1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: ordered_wat_penalty: 1.221
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: ordered_pt_wat_penalty: 2.709
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_ref_seq_length_: 9
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_term_length_: 3
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_pssm_feat_: 1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_scorecut_defined_: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_scorecut_: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_avg_rank_as_energy_: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_aa_matrix_defined_: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_aa_matrix_: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_list_defined_: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_list_: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_defined_: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_rank_list_defined_: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_rank_list_: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_rank_defined_: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: nmer_svm_rank_: 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: voids_penalty_energy_containing_cones_cutoff_:6
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: voids_penalty_energy_cone_distance_cutoff_: 8
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: voids_penalty_energy_cone_dotproduct_cutoff_: 0.1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: voids_penalty_energy_voxel_grid_padding_: 1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: voids_penalty_energy_voxel_size_: 0.5
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: voids_penalty_energy_disabled_except_during_packing_: TRUE
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: hbnet_bonus_ramping_function_: "quadratic"
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: hbnet_max_network_size_: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_hbond_energy_threshold_: -0.25
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_burial_atomic_depth_: 4.5
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_burial_probe_radius_: 2.3
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_burial_resolution_: 0.5
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_oversat_penalty_: 1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_assume_const_backbone_:1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_natural_corrections1_:0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_hbond_bonus_cross_chain_:0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_hbond_bonus_ser_to_helix_bb_:0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: approximate_buried_unsat_penalty_lys_ok_with_1_:0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: target_clash_pdb_:
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: dump_trajectory_prefix_: traj
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: dump_trajectory_gz_: FALSE
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: dump_trajectory_stride_: 1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: bond_angle_central_atoms_to_score:
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] EnergyMethodOptions::show: bond_angle_residue_type_param_set: none
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: hb_max_energy: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: exclude_DNA_DNA: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: exclude_intra_res_protein_: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: exclude_intra_res_RNA_: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: put_intra_into_total_: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: exclude_self_hbonds: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: use_hb_env_dep: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: use_hb_env_dep_DNA: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: smooth_hb_env_dep: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: bb_donor_acceptor_check: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: decompose_bb_hb_into_pair_energies: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: params_database_tag_: ref2015_params
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: use_sp2_chi_penalty_: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: sp2_BAH180_rise_: 0.75
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: sp2_outer_width_: 0.357
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: measure_sp3acc_BAH_from_hvy_: true
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: fade_energy_: 1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: exclude_ether_oxygens_: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: Mbhbond: false 
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HbondOptions::show: mphbond: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: hbond_energy_shift: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] HBondOptions::show: water_hybrid_sf: false
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] RNA_EnergyMethodOptions::show: syn_G_potential_bonus: 0
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] RNA_EnergyMethodOptions::show: torsion_potential: ps_04282011
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] RNA_EnergyMethodOptions::show: suiteness_bonus: Richardson
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] RNA_EnergyMethodOptions::show: rna_base_pair_xy_filename: scoring/rna/rna_base_pair_xy.dat
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] FreeDOF_Options::show: free_suite_bonus: -1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] FreeDOF_Options::show: free_2HOprime_bonus: -0.5
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] FreeDOF_Options::show: free_sugar_bonus: -1
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] FreeDOF_Options::show: pack_phosphate_penalty: 0.25
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] FreeDOF_Options::show: free_side_chain_bonus: -0.5
+protocols.chemically_conjugated_docking.UBQ_GTPaseMover: (0) [2026-11- 9 15:38:58:] 
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:38:58:] SCOREFUNCTION: ref2015
+protocols.rosetta_scripts.RosettaScriptsSchemaValidator: (0) [2026-11- 9 15:38:58:] ...done
+protocols.rosetta_scripts.RosettaScriptsSchemaValidator: (0) [2026-11- 9 15:38:58:] Initializing schema validator...
+protocols.rosetta_scripts.RosettaScriptsSchemaValidator: (0) [2026-11- 9 15:39: 1:] ...done
+protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026-11- 9 15:39: 1:] ...done
+protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026-11- 9 15:39: 1:] Parsed script:
 <ROSETTASCRIPTS>
 	<SCOREFXNS>
 		<ScoreFunction name="fullatom" symmetric="0" weights="ref2015_cart"/>
@@ -419,58 +419,181 @@ protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026- 7- 3 14:13:55:] Parse
 	</PROTOCOLS>
 	<OUTPUT scorefxn="fullatom"/>
 </ROSETTASCRIPTS>
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:55:] SCOREFUNCTION: ref2015
-protocols.jd2.parser.ScoreFunctionLoader: (0) [2026- 7- 3 14:13:55:] defined score function "fullatom" with weights "ref2015_cart"
-protocols.jd2.parser.ScoreFunctionLoader: (0) [2026- 7- 3 14:13:55:] Scorefunction tag contains 'symmetric' option. This is no longer needed.
-core.scoring.ScoreFunctionFactory: (0) [2026- 7- 3 14:13:55:] SCOREFUNCTION: ref2015
-protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026- 7- 3 14:13:55:] Defined mover named "fastrelax" of type FastRelax
-protocols.rosetta_scripts.ParsedProtocol: (0) [2026- 7- 3 14:13:55:] ParsedProtocol mover with the following settings
-protocols.rosetta_scripts.ParsedProtocol: (0) [2026- 7- 3 14:13:55:] Added mover "fastrelax"
-protocols.jd2.PDBJobInputter: (0) [2026- 7- 3 14:13:55:] PDBJobInputter::pose_from_job
-protocols.jd2.PDBJobInputter: (0) [2026- 7- 3 14:13:55:] filling pose from saved copy /data/user/teo/devel/MAVISp_automatization/example/essentials/rosetta_data/tf/CRX/free/AFDB_36-104/v3_model/ref2015_cartesian2020/O43186_36-104.pdb
-protocols.rosetta_scripts.ParsedProtocol: (0) [2026- 7- 3 14:13:55:] =======================BEGIN MOVER FastRelax - fastrelax=======================
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:55:] Creating new peptide-bonded energy container (69)
-basic.io.database: (0) [2026- 7- 3 14:13:55:] Database file opened: scoring/score_functions/elec_cp_reps.dat
-core.scoring.elec.util: (0) [2026- 7- 3 14:13:55:] Read 40 countpair representative atoms
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:56:] Adding undefined angle PRO: CD,NV,CAV to DB with theta0 = 1.99196 , Ktheta = 80
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:56:] Adding undefined angle PRO: CD,NV,1H to DB with theta0 = 1.91114 , Ktheta = 80
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:56:] Adding undefined angle PRO: CD,NV,2H to DB with theta0 = 1.91114 , Ktheta = 80
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:56:] Adding undefined angle PRO: CAV,NV,1H to DB with theta0 = 1.86886 , Ktheta = 80
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:56:] Adding undefined angle PRO: CAV,NV,2H to DB with theta0 = 1.86886 , Ktheta = 80
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:56:] Adding undefined angle PRO: 1H,NV,2H to DB with theta0 = 1.91013 , Ktheta = 80
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:56:] Adding undefined length PRO: NV,CAV, to DB with d0 = 1.38302 , Kd = 300
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:56:] Adding undefined length PRO: NV,1H, to DB with d0 = 1 , Kd = 300
-core.energy_methods.CartesianBondedEnergy: (0) [2026- 7- 3 14:13:56:] Adding undefined length PRO: NV,2H, to DB with d0 = 1 , Kd = 300
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:13:56:] CMD: repeat  21.2155  0  0  0.55
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:13:56:] CMD: coord_cst_weight  21.2155  0  0  0.55
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:13:56:] CMD: scale:fa_rep  -1.54108  0  0  0.022
-core.pack.task: (0) [2026- 7- 3 14:13:56:] Packer task: initialize from command line() 
-core.pack.pack_rotamers: (0) [2026- 7- 3 14:13:56:] built 1278 rotamers at 69 positions.
-core.pack.interaction_graph.interaction_graph_factory: (0) [2026- 7- 3 14:13:56:] Instantiating DensePDInteractionGraph
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:13:57:] CMD: repack  -114.718  0  0  0.022
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:13:57:] CMD: scale:fa_rep  -113.249  0  0  0.02805
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:19:] CMD: min  -272.162  1.04739  1.04739  0.02805
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:19:] CMD: coord_cst_weight  -272.162  1.04739  1.04739  0.02805
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:19:] CMD: scale:fa_rep  -162.145  1.04739  1.04739  0.14575
-core.pack.task: (0) [2026- 7- 3 14:14:19:] Packer task: initialize from command line() 
-core.pack.pack_rotamers: (0) [2026- 7- 3 14:14:19:] built 1164 rotamers at 69 positions.
-core.pack.interaction_graph.interaction_graph_factory: (0) [2026- 7- 3 14:14:19:] Instantiating DensePDInteractionGraph
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:20:] CMD: repack  -166.146  1.04739  1.04739  0.14575
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:20:] CMD: scale:fa_rep  -159.073  1.04739  1.04739  0.154
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:30:] CMD: min  -229.895  0.83146  0.83146  0.154
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:30:] CMD: coord_cst_weight  -229.895  0.83146  0.83146  0.154
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:30:] CMD: scale:fa_rep  -202.948  0.83146  0.83146  0.30745
-core.pack.task: (0) [2026- 7- 3 14:14:30:] Packer task: initialize from command line() 
-core.pack.pack_rotamers: (0) [2026- 7- 3 14:14:30:] built 1155 rotamers at 69 positions.
-core.pack.interaction_graph.interaction_graph_factory: (0) [2026- 7- 3 14:14:30:] Instantiating DensePDInteractionGraph
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:31:] CMD: repack  -202.955  0.83146  0.83146  0.30745
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:31:] CMD: scale:fa_rep  -200.83  0.83146  0.83146  0.31955
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:44:] CMD: min  -211.139  0.813348  0.813348  0.31955
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:44:] CMD: coord_cst_weight  -211.139  0.813348  0.813348  0.31955
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:44:] CMD: scale:fa_rep  -189.887  0.813348  0.813348  0.55
-core.pack.task: (0) [2026- 7- 3 14:14:44:] Packer task: initialize from command line() 
-core.pack.pack_rotamers: (0) [2026- 7- 3 14:14:44:] built 1121 rotamers at 69 positions.
-core.pack.interaction_graph.interaction_graph_factory: (0) [2026- 7- 3 14:14:44:] Instantiating DensePDInteractionGraph
-protocols.relax.FastRelax: (0) [2026- 7- 3 14:14:45:] CMD: repack  -189.887  0.813348  0.813348  0.55
-Got some signal... It is:15
-Signal 15 (SIGTERM) means that the process was terminated.  This usually means that something external to Rosetta, such as a queing system, aborted the process (e.g. due to a time or resource limit).
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:39: 1:] SCOREFUNCTION: ref2015
+protocols.jd2.parser.ScoreFunctionLoader: (0) [2026-11- 9 15:39: 1:] defined score function "fullatom" with weights "ref2015_cart"
+protocols.jd2.parser.ScoreFunctionLoader: (0) [2026-11- 9 15:39: 1:] Scorefunction tag contains 'symmetric' option. This is no longer needed.
+core.scoring.ScoreFunctionFactory: (0) [2026-11- 9 15:39: 1:] SCOREFUNCTION: ref2015
+protocols.rosetta_scripts.RosettaScriptsParser: (0) [2026-11- 9 15:39: 1:] Defined mover named "fastrelax" of type FastRelax
+protocols.rosetta_scripts.ParsedProtocol: (0) [2026-11- 9 15:39: 1:] ParsedProtocol mover with the following settings
+protocols.rosetta_scripts.ParsedProtocol: (0) [2026-11- 9 15:39: 1:] Added mover "fastrelax"
+protocols.jd2.PDBJobInputter: (0) [2026-11- 9 15:39: 1:] PDBJobInputter::pose_from_job
+protocols.jd2.PDBJobInputter: (0) [2026-11- 9 15:39: 1:] filling pose from saved copy /data/user/teo/devel/MAVISp_automatization/example/essentials/rosetta_data/tf/CRX/free/AFDB_36-104/v3_model/ref2015_cartesian2020/O43186_36-104.pdb
+protocols.rosetta_scripts.ParsedProtocol: (0) [2026-11- 9 15:39: 1:] =======================BEGIN MOVER FastRelax - fastrelax=======================
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:39: 1:] Creating new peptide-bonded energy container (69)
+basic.io.database: (0) [2026-11- 9 15:39: 1:] Database file opened: scoring/score_functions/elec_cp_reps.dat
+core.scoring.elec.util: (0) [2026-11- 9 15:39: 1:] Read 40 countpair representative atoms
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:39: 1:] Adding undefined angle PRO: CD,NV,CAV to DB with theta0 = 1.99196 , Ktheta = 80
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:39: 1:] Adding undefined angle PRO: CD,NV,1H to DB with theta0 = 1.91114 , Ktheta = 80
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:39: 1:] Adding undefined angle PRO: CD,NV,2H to DB with theta0 = 1.91114 , Ktheta = 80
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:39: 1:] Adding undefined angle PRO: CAV,NV,1H to DB with theta0 = 1.86886 , Ktheta = 80
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:39: 1:] Adding undefined angle PRO: CAV,NV,2H to DB with theta0 = 1.86886 , Ktheta = 80
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:39: 1:] Adding undefined angle PRO: 1H,NV,2H to DB with theta0 = 1.91013 , Ktheta = 80
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:39: 1:] Adding undefined length PRO: NV,CAV, to DB with d0 = 1.38302 , Kd = 300
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:39: 1:] Adding undefined length PRO: NV,1H, to DB with d0 = 1 , Kd = 300
+core.energy_methods.CartesianBondedEnergy: (0) [2026-11- 9 15:39: 1:] Adding undefined length PRO: NV,2H, to DB with d0 = 1 , Kd = 300
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39: 2:] CMD: repeat  21.2155  0  0  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39: 2:] CMD: coord_cst_weight  21.2155  0  0  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39: 2:] CMD: scale:fa_rep  -1.54108  0  0  0.022
+core.pack.task: (0) [2026-11- 9 15:39: 2:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:39: 2:] built 1278 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:39: 2:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39: 3:] CMD: repack  -115.975  0  0  0.022
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39: 3:] CMD: scale:fa_rep  -114.492  0  0  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:26:] CMD: min  -273.262  1.11024  1.11024  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:26:] CMD: coord_cst_weight  -273.262  1.11024  1.11024  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:26:] CMD: scale:fa_rep  -163.093  1.11024  1.11024  0.14575
+core.pack.task: (0) [2026-11- 9 15:39:26:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:39:26:] built 1167 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:39:26:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:27:] CMD: repack  -167.334  1.11024  1.11024  0.14575
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:27:] CMD: scale:fa_rep  -160.283  1.11024  1.11024  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:47:] CMD: min  -232.329  0.902995  0.902995  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:47:] CMD: coord_cst_weight  -232.329  0.902995  0.902995  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:47:] CMD: scale:fa_rep  -205.159  0.902995  0.902995  0.30745
+core.pack.task: (0) [2026-11- 9 15:39:47:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:39:47:] built 1132 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:39:47:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:47:] CMD: repack  -205.004  0.902995  0.902995  0.30745
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:47:] CMD: scale:fa_rep  -202.895  0.902995  0.902995  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:54:] CMD: min  -211.581  0.845626  0.845626  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:54:] CMD: coord_cst_weight  -211.581  0.845626  0.845626  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:54:] CMD: scale:fa_rep  -189.064  0.845626  0.845626  0.55
+core.pack.task: (0) [2026-11- 9 15:39:54:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:39:54:] built 1123 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:39:54:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:39:54:] CMD: repack  -188.898  0.845626  0.845626  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40: 4:] CMD: min  -195.164  0.789665  0.789665  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40: 4:] MRP: 0  -195.164  -195.164  0.789665  0.789665  
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40: 4:] CMD: accept_to_best  -195.164  0.789665  0.789665  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40: 4:] CMD: endrepeat  -195.164  0.789665  0.789665  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40: 4:] CMD: coord_cst_weight  -195.164  0.789665  0.789665  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40: 4:] CMD: scale:fa_rep  -228.159  0.789665  0.789665  0.022
+core.pack.task: (0) [2026-11- 9 15:40: 4:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:40: 4:] built 1226 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:40: 4:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40: 5:] CMD: repack  -233.052  0.789665  0.789665  0.022
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40: 5:] CMD: scale:fa_rep  -231.854  0.789665  0.789665  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:18:] CMD: min  -278.323  1.0951  1.0951  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:18:] CMD: coord_cst_weight  -278.323  1.0951  1.0951  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:18:] CMD: scale:fa_rep  -172.342  1.0951  1.0951  0.14575
+core.pack.task: (0) [2026-11- 9 15:40:18:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:40:18:] built 1142 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:40:18:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:19:] CMD: repack  -174.158  1.0951  1.0951  0.14575
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:19:] CMD: scale:fa_rep  -167.121  1.0951  1.0951  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:28:] CMD: min  -234.989  0.903701  0.903701  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:28:] CMD: coord_cst_weight  -234.989  0.903701  0.903701  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:28:] CMD: scale:fa_rep  -207.8  0.903701  0.903701  0.30745
+core.pack.task: (0) [2026-11- 9 15:40:28:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:40:28:] built 1132 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:40:28:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:29:] CMD: repack  -208.129  0.903701  0.903701  0.30745
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:29:] CMD: scale:fa_rep  -205.984  0.903701  0.903701  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:41:] CMD: min  -216.549  0.84509  0.84509  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:41:] CMD: coord_cst_weight  -216.549  0.84509  0.84509  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:41:] CMD: scale:fa_rep  -194.524  0.84509  0.84509  0.55
+core.pack.task: (0) [2026-11- 9 15:40:41:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:40:41:] built 1134 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:40:41:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:41:] CMD: repack  -194.524  0.84509  0.84509  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:45:] CMD: min  -198.783  0.828111  0.828111  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:45:] MRP: 1  -198.783  -198.783  0.828111  0.828111  
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:45:] CMD: accept_to_best  -198.783  0.828111  0.828111  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:45:] CMD: endrepeat  -198.783  0.828111  0.828111  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:45:] CMD: coord_cst_weight  -198.783  0.828111  0.828111  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:45:] CMD: scale:fa_rep  -233.063  0.828111  0.828111  0.022
+core.pack.task: (0) [2026-11- 9 15:40:45:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:40:45:] built 1224 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:40:45:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:46:] CMD: repack  -237.425  0.828111  0.828111  0.022
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:46:] CMD: scale:fa_rep  -236.164  0.828111  0.828111  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:59:] CMD: min  -282.499  1.11544  1.11544  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:59:] CMD: coord_cst_weight  -282.499  1.11544  1.11544  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:40:59:] CMD: scale:fa_rep  -172.198  1.11544  1.11544  0.14575
+core.pack.task: (0) [2026-11- 9 15:40:59:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:40:59:] built 1149 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:40:59:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41: 0:] CMD: repack  -175.253  1.11544  1.11544  0.14575
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41: 0:] CMD: scale:fa_rep  -168.027  1.11544  1.11544  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41: 8:] CMD: min  -237.712  0.933873  0.933873  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41: 8:] CMD: coord_cst_weight  -237.712  0.933873  0.933873  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41: 8:] CMD: scale:fa_rep  -210.236  0.933873  0.933873  0.30745
+core.pack.task: (0) [2026-11- 9 15:41: 8:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:41: 8:] built 1141 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:41: 8:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41: 8:] CMD: repack  -210.236  0.933873  0.933873  0.30745
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41: 8:] CMD: scale:fa_rep  -208.07  0.933873  0.933873  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:17:] CMD: min  -216.931  0.85632  0.85632  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:17:] CMD: coord_cst_weight  -216.931  0.85632  0.85632  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:17:] CMD: scale:fa_rep  -194.473  0.85632  0.85632  0.55
+core.pack.task: (0) [2026-11- 9 15:41:17:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:41:17:] built 1138 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:41:17:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:17:] CMD: repack  -194.473  0.85632  0.85632  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:23:] CMD: min  -198.946  0.83143  0.83143  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:23:] MRP: 2  -198.946  -198.946  0.83143  0.83143  
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:23:] CMD: accept_to_best  -198.946  0.83143  0.83143  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:23:] CMD: endrepeat  -198.946  0.83143  0.83143  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:23:] CMD: coord_cst_weight  -198.946  0.83143  0.83143  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:23:] CMD: scale:fa_rep  -233.137  0.83143  0.83143  0.022
+core.pack.task: (0) [2026-11- 9 15:41:23:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:41:23:] built 1223 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:41:23:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:24:] CMD: repack  -237.508  0.83143  0.83143  0.022
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:24:] CMD: scale:fa_rep  -236.262  0.83143  0.83143  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:37:] CMD: min  -282.58  1.11883  1.11883  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:37:] CMD: coord_cst_weight  -282.58  1.11883  1.11883  0.02805
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:37:] CMD: scale:fa_rep  -172.003  1.11883  1.11883  0.14575
+core.pack.task: (0) [2026-11- 9 15:41:37:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:41:37:] built 1150 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:41:37:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:38:] CMD: repack  -175.557  1.11883  1.11883  0.14575
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:38:] CMD: scale:fa_rep  -168.415  1.11883  1.11883  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:46:] CMD: min  -237.745  0.934145  0.934145  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:46:] CMD: coord_cst_weight  -237.745  0.934145  0.934145  0.154
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:46:] CMD: scale:fa_rep  -210.409  0.934145  0.934145  0.30745
+core.pack.task: (0) [2026-11- 9 15:41:46:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:41:46:] built 1141 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:41:46:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:46:] CMD: repack  -210.409  0.934145  0.934145  0.30745
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:46:] CMD: scale:fa_rep  -208.254  0.934145  0.934145  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:54:] CMD: min  -216.917  0.859671  0.859671  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:54:] CMD: coord_cst_weight  -216.917  0.859671  0.859671  0.31955
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:54:] CMD: scale:fa_rep  -194.536  0.859671  0.859671  0.55
+core.pack.task: (0) [2026-11- 9 15:41:54:] Packer task: initialize from command line() 
+core.pack.pack_rotamers: (0) [2026-11- 9 15:41:54:] built 1138 rotamers at 69 positions.
+core.pack.interaction_graph.interaction_graph_factory: (0) [2026-11- 9 15:41:54:] Instantiating DensePDInteractionGraph
+protocols.relax.FastRelax: (0) [2026-11- 9 15:41:55:] CMD: repack  -194.536  0.859671  0.859671  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:42: 1:] CMD: min  -199.012  0.833571  0.833571  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:42: 1:] MRP: 3  -199.012  -199.012  0.833571  0.833571  
+protocols.relax.FastRelax: (0) [2026-11- 9 15:42: 1:] CMD: accept_to_best  -199.012  0.833571  0.833571  0.55
+protocols.relax.FastRelax: (0) [2026-11- 9 15:42: 1:] CMD: endrepeat  -199.012  0.833571  0.833571  0.55
+protocols::checkpoint: (0) [2026-11- 9 15:42: 1:] Deleting checkpoints of FastRelax
+protocols.rosetta_scripts.ParsedProtocol: (0) [2026-11- 9 15:42: 1:] setting status to success
+protocols.jd2.JobDistributor: (0) [2026-11- 9 15:42: 1:] relax_O43186_36-104_0001 reported success in 191 seconds
+protocols.jd2.JobDistributor: (0) [2026-11- 9 15:42: 1:] no more batches to process... 
+protocols.jd2.JobDistributor: (0) [2026-11- 9 15:42: 1:] 1 jobs considered, 1 jobs attempted in 191 seconds
+basic.citation_manager.CitationManager: (0) [2026-11- 9 15:42: 1:] 
+The following Rosetta modules were used during this run of Rosetta, and should be cited:
+
+rosetta_scripts Application's citation(s):
+Fleishman SJ, Leaver-Fay A, Corn JE, Strauch E-M, Khare SD, Koga N, Ashworth J, Murphy P, Richter F, Lemmon G, Meiler J, and Baker D.  (2011).  RosettaScripts: A Scripting Language Interface to the Rosetta Macromolecular Modeling Suite.  PLoS ONE 6(6):e20161.  doi: 10.1371/journal.pone.0020161.
+
+FastRelax Mover's citation(s):
+*Tyka MD, *Keedy DA, André I, Dimaio F, Song Y, Richardson DC, Richardson JS, and Baker D.  (2011).  Alternate states of proteins revealed by detailed energy landscape mapping.  J Mol Biol 405(2):607-18.  doi: 10.1016/j.jmb.2010.11.008.  (*Co-primary authors.)
+
+Khatib F, Cooper S, Tyka MD, Xu K, Makedon I, Popovic Z, Baker D, and Players F.  (2011).  Algorithm discovery by protein folding game players.  Proc Natl Acad Sci USA 108(47):18949-53.  doi: 10.1073/pnas.1115898108.
+
+Maguire JB, Haddox HK, Strickland D, Halabiya SF, Coventry B, Griffin JR, Pulavarti SVSRK, Cummins M, Thieker DF, Klavins E, Szyperski T, DiMaio F, Baker D, and Kuhlman B.  (2021).  Perturbing the energy landscape for improved packing during computational protein design.  Proteins 89(4):436-449.  doi: 10.1002/prot.26030.
+
+
