@@ -344,7 +344,7 @@ BLM
     ├── clinvar
     │   └── variants_output.csv
     │
-    ├── ptm
+    ├── phosphorylation
     │   ├── summary_stability.txt
     │   ├── sasa.rsa
     │   └── metatable.csv
