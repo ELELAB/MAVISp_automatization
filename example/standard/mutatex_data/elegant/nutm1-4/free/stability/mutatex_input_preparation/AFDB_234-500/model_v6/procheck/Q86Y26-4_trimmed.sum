@@ -1,0 +1,24 @@
+
+ +----------<<<  P  R  O  C  H  E  C  K     S  U  M  M  A  R  Y  >>>----------+
+ |                                                                            |
+ | ../saturation/Q86Y26-4_trimmed.pdb   2.0  A                   267 residues |
+ |                                                                            |
++| Ramachandran plot:   83.2% core   13.4% allow    3.4% gener    0.0% disall |
+ |                                                                            |
+*| All Ramachandrans:   19 labelled residues (out of 265)                     |
++| Chi1-chi2 plots:      1 labelled residues (out of 172)                     |
++| Main-chain params:    5 better     0 inside      1 worse                   |
+ | Side-chain params:    5 better     0 inside      0 worse                   |
+ |                                                                            |
+*| Residue properties: Max.deviation:    22.0              Bad contacts:    0 |
+*|                     Bond len/angle:    5.5    Morris et al class:  1  2  2 |
+ |                                                                            |
+ | G-factors           Dihedrals:  -0.25  Covalent:   0.13    Overall:  -0.09 |
+ |                                                                            |
+ | M/c bond lengths:100.0% within limits   0.0% highlighted                   |
+ | M/c bond angles:  95.7% within limits   4.3% highlighted                   |
++| Planar groups:    94.4% within limits   5.6% highlighted       1 off graph |
+ |                                                                            |
+ +----------------------------------------------------------------------------+
+   + May be worth investigating further.  * Worth investigating further.
+
