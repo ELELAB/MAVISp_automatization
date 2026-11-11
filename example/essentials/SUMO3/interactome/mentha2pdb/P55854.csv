@@ -1,0 +1,41 @@
+target uniprot id,target uniprot gene,interactor uniprot id,interactor uniprot gene,mentha score,PDB id,fusion,target chain id,target starting residue,target ending residue,interactor chain id,interactor starting residue,interactor ending residue,other interactors,method,resolution,dna chains,num ligands,PMID,pDockQ HuMap,pDockQ HuRI
+P55854,SUMO3,Q96EQ0,SGTB,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.515026
+P55854,SUMO3,O43765,SGTA,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,na,0.536771
+P55854,SUMO3,Q9HC62,SENP2,0.917,2IO1,na,B;D;F,14;14;14,103;103;103,A;C;E,364;364;364,589;589;589,na,X-ray diffraction,2.6,0.0,0.0,25416956 17099700 25944111 unassigned1304 12192048 ,0.62064,na
+P55854,SUMO3,P63279,UBE2I,0.835,na,na,na,na,na,na,na,na,na,na,na,na,na,11451954 17353931 21949651 28514442 16524884 16620772 26344197 ,na,na
+P55854,SUMO3,Q5W0Q7,USPL1,0.832,7ZJU,na,B;D,2;2,91;91,A;C,218;218,502;502,na,X-ray diffraction,2.17,0.0,5.0,25416956 22878415 ,na,na
+P55854,SUMO3,Q9P0U3,SENP1,0.78,6NNQ,na,B,15,92,A,421,644,na,X-ray diffraction,2.621,0.0,0.0,22878415 16553580 16608850 ,na,na
+P55854,SUMO3,Q13111,CHAF1A,0.671,na,na,na,na,na,na,na,na,na,na,na,na,na,19919826 ,na,na
+P55854,SUMO3,Q9UHP3,USP25,0.523,na,na,na,na,na,na,na,na,na,na,na,na,na,18538659 ,na,na
+P55854,SUMO3,Q13569,TDG,0.523,na,na,na,na,na,na,na,na,na,na,na,na,na,11889051 ,na,na
+P55854,SUMO3,Q8IY92,SLX4,0.454,na,na,na,na,na,na,na,na,na,na,na,na,na,25533188 ,na,na
+P55854,SUMO3,Q9UBE0,SAE1,0.386,na,na,na,na,na,na,na,na,na,na,na,na,na,17353931 26344197 ,na,na
+P55854,SUMO3,P23497,SP100,0.376,na,na,na,na,na,na,na,na,na,na,na,na,na,17000644 16524884 ,na,na
+P55854,SUMO3,Q16644,MAPKAPK3,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,21900206 ,na,na
+P55854,SUMO3,Q16637,SMN2,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,21900206 ,na,na
+P55854,SUMO3,Q05086,UBE3A,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,21900206 ,na,na
+P55854,SUMO3,P38936,CDKN1A,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,21900206 ,na,na
+P55854,SUMO3,P20073,ANXA7,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,21900206 ,na,na
+P55854,SUMO3,P04183,TK1,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,21900206 ,na,na
+P55854,SUMO3,P02766,TTR,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,21900206 ,na,na
+P55854,SUMO3,O60925,PFDN1,0.332,na,na,na,na,na,na,na,na,na,na,na,na,na,21900206 ,na,na
+P55854,SUMO3,Q9UER7,DAXX,0.309,na,na,na,na,na,na,na,na,na,na,na,na,na,21474068 ,na,na
+P55854,SUMO3,Q9H2X6,HIPK2,0.309,na,na,na,na,na,na,na,na,na,na,na,na,na,21145359 ,na,na
+P55854,SUMO3,Q96HI0,SENP5,0.309,9GNN,na,C;D,14;14,91;91,A;B,568;568,755;755,na,X-ray diffraction,2.36,0.0,1.0,16608850 ,na,na
+P55854,SUMO3,Q6ZNA4,RNF111,0.309,na,na,na,na,na,na,na,na,na,na,na,na,na,23530056 ,na,na
+P55854,SUMO3,P11474,ESRRA,0.309,na,na,na,na,na,na,na,na,na,na,na,na,na,18063693 ,na,na
+P55854,SUMO3,P08670,VIM,0.286,na,na,na,na,na,na,na,na,na,na,na,na,na,16169070 ,na,na
+P55854,SUMO3,Q96IT1,ZNF496,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+P55854,SUMO3,Q86T24,ZBTB33,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+P55854,SUMO3,Q6PEW1,ZCCHC12,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+P55854,SUMO3,Q15843,NEDD8,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,18274552 ,na,na
+P55854,SUMO3,P29590,PML,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,17000644 21779164 ,na,na
+P55854,SUMO3,O43290,SART1,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,17000644 ,na,na
+P55854,SUMO3,O15060,ZBTB39,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+P55854,SUMO3,A4D161,FAM221A,0.236,na,na,na,na,na,na,na,na,na,na,na,na,na,unassigned1304 ,na,na
+P55854,SUMO3,Q9UBT2,UBA2,0.21,na,na,na,na,na,na,na,na,na,na,na,na,na,16620772 ,na,na
+P55854,SUMO3,Q8IYW5,RNF168,0.21,na,na,na,na,na,na,na,na,na,na,na,na,na,26675234 ,na,na
+P55854,SUMO3,Q16665,HIF1A,0.21,na,na,na,na,na,na,na,na,na,na,na,na,na,19680224 ,na,na
+P55854,SUMO3,Q09472,EP300,0.21,na,na,na,na,na,na,na,na,na,na,na,na,na,19680224 ,na,na
+P55854,SUMO3,P62508,ESRRG,0.21,na,na,na,na,na,na,na,na,na,na,na,na,na,18063693 ,na,na
+P55854,SUMO3,P0CG48,UBC,0.21,na,na,na,na,na,na,na,na,na,na,na,na,na,24637324 ,na,na

@@ -1,5 +1,8 @@
-2026-08-25 11:26:46,647 - INFO - PDBminer is starting
-2026-08-25 11:26:46,858 - INFO - input file created based on hugo name and uniprot id, file name: input_file.csv
-2026-08-25 11:26:46,858 - INFO - Pipeline is starting
-2026-08-25 11:26:50,782 - INFO - total runtime: 0:00:04.134418
-2026-08-25 11:26:50,782 - INFO - PDBminer has finished.
+2026-11-10 08:34:42,129 - INFO - PDBminer is starting
+2026-11-10 08:34:42,349 - INFO - input file created based on hugo name and uniprot id, file name: input_file.csv
+2026-11-10 08:34:42,349 - INFO - Pipeline is starting
+2026-11-10 08:34:45,354 - WARNING - WARNING: Could not connect to 3D-Beacons database via API for P48539. – got HTTP 404 (not found). Not retrying this URL.
+2026-11-10 08:34:45,355 - WARNING - 3D-Beacons query failed for P48539: WARNING: Could not connect to 3D-Beacons database via API for P48539. failed. Last HTTP status: 404. Falling back to UniProt PDB list.
+2026-11-10 08:34:45,869 - WARNING - Uniprot returned 1 structures. NOTICE that structures deposited in the PDB within 8 weeks may not be included in this list, P48539.
+2026-11-10 08:34:50,250 - INFO - total runtime: 0:00:08.120611
+2026-11-10 08:34:50,250 - INFO - PDBminer has finished.

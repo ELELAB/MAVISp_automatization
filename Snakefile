@@ -209,15 +209,15 @@ netphos_readme = f"mavisp_templates/GENE_NAME/"\
 
 modules.update({"netphos":netphos_readme})
 
-ptm_mutatex_script  = "mavisp_templates/GENE_NAME/ptm/mutatex/run_ddgs.sh"
-ptm_mutatex_readme  = "mavisp_templates/GENE_NAME/ptm/mutatex/readme.txt"
-ptm_mutatex_mutlist = "mavisp_templates/GENE_NAME/ptm/mutatex/mutation_list.txt"
-ptm_naccess_readme  = "mavisp_templates/GENE_NAME/ptm/naccess/readme.txt"
+phosphorylation_mutatex_script  = "mavisp_templates/GENE_NAME/phosphorylation/mutatex/run_ddgs.sh"
+phosphorylation_mutatex_readme  = "mavisp_templates/GENE_NAME/phosphorylation/mutatex/readme.txt"
+phosphorylation_mutatex_mutlist = "mavisp_templates/GENE_NAME/phosphorylation/mutatex/mutation_list.txt"
+phosphorylation_naccess_readme  = "mavisp_templates/GENE_NAME/phosphorylation/naccess/readme.txt"
 
-modules['mutations_aggregation']['ptm'] = {'mutatex' : {'script'  : ptm_mutatex_script,
-                                                                 'readme'  : ptm_mutatex_readme,
-                                                                 'mutlist' : ptm_mutatex_mutlist},
-                                          'naccess' : {'readme'  : ptm_naccess_readme}}
+modules['mutations_aggregation']['phosphorylation'] = { 'mutatex' : { 'script'  : phosphorylation_mutatex_script,
+                                                                      'readme'  : phosphorylation_mutatex_readme,
+                                                                      'mutlist' : phosphorylation_mutatex_mutlist },
+                                                        'naccess' : { 'readme'  : phosphorylation_naccess_readme } }
 
 #--------------------------- Mutations Classifiers -------------------------#
 
@@ -400,13 +400,13 @@ rule all:
                structure_source = df_exploded['structure_source'],
                model = df_exploded['model']),
 
-        expand("{hugo_name}/ptm/{structure_source}_{resrange}/mutatex/summary_stability.txt",
+        expand("{hugo_name}/phosphorylation/{structure_source}_{resrange}/mutatex/summary_stability.txt",
             zip,
             hugo_name = df_exploded['protein'],
             resrange = df_exploded['trimmed'],
             structure_source = df_exploded['structure_source']),
 
-        expand("{hugo_name}/ptm/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
+        expand("{hugo_name}/phosphorylation/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
             zip,
             hugo_name = df_exploded['protein'],
             resrange = df_exploded['trimmed'],
@@ -1158,7 +1158,7 @@ rule denovo_phospho:
 
         shell("cd {outdir} && snakemake -c {threads} --rerun-incomplete")
 
-rule ptm_stability:
+rule phosphorylation_stability:
     input:
         data=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
@@ -1175,7 +1175,7 @@ rule ptm_stability:
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb",
         mutlist_dir="{hugo_name}/cancermuts/"
     output:
-        summary="{hugo_name}/ptm/{structure_source}_{resrange}/mutatex/summary_stability.txt",
+        summary="{hugo_name}/phosphorylation/{structure_source}_{resrange}/mutatex/summary_stability.txt",
     run:
         mutlist = ""
         pattern = "mutlist_mutatex_P_\d{8}\.txt"
@@ -1185,9 +1185,9 @@ rule ptm_stability:
 
         outdir = os.path.dirname(output.summary)
         shutil.copy(f"{input.mutlist_dir}/{mutlist}", f"{outdir}")
-        shutil.copy(modules['mutations_aggregation']['ptm']['mutatex']['readme'], outdir)
-        shutil.copy(modules['mutations_aggregation']['ptm']['mutatex']['script'], outdir)
-        shutil.copy(modules['mutations_aggregation']['ptm']['mutatex']['mutlist'], outdir)
+        shutil.copy(modules['mutations_aggregation']['phosphorylation']['mutatex']['readme'], outdir)
+        shutil.copy(modules['mutations_aggregation']['phosphorylation']['mutatex']['script'], outdir)
+        shutil.copy(modules['mutations_aggregation']['phosphorylation']['mutatex']['mutlist'], outdir)
         if os.path.islink(f"{outdir}/final_averages") or os.path.exists(f"{outdir}/final_averages"):
             os.remove(f"{outdir}/final_averages")
         os.symlink(os.path.abspath(input.data), f"{outdir}/final_averages")
@@ -1199,9 +1199,9 @@ rule ptm_stability:
                   bash run_ddgs.sh {os.path.basename(input.pdb)} {mutlist}
                """)
 
-rule ptm_sas:
+rule phosphorylation_sas:
     output:
-        rsa="{hugo_name}/ptm/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa"
+        rsa="{hugo_name}/phosphorylation/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa"
     input:
         pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
@@ -1212,7 +1212,7 @@ rule ptm_sas:
     run:
         outdir = os.path.dirname(output.rsa)
         pdb_fname = os.path.basename(input.pdb)
-        shutil.copy(modules['mutations_aggregation']['ptm']['naccess']['readme'], outdir)
+        shutil.copy(modules['mutations_aggregation']['phosphorylation']['naccess']['readme'], outdir)
         shutil.copy(input.pdb, outdir)
         shell(f"cd {outdir} && naccess {pdb_fname}")
 
@@ -1609,11 +1609,11 @@ rule metadata:
 
 rule collect_outputs:
     input:
-        ptm_stability = lambda wcs: [
-            f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{resrange}/mutatex/summary_stability.txt"
+        phosphorylation_stability = lambda wcs: [
+            f"{wcs.hugo_name}/phosphorylation/{wcs.structure_source}_{resrange}/mutatex/summary_stability.txt"
             for resrange in df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]],
-        ptm_sas = lambda wcs: [
-            f"{wcs.hugo_name}/ptm/{wcs.structure_source}_{resrange}/naccess/"
+        phosphorylation_sas = lambda wcs: [
+            f"{wcs.hugo_name}/phosphorylation/{wcs.structure_source}_{resrange}/naccess/"
             f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}"
             f"_trimmed_model0_checked.rsa"
             for resrange in df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]],
@@ -1646,24 +1646,24 @@ rule collect_outputs:
         out  = Path(hn) / "simple_mode"
         out.mkdir(parents=True, exist_ok=True)
 
-	# 1) PTM stability
-	ptm_dir = out / "ptm"
-	ptm_dir.mkdir(parents=True, exist_ok=True)
+	# 1) phosphorylation stability
+	phosphorylation_dir = out / "phosphorylation"
+	phosphorylation_dir.mkdir(parents=True, exist_ok=True)
 
 	stability_contents = []
-        for fn in input.ptm_stability:
+        for fn in input.phosphorylation_stability:
             if Path(fn).stat().st_size > 0:
                 stability_contents.append(Path(fn).read_text())
 
         if stability_contents:
-            with open(ptm_dir / "summary_stability.txt", "w") as fw:
+            with open(phosphorylation_dir / "summary_stability.txt", "w") as fw:
                 fw.writelines(stability_contents)
 
-	# 2) PTM sasa.rsa
-        rsa_files = sorted(input.ptm_sas,
+	# 2) phosphorylation sasa.rsa
+        rsa_files = sorted(input.phosphorylation_sas,
         key=lambda p: int(Path(p).parent.parent.name.split("_", 1)[1].split("-", 1)[1]))
         first, last = rsa_files[0], rsa_files[-1]
-        sasa_out = ptm_dir / "sasa.rsa"
+        sasa_out = phosphorylation_dir / "sasa.rsa"
         with open(first) as fh_first:
             header = [next(fh_first) for _ in range(4)]
         res_lines = []
@@ -1680,9 +1680,9 @@ rule collect_outputs:
             fout.writelines(res_lines)
             fout.writelines(tail)
 
-	# 3) PTM metatable
+	# 3) phosphorylation metatable
         meta_src = Path(input.cancermuts) / f"metatable_pancancer_{hn}.csv"
-        shutil.copy(meta_src, ptm_dir / "metatable.csv")
+        shutil.copy(meta_src, phosphorylation_dir / "metatable.csv")
 
         # 4) copy SAS into its own folder
         sas_dir = out / "sas"
