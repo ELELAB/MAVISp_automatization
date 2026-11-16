@@ -140,7 +140,7 @@ modules:
         thermompnn_conda_env: /usr/local/envs/thermompnn
         output_path_folder: /data/raw_data/computational_data/thermoMPNN_data/
         template_folder: mavisp_templates/GENE_NAME/thermompnn
-        thermompnn_dir: /data/raw_data/computational_data/thermoMPNN_data/templates/
+        thermompnn_install_dir: /data/raw_data/computational_data/thermoMPNN_data/templates/
         folder_name: thermompnn
     rosetta_relax:
         rosetta_env: /usr/local/envs/rosettaddgprediction/bin/activate
@@ -151,7 +151,7 @@ modules:
         environment: set +eu && . /usr/local/envs/efoldmine/bin/activate && set -eu
 ```
 
-The ThermoMPNN `thermompnn_dir` contains the shared helper scripts and model weights.
+The ThermoMPNN `thermompnn_install_dir` contains the shared helper scripts and model weights.
 
 Before running the pipeline, please ensure that you customize the configuration file by providing the correct paths for the environment, databases and the location of the cancermuts script template.
 N.B the field ELM_connections_per_run specifiy the number of cancermuts run that can be run in parallell. It's essential to query ELM database once at time, for this reason the parameter needs to be set 1. 
@@ -406,75 +406,56 @@ BLM
         └── mutations_pmid_22052025.txt
 
 ```
-
 ## Usage
 
-The commands below run Snakemake locally. The `all` and `essentials` targets require a GPU on that server. To let Snakemake submit ThermoMPNN to a GPU node, use the [SLURM command](#slurm) from bioinfo01.
+Run the commands below from the relevant example folder on bioinfo01 using Snakemake 7.32.4. The SLURM profile submits ThermoMPNN to a GPU node; the other rules run locally.
 
 In order to run the pipeline (see example folder):
 
-```
+```bash
 conda deactivate
 
 module load python/3.10
 
-snakemake -c 1
+mkdir -p slurm_logs
+
+snakemake --snakefile ../../Snakefile --profile ../../profiles/slurm all
 ```
 
 to use the target rule for IDPs, instead:
 
-```
+```bash
 conda deactivate
 
 module load python/3.10
 
-snakemake -c 1 idps
+snakemake --snakefile ../../Snakefile --profile ../../profiles/slurm idps
 ```
 
 notice that in this case the `input.csv` file must specify a custom PDB file per row.
 
 to use the mode to run only essential data:
 
-```
+```bash
 conda deactivate
 
 module load python/3.10
 
-snakemake -c 1 essentials
+mkdir -p slurm_logs
+
+snakemake --snakefile ../../Snakefile --profile ../../profiles/slurm essentials
 ```
 
 to use the mode to run only idps essential data:
 
-```
+```bash
 conda deactivate
 
 module load python/3.10
 
-snakemake -c 1 essentials_idps
+snakemake --snakefile ../../Snakefile --profile ../../profiles/slurm essentials_idps
 ```
 
-### SLURM
+SLURM job logs are written to `slurm_logs/`.
 
-Start Snakemake from `example/standard` on bioinfo01 using Snakemake 7.32.4.
-Snakemake submits `thermompnn` to SLURM, which runs it on a GPU node.
-The other rules run locally on bioinfo01.
-
-```bash
-mkdir -p slurm_logs
-
-snakemake \
-    --snakefile ../../Snakefile \
-    --cluster-config ../../config_slurm.yaml \
-    --cluster "sbatch --parsable --partition={cluster.partition} --gres={cluster.gres} --cpus-per-task={cluster.cpus_per_task} --output={cluster.output} --error={cluster.error}" \
-    --cluster-cancel scancel \
-    --jobs 1 \
-    --cores 1 \
-    --local-cores 1 \
-    --printshellcmds \
-    all
-```
-
-Job logs are written to `slurm_logs/`.
-For `example/essentials`, run the same command from that directory with `essentials` as the final target.
-To queue the Snakemake command with Task Spooler, prefix it with `tsp -N 1`.
-Keep all Snakemake options, including `--cluster-config` and `--cluster`.
+To queue a Snakemake command with Task Spooler, prefix it with `tsp -N 1` and keep the `--snakefile` and `--profile` options.

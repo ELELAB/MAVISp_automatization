@@ -6,5 +6,5 @@ conda deactivate
 
 module load python/3.10/modulefile
 
-tsp -N 4 snakemake -c 4 idps
+tsp -N 4 snakemake --snakefile ../../Snakefile --profile ../../profiles/slurm -c 4 idps
 

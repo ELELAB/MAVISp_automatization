@@ -53,7 +53,7 @@ modules:
         thermompnn_conda_env: /usr/local/envs/thermompnn
         output_path_folder: thermoMPNN_data/
         template_folder: mavisp_templates/GENE_NAME/thermompnn
-        thermompnn_dir: /data/raw_data/computational_data/thermoMPNN_data/templates/
+        thermompnn_install_dir: /data/raw_data/computational_data/thermoMPNN_data/templates/
         folder_name: thermompnn
     rosetta_relax:
         rosetta_env: /usr/local/envs/rosettaddgprediction/bin/activate

@@ -391,16 +391,22 @@ rule all:
                structure_source = df_exploded['structure_source'],
                model = df_exploded['model']),
 
-        expand("{path}/"\
-               "{research_field}/"\
-               "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/",
+        expand([
+               "{path}/{research_field}/"
+               "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/"
+               "ThermoMPNN_inference_{uniprot_ac}_{resrange}.csv",
+               "{path}/{research_field}/"
+               "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/"
+               "ThermoMPNN_inference_{uniprot_ac}_{resrange}_postprocessed.csv"
+               ],
                zip,
                resrange = df_exploded['trimmed'],
                hugo_name = df_exploded['protein'].str.lower(),
                path = df_exploded['output_thermompnn_folder'],
                research_field = df_exploded['research_field'],
                structure_source = df_exploded['structure_source'],
-               model = df_exploded['model']),
+               model = df_exploded['model'],
+               uniprot_ac = df_exploded['uniprot_ac'].str.upper()),
 
         expand("{path}/"\
                "{research_field}/"\
@@ -1427,17 +1433,27 @@ rule thermompnn:
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/original_model/",
     output:
-        directory("{path,.*}thermoMPNN_data/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/")
+        raw=(
+            "{path,.*}thermoMPNN_data/{research_field}/{hugo_name}/free/"
+            "{structure_source}_{resrange}/{model}_model/"
+            "ThermoMPNN_inference_{uniprot_ac}_{resrange}.csv"
+        ),
+        postprocessed=(
+            "{path,.*}thermoMPNN_data/{research_field}/{hugo_name}/free/"
+            "{structure_source}_{resrange}/{model}_model/"
+            "ThermoMPNN_inference_{uniprot_ac}_{resrange}_postprocessed.csv"
+        ),
     shell:
         """
-        mkdir -p {output}
-        cp {config[modules][thermompnn][template_folder]}/readme.txt {output}
-        cp {config[modules][thermompnn][template_folder]}/custom_inference_standalone.py {output}
+        output_dir=$(dirname "{output.raw}")
+
+        cp {config[modules][thermompnn][template_folder]}/readme.txt "$output_dir/"
+        cp {config[modules][thermompnn][template_folder]}/custom_inference_standalone.py "$output_dir/"
 
         pdb_name=$(ls {input}/*_{wildcards.resrange}.pdb | xargs basename)
-        cp {input}/"$pdb_name" {output}/"$pdb_name"
+        cp {input}/"$pdb_name" "$output_dir/$pdb_name"
 
-        cd {output}
+        cd "$output_dir"
 
         offset=$(echo "{wildcards.resrange}" | cut -d'-' -f1)
 
@@ -1446,11 +1462,12 @@ rule thermompnn:
 
         python custom_inference_standalone.py --pdb "$pdb_name" \
                                             --chain A \
-                                            --thermompnn-dir {config[modules][thermompnn][thermompnn_dir]} \
-                                            --offset "$offset"
+                                            --thermompnn-dir {config[modules][thermompnn][thermompnn_install_dir]} \
+                                            --offset "$offset" \
+                                            --output "$(basename "{output.raw}")" \
+                                            --postprocess-output "$(basename "{output.postprocessed}")"
         """
 
-#################################
 
 rule rosetta_relax:
     localrule: True
@@ -1702,7 +1719,8 @@ rule collect_outputs:
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
         structure_thermompnn=lambda wcs: [
             f"{thermompnn_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/"
-            f"{wcs.structure_source}_{resrange}/{wcs.model}_model"
+            f"{wcs.structure_source}_{resrange}/{wcs.model}_model/"
+            f"ThermoMPNN_inference_{wcs.uniprot_ac}_{resrange}_postprocessed.csv"
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
         structure_foldx5=lambda wcs: [
             f"{mutatex_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/"
@@ -1832,24 +1850,22 @@ rule collect_outputs:
                     fout.write(lines[0])
                     header_written = True
                 fout.writelines(lines[1:])
-
-        # ThermoMPNN predictions
+       
+        # 15) ThermoMPNN predictions
         thermompnn_out = base / "thermompnn" / (
             f"ThermoMPNN_inference_{wildcards.uniprot_ac}_{merged_range}_postprocessed.csv")
         thermompnn_out.parent.mkdir(parents=True, exist_ok=True)
 
         with open(thermompnn_out, "w") as fout:
             header_written = False
-            for r in input.structure_thermompnn:
-                resrange = Path(r).parent.name.split('_', 1)[1]
-                fp = Path(r) / f"ThermoMPNN_inference_{wildcards.uniprot_ac}_{resrange}_postprocessed.csv"
-                lines = fp.read_text().splitlines(keepends=True)
+            for fp in input.structure_thermompnn:
+                lines = Path(fp).read_text().splitlines(keepends=True)
                 if not header_written:
                     fout.write(lines[0])
                     header_written = True
                 fout.writelines(lines[1:])
 
-	# 15) foldx5 energies
+	# 16) foldx5 energies
         fx_dir = base / "foldx5"
         fx_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1873,7 +1889,7 @@ rule collect_outputs:
         merge_foldx_csv(input.structure_foldx5, fx_dir / "energies.csv")
         merge_foldx_csv(input.structure_foldx5_std, fx_dir / "energies_std.csv")
 
-        # 16) mutation_list
+        # 17) mutation_list
         ml_dir = out / "mutation_list"
         ml_dir.mkdir(parents=True, exist_ok=True)
         all_ml = glob.glob(f"{hn}/cancermuts/mutlist_*.txt")
@@ -1885,7 +1901,7 @@ rule collect_outputs:
             for line in fi:
                 fo.write(f"{line.rstrip()}\thttps://doi.org/10.1101/2022.10.22.513328\n")
 
-        # 17) touch the done‐file
+        # 18) touch the done‐file
         Path(output[0]).touch()
 
 rule collect_outputs_idps:
