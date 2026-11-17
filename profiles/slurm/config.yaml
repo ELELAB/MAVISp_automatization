@@ -1,13 +1,9 @@
-cluster: >-
-    sbatch --parsable
-    --partition=main
-    --gres=gpu:1
-    --cpus-per-task=1
-    --output=slurm_logs/slurm-%j.out
-    --error=slurm_logs/slurm-%j.err
-
-cluster-cancel: scancel
+slurm: true
 jobs: 1
 cores: 1
 local-cores: 1
 printshellcmds: true
+
+default-resources:
+    - slurm_partition=main
+    - slurm_extra="--gres=gpu:1"
