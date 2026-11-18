@@ -1,0 +1,5 @@
+dssp_exec: /usr/local/dssp-3.0.10/bin/mkdssp
+plddt_cutoff: 70
+uniprot_ids:
+  Q86Y26-4:
+    dir_name: nutm1-4
