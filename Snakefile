@@ -1670,7 +1670,7 @@ rule thermompnn:
         set +u; source {config[modules][thermompnn][conda_activation]}
         conda activate {config[modules][thermompnn][thermompnn_conda_env]}; set -u
 
-        python custom_inference_standalone.py --pdb "$pdb_name" \
+        "{config[modules][thermompnn][thermompnn_conda_env]}/bin/python" custom_inference_standalone.py --pdb "$pdb_name" \
                                             --chain A \
                                             --thermompnn-dir {config[modules][thermompnn][thermompnn_install_dir]} \
                                             --offset "$offset" \
