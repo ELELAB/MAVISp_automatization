@@ -416,6 +416,10 @@ standard_df = df[~df["run_as_isoform"]].copy()
 rasp_path=modules['rasp']['output_path_folder'].rstrip("/")
 df['output_path_folder'] = rasp_path
 
+# ThermoMPNN
+thermompnn_path=modules['thermompnn']['output_path_folder']
+df['output_thermompnn_folder'] = thermompnn_path
+
 # Mutatex
 mutatex_path=modules['mutations_aggregation']['mutatex']['repository']
 
@@ -450,6 +454,7 @@ modules['efoldmine'].update({"readme": efoldmine_readme})
 
 
 rule all:
+    localrule: True
     input:
         expand("{hugo_name}/structure_selection/"\
                 "original_model/",
@@ -499,6 +504,23 @@ rule all:
                research_field = df_exploded['research_field'],
                structure_source = df_exploded['structure_source'],
                model = df_exploded['model']),
+
+        expand([
+               "{path}/{research_field}/"
+               "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/"
+               "ThermoMPNN_inference_{uniprot_ac}_{resrange}.csv",
+               "{path}/{research_field}/"
+               "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/"
+               "ThermoMPNN_inference_{uniprot_ac}_{resrange}_postprocessed.csv"
+               ],
+               zip,
+               resrange = df_exploded['trimmed'],
+               hugo_name = df_exploded['protein'].str.lower(),
+               path = df_exploded['output_thermompnn_folder'],
+               research_field = df_exploded['research_field'],
+               structure_source = df_exploded['structure_source'],
+               model = df_exploded['model'],
+               uniprot_ac = df_exploded['uniprot_ac'].str.upper()),
 
         expand("{path}/"\
                "{research_field}/"\
@@ -566,6 +588,7 @@ rule all:
 ###################### Target rule for IDP processing #######################
 
 rule idps:
+    localrule: True
     input:
         expand("{hugo_name}/structure_selection/"\
                "domain_annotations/"\
@@ -631,6 +654,7 @@ rule idps:
 ###################### Target rule for simple_mode processing #######################
 
 rule essentials:
+    localrule: True
     input:
         expand("{hugo_name}/simple_mode/collection_{research_field}_{structure_source}_{resrange}_{uniprot_ac}_{model}.done",
                 zip,
@@ -644,6 +668,7 @@ rule essentials:
 ###################### Target rule for simple_mode_idps processing #######################
 
 rule essentials_idps:
+    localrule: True
     input:
         expand(
             "{hugo_name}/simple_mode/"
@@ -660,6 +685,7 @@ rule essentials_idps:
 ###################### Structure selection and trimming ######################
 
 rule structure_selection:
+    localrule: True
     input:
         mutatex_trimmed = mutatex_trimmed_inputs
     output:
@@ -758,6 +784,7 @@ rule structure_selection:
             shell("cd {root_dir} && python get_alphafolddb_data.py -c config_alphafolddb.yaml -d .")
 
 rule pdbminer:
+    localrule: True
     output:
         "{hugo_name}/structure_selection/pdbminer/results/"\
         "{uniprot_ac}/{uniprot_ac}_all.csv"
@@ -784,6 +811,7 @@ rule pdbminer:
         '''
 
 rule pdbminer_complexes:
+    localrule: True
     input:
         "{hugo_name}/structure_selection/pdbminer/results/{uniprot_ac}/{uniprot_ac}_all.csv"
     output:
@@ -807,6 +835,7 @@ rule pdbminer_complexes:
         '''
 
 rule procheck:
+    localrule: True
     input:
         trimmed_pdb_dir="{hugo_name}/structure_selection/original_model/"  # The directory containing the PDB files
     output:
@@ -849,6 +878,7 @@ rule procheck:
 ############################### Interactome #################################
 
 rule mentha2pdb:
+    localrule: True
     output:
         "{hugo_name}/interactome/mentha2pdb/{uniprot_ac}.csv"
     shell:
@@ -879,6 +909,7 @@ rule mentha2pdb:
        '''
 
 rule string2pdb:
+    localrule: True
     output:
         "{hugo_name}/interactome/string2pdb/{uniprot_ac}_string_interactors.csv"
     shell:
@@ -893,6 +924,7 @@ rule string2pdb:
         '''
 
 rule aggregate:
+    localrule: True
     input:
         pdbminer_output="{hugo_name}/structure_selection/pdbminer/results/{uniprot_ac}/{uniprot_ac}_all.csv",
         pdbminer_complexes_output="{hugo_name}/structure_selection/pdbminer_complexes/{uniprot_ac}_filtered.csv",
@@ -916,6 +948,7 @@ rule aggregate:
         '''
 
 rule isoform_coverage:
+    localrule: True
     input:
         aggregated=lambda wcs: (f"{wcs.hugo_name}/interactome/aggregate/" f"{df.loc[df['protein'].str.upper() == wcs.hugo_name.upper(), 'base_ac'].iloc[0]}_aggregated.csv")
     output:
@@ -936,6 +969,7 @@ rule isoform_coverage:
         '''
 
 rule hpc_atlas:
+    localrule: True
     output:
         "{hugo_name}/interactome/hpc_atlas/{hugo_name}.out"
     shell:
@@ -954,6 +988,7 @@ rule hpc_atlas:
 ###############################Efoldmine####################################
 
 rule efoldmine:
+    localrule: True
     output:
         "{hugo_name}/efoldmine/{uniprot_ac}.tabular"
     shell:
@@ -971,6 +1006,7 @@ rule efoldmine:
 ################## mutations retrieval and aggregation ######################
 
 rule saturation_list:
+    localrule: True
     output:
         "{hugo_name}/saturation_mutlist/saturation_mutlist.txt"
     params:
@@ -990,6 +1026,7 @@ rule saturation_list:
               f"cat saturation_mutlist_* > saturation_mutlist.txt")
 
 rule cancermuts:
+    localrule: True
     input:
         saturation_mutlist=lambda wcs: f"{wcs.hugo_name}/saturation_mutlist/saturation_mutlist.txt" if modules['mutations_aggregation']['cancermuts']['saturation'] else [],
     output:
@@ -1167,6 +1204,7 @@ rule cancermuts:
 ################ Mutlists generation and protein annotations ################
 
 rule mutlist:
+    localrule: True
     input:
         "{hugo_name}/structure_selection/original_model/",
         f"{modules['mutations_aggregation']['cancermuts']['folder_name']}"+
@@ -1208,7 +1246,7 @@ rule mutlist:
         script = modules['mutlist_generation']['script']
         readme = modules['mutlist_generation']['readme']
         metatable = os.path.abspath(input[1])
-	shell("set +u && "\
+        shell("set +u && "\
                 "{config[modules][mutations_aggregation][mutlist][source]} && "\
                 "set -u && "\
                 "mkdir -p {output} &&"\
@@ -1268,12 +1306,13 @@ rule mutlist:
 
 
 rule domains:
+    localrule: True
     input:
         directory("{hugo_name}/cancermuts/")
     output:
         "{hugo_name}/structure_selection/domain_annotations/"
         "domains_mutlist.csv",
-	"{hugo_name}/structure_selection/domain_annotations/"
+        "{hugo_name}/structure_selection/domain_annotations/"
         "summary.csv",
         "{hugo_name}/structure_selection/domain_annotations/"
         "results.csv"
@@ -1304,6 +1343,7 @@ rule domains:
                 python ../../../{script_ted} -id {uniprot_ac}""")
 
 rule netphos:
+     localrule: True
      output:
          "{hugo_name}/netphos/netphos.out"
      run:
@@ -1318,6 +1358,7 @@ rule netphos:
               " netphos {uniprot_ac}.fasta > netphos.out")
 
 rule denovo_phospho:
+    localrule: True
     input:
         cancermuts_dir="{hugo_name}/cancermuts/"
     output:
@@ -1355,6 +1396,7 @@ rule denovo_phospho:
         shell("cd {outdir} && snakemake -c {threads} --rerun-incomplete")
 
 rule phosphorylation_stability:
+    localrule: True
     input:
         data=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
@@ -1396,6 +1438,7 @@ rule phosphorylation_stability:
                """)
 
 rule phosphorylation_sas:
+    localrule: True
     output:
         rsa="{hugo_name}/phosphorylation/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa"
     input:
@@ -1417,6 +1460,7 @@ rule phosphorylation_sas:
 ######################### Mutations classifiers #############################
 
 rule demask_config:
+    localrule: True
     output:
         "{hugo_name}/demask/config.ini"
     run:
@@ -1443,6 +1487,7 @@ rule demask_config:
             config.write(f)
 
 rule demask_homologs:
+    localrule: True
     input:
         "{hugo_name}/demask/config.ini"
     output:
@@ -1466,6 +1511,7 @@ rule demask_homologs:
         """
 
 rule demask_prediction:
+    localrule: True
     input:
         "{hugo_name}/demask/myquery_homologs.a2m"
     output:
@@ -1487,6 +1533,7 @@ rule demask_prediction:
         """
 
 rule alphamissense:
+    localrule: True
     input:
         cancermuts = "{hugo_name}/cancermuts"
     output:
@@ -1515,10 +1562,11 @@ rule alphamissense:
 
 ############################## Calculations #################################
 rule rasp_workflow:
+    localrule: True
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/original_model/",
     output:
-        directory("{path}/{research_field}/{hugo_name}/free/""{structure_source}_{resrange}/{model}_model/")
+        directory("{path}/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/")
     shell:
         """
         mkdir -p {output}
@@ -1579,6 +1627,7 @@ rule rasp_workflow:
         # Activate conda environment
         set +u; source {config[modules][rasp][conda_activation]}
         conda activate {config[modules][rasp][rasp_conda_env]}; set -u
+        export PATH="{config[modules][rasp][rasp_conda_env]}/bin:$PATH"
 
         # Run RaSP workflow
         RaSP_workflow -i $processed_pdb \
@@ -1589,7 +1638,49 @@ rule rasp_workflow:
                       -c A
         RaSP_postprocess -i output/predictions/cavity_pred_*.csv
         """
+
+rule thermompnn:
+    input:
+        lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/original_model/",
+    output:
+        raw=(
+            "{path,.*}thermoMPNN_data/{research_field}/{hugo_name}/free/"
+            "{structure_source}_{resrange}/{model}_model/"
+            "ThermoMPNN_inference_{uniprot_ac}_{resrange}.csv"
+        ),
+        postprocessed=(
+            "{path,.*}thermoMPNN_data/{research_field}/{hugo_name}/free/"
+            "{structure_source}_{resrange}/{model}_model/"
+            "ThermoMPNN_inference_{uniprot_ac}_{resrange}_postprocessed.csv"
+        ),
+    shell:
+        """
+        output_dir=$(dirname "{output.raw}")
+
+        cp {config[modules][thermompnn][template_folder]}/readme.txt "$output_dir/"
+        cp {config[modules][thermompnn][template_folder]}/custom_inference_standalone.py "$output_dir/"
+
+        pdb_name=$(ls {input}/*_{wildcards.resrange}.pdb | xargs basename)
+        cp {input}/"$pdb_name" "$output_dir/$pdb_name"
+
+        cd "$output_dir"
+
+        offset=$(echo "{wildcards.resrange}" | cut -d'-' -f1)
+
+        set +u; source {config[modules][thermompnn][conda_activation]}
+        conda activate {config[modules][thermompnn][thermompnn_conda_env]}; set -u
+
+        "{config[modules][thermompnn][thermompnn_conda_env]}/bin/python" custom_inference_standalone.py --pdb "$pdb_name" \
+                                            --chain A \
+                                            --thermompnn-dir {config[modules][thermompnn][thermompnn_install_dir]} \
+                                            --offset "$offset" \
+                                            --output "$(basename "{output.raw}")" \
+                                            --postprocess-output "$(basename "{output.postprocessed}")"
+        """
+
+
 rule rosetta_relax:
+    localrule: True
     input:
         "{hugo_name}/structure_selection/original_model/"
     output:
@@ -1741,6 +1832,7 @@ rule allosigma4:
 '''
 
 rule metadata:
+    localrule: True
     input:
         directory("{hugo_name}/cancermuts")
     output:
@@ -1818,6 +1910,7 @@ rule metadata:
             yaml.safe_dump(importing_dict, fh, sort_keys=False)
 
 rule collect_outputs:
+    localrule: True
     input:
         phosphorylation_stability = lambda wcs: [
             f"{wcs.hugo_name}/phosphorylation/{wcs.structure_source}_{resrange}/mutatex/summary_stability.txt"
@@ -1834,6 +1927,11 @@ rule collect_outputs:
         structure_rasp=lambda wcs: [
             f"{rasp_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/"
             f"{wcs.structure_source}_{resrange}/{wcs.model}_model"
+            for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
+        structure_thermompnn=lambda wcs: [
+            f"{thermompnn_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/"
+            f"{wcs.structure_source}_{resrange}/{wcs.model}_model/"
+            f"ThermoMPNN_inference_{wcs.uniprot_ac}_{resrange}_postprocessed.csv"
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
         structure_foldx5=lambda wcs: [
             f"{mutatex_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/"
@@ -1862,11 +1960,11 @@ rule collect_outputs:
         out  = Path(hn) / "simple_mode"
         out.mkdir(parents=True, exist_ok=True)
 
-	# 1) phosphorylation stability
-	phosphorylation_dir = out / "phosphorylation"
-	phosphorylation_dir.mkdir(parents=True, exist_ok=True)
+        # 1) phosphorylation stability
+        phosphorylation_dir = out / "phosphorylation"
+        phosphorylation_dir.mkdir(parents=True, exist_ok=True)
 
-	stability_contents = []
+        stability_contents = []
         for fn in input.phosphorylation_stability:
             if Path(fn).stat().st_size > 0:
                 stability_contents.append(Path(fn).read_text())
@@ -1970,8 +2068,22 @@ rule collect_outputs:
                     fout.write(lines[0])
                     header_written = True
                 fout.writelines(lines[1:])
+       
+        # 15) ThermoMPNN predictions
+        thermompnn_out = base / "thermompnn" / (
+            f"ThermoMPNN_inference_{wildcards.uniprot_ac}_{merged_range}_postprocessed.csv")
+        thermompnn_out.parent.mkdir(parents=True, exist_ok=True)
 
-	# 15) foldx5 energies
+        with open(thermompnn_out, "w") as fout:
+            header_written = False
+            for fp in input.structure_thermompnn:
+                lines = Path(fp).read_text().splitlines(keepends=True)
+                if not header_written:
+                    fout.write(lines[0])
+                    header_written = True
+                fout.writelines(lines[1:])
+
+	# 16) foldx5 energies
         fx_dir = base / "foldx5"
         fx_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1995,7 +2107,7 @@ rule collect_outputs:
         merge_foldx_csv(input.structure_foldx5, fx_dir / "energies.csv")
         merge_foldx_csv(input.structure_foldx5_std, fx_dir / "energies_std.csv")
 
-        # 16) mutation_list
+        # 17) mutation_list
         ml_dir = out / "mutation_list"
         ml_dir.mkdir(parents=True, exist_ok=True)
         all_ml = glob.glob(f"{hn}/cancermuts/mutlist_*.txt")
@@ -2007,10 +2119,11 @@ rule collect_outputs:
             for line in fi:
                 fo.write(f"{line.rstrip()}\thttps://doi.org/10.1101/2022.10.22.513328\n")
 
-        # 17) touch the done‐file
+        # 18) touch the done‐file
         Path(output[0]).touch()
 
 rule collect_outputs_idps:
+    localrule: True
     input:
         demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
         alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
