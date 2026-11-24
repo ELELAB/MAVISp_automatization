@@ -493,17 +493,18 @@ rule all:
                "am.tsv.gz",
                hugo_name = df['protein'].str.upper()),
 
-
-        expand("{path}/"\
-               "{research_field}/"\
-               "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/",
-               zip,
-               resrange = df_exploded['trimmed'],
-               hugo_name = df_exploded['protein'].str.lower(),
-               path = df_exploded['output_path_folder'],
-               research_field = df_exploded['research_field'],
-               structure_source = df_exploded['structure_source'],
-               model = df_exploded['model']),
+        expand(
+            "{path}/{research_field}/"
+            "{hugo_name}/free/{structure_source}_{resrange}/{model}_model/"
+            "output/predictions/post_processed_{uniprot_ac}_{resrange}_processed_A.csv",
+            zip,
+            resrange = df_exploded['trimmed'],
+            hugo_name = df_exploded['protein'].str.lower(),
+            path = df_exploded['output_path_folder'],
+            uniprot_ac = df_exploded['uniprot_ac'].str.upper(),
+            research_field = df_exploded['research_field'],
+            structure_source = df_exploded['structure_source'],
+            model = df_exploded['model']),
 
         expand([
                "{path}/{research_field}/"
@@ -1562,22 +1563,27 @@ rule alphamissense:
 
 ############################## Calculations #################################
 rule rasp_workflow:
-    localrule: True
     input:
         lambda wcs: f"{wcs.hugo_name.upper()}/structure_selection/original_model/",
     output:
-        directory("{path}/{research_field}/{hugo_name}/free/{structure_source}_{resrange}/{model}_model/")
+        postprocessed=(
+            "{path}/{research_field}/{hugo_name}/free/"
+            "{structure_source}_{resrange}/{model}_model/"
+            "output/predictions/post_processed_{uniprot_ac}_{resrange}_processed_A.csv"
+        ),
+    threads: 4
     shell:
         """
-        mkdir -p {output}
-        cp {config[modules][rasp][readme]} {output}
+        output_dir="{wildcards.path}/{wildcards.research_field}/{wildcards.hugo_name}/free/{wildcards.structure_source}_{wildcards.resrange}/{wildcards.model}_model"
+        mkdir -p "$output_dir"
+        cp {config[modules][rasp][readme]} "$output_dir/"
 
         pdb_name=$(ls {input}/*_{wildcards.resrange}.pdb | xargs basename)
         processed_pdb=$(echo "$pdb_name" | sed 's/\.pdb$/_processed.pdb/')
 
-        cp {input}/"$pdb_name" {output}/"$pdb_name"
+        cp {input}/"$pdb_name" "$output_dir/$pdb_name"
 
-        cd {output}
+        cd "$output_dir"
 
         # Step 1: Add chain if missing
         add_chain() {{
@@ -1631,12 +1637,12 @@ rule rasp_workflow:
 
         # Run RaSP workflow
         RaSP_workflow -i $processed_pdb \
-                      -r cpu \
+                      -r cuda \
                       -p /usr/local/envs/RaSP_workflow/RaSP_workflow/src/ \
                       -o . \
-                      -n 4 \
+                      -n {threads} \
                       -c A
-        RaSP_postprocess -i output/predictions/cavity_pred_*.csv
+        RaSP_postprocess -i "output/predictions/cavity_pred_{wildcards.uniprot_ac}_{wildcards.resrange}_processed_A.csv"
         """
 
 rule thermompnn:
@@ -1926,7 +1932,8 @@ rule collect_outputs:
         efoldmine=lambda wcs: f"{wcs.hugo_name}/efoldmine/{wcs.uniprot_ac}.tabular",
         structure_rasp=lambda wcs: [
             f"{rasp_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/"
-            f"{wcs.structure_source}_{resrange}/{wcs.model}_model"
+            f"{wcs.structure_source}_{resrange}/{wcs.model}_model/"
+            f"output/predictions/post_processed_{wcs.uniprot_ac}_{resrange}_processed_A.csv"
             for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
         structure_thermompnn=lambda wcs: [
             f"{thermompnn_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/"
@@ -2047,19 +2054,16 @@ rule collect_outputs:
             shutil.copy(af_csv, af_dir / af_csv.name)
 
 	# 13) merge stability
-        ranges = sorted([Path(r).parent.name.split('_',1)[1] for r in input.structure_rasp],
-            key=lambda x: int(x.split('-',1)[0]))
+        ranges = sorted(
+            df.loc[df['protein'] == wildcards.hugo_name, 'trimmed'].iloc[0],
+            key=lambda x: int(x.split('-', 1)[0]))
         merged_range = "_".join(ranges)
         base = out / "stability" / f"{wildcards.structure_source}_{merged_range}" / wildcards.structure_source / f"model_{wildcards.model}"
 
         # 14) rasp predictions
         rasp_out = base / "rasp" / "post_processed.csv"
         (rasp_out.parent).mkdir(parents=True, exist_ok=True)
-        rasp_files = []
-        for r in input.structure_rasp:
-            rasp_files += list((Path(r) / "output" / "predictions").glob("post_processed_*.csv"))
-        rasp_files = sorted(rasp_files)
-
+        rasp_files = sorted(Path(r) for r in input.structure_rasp)
         with open(rasp_out, "w") as fout:
             header_written = False
             for fp in rasp_files:
