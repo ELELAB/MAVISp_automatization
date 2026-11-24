@@ -406,8 +406,7 @@ BLM
 
 ```
 ## Usage
-
-Run the commands below from the relevant example folder on bioinfo01 using Snakemake 7.32.4. The SLURM profile submits ThermoMPNN to a GPU node; the other rules run locally.
+Run the commands below from the relevant example folder on bioinfo01 using Snakemake 7.32.4. The SLURM profile submits RaSP and ThermoMPNN to a GPU node; the other rules run locally.
 
 In order to run the pipeline (see example folder):
 
