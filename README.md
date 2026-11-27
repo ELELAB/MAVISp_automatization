@@ -48,6 +48,7 @@ The pipeline requires the following programs:
 - RosettaDDGprediction
 - efoldmine
 - procheck
+- NACCESS (required for `all` and `essentials`)
 
 The pipeline requires the following databases:
 - mentha
