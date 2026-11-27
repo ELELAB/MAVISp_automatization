@@ -165,7 +165,7 @@ N.B The template files for the RasP calculations are collected in the following 
 
 The pipeline automates the following steps for each entry in the input CSV file, collecting the corresponding readouts and organizing them into specific folders based on the HUGO name of each entry (refer to the example folder):
 
-- **Retrieving and trimming AlphaFold models**: The associated PDB file for each entry in the input file is copied from MutateX folder. Each trimmed model is stored in the "structure_selection/original_model/" path (see example folder). Only regions with high pLDDT scores are retained. The residue range is used in subsequent steps to filter the mutation list for calculations. 
+- **Retrieving and trimming AlphaFold models**: The workflow uses the PDB supplied in `input_pdb` when provided. If `input_pdb` is omitted, it retrieves the structure from the configured MutateX repository. Without a MutateX repository, `input_pdb` is required for each protein. Each trimmed model is stored in the "structure_selection/original_model/" path (see example folder). Only regions with high pLDDT scores are retained. The residue range is used in subsequent steps to filter the mutation list for calculations. 
 For proteins using experimental PDB or any other custom structure, the specified PDB file is copied from working directory and trimmed as needed.
 Notice that when using the `idps` target rule, the PDB file always needs to be specified manually, as the MutateX run will not be available.
 
