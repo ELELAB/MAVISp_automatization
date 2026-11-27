@@ -48,6 +48,7 @@ The pipeline requires the following programs:
 - RosettaDDGprediction
 - efoldmine
 - procheck
+- NACCESS (required for `all` and `essentials`)
 
 The pipeline requires the following databases:
 - mentha
@@ -56,7 +57,7 @@ The pipeline requires the following databases:
 - Alphamissense
 - AF_Huri
 
-It also requires to have a full mutational scan performed using MutateX.
+For `all` (the full workflow) and `essentials`, supply a PDB in `input_pdb` for each protein when running without FoldX. Omit `modules.mutations_aggregation.mutatex` from `config.yaml` to use this mode. The workflow collects ThermoMPNN and RaSP results and skips the MutateX-backed phosphorylation outputs. NACCESS calculates solvent accessibility from the trimmed input PDB and collects it in `simple_mode/sas/sasa.rsa`. With FoldX enabled, NACCESS continues to use the FoldX-prepared PDB. To include FoldX outputs, configure the MutateX repository and provide a complete scan for every residue range.
 
 Before running the pipeline, please ensure that all the requirements are met.
 
@@ -75,7 +76,7 @@ where:
 "trimmed" represents the residues range of your trimmed model (in case of multiple models specify the ranges "_" separeted)
 "ref_seq" is the ref seq code associated with the isoform used by cancermuts (usually the first one). The RefSeq associated with the first isoform can be accessed through the Uniprot database in the "Sequence & isoforms" or "Sequence" section (depending on the protein being investigated) under the field "Sequence databases". The RefSeq code required by the pipeline consists of the "NP" followed by all subsequent characters until the dot, excluding it. There may be multiple RefSeq codes available. The one associated with the correct isoform includes the isoform code, which is enclosed in square brackets, corresponding to the canonical isoform. Verify by clicking on it that it corresponds to the correct isoform.
 "research_field" is the project or the research field in which the protein is involved (this is the name of the folder in which the cancermuts and rasp calculation will be organized).
-"input_pdb" is an optional input pdb file the user provides. Notice that this is mandatory when using the `idp` rule target.
+"input_pdb" is a path to a user-provided PDB file. It is required when no MutateX repository is configured and when using the `idps` target.
 "structure_source" the source of the input structure, it needs to follow the nameing of this dictionary:
 AFDB: "AlphaFold database",
 AF3: "AlphaFold3 webserver",
@@ -165,7 +166,7 @@ N.B The template files for the RasP calculations are collected in the following 
 
 The pipeline automates the following steps for each entry in the input CSV file, collecting the corresponding readouts and organizing them into specific folders based on the HUGO name of each entry (refer to the example folder):
 
-- **Retrieving and trimming AlphaFold models**: The associated PDB file for each entry in the input file is copied from MutateX folder. Each trimmed model is stored in the "structure_selection/original_model/" path (see example folder). Only regions with high pLDDT scores are retained. The residue range is used in subsequent steps to filter the mutation list for calculations. 
+- **Retrieving and trimming AlphaFold models**: The workflow uses the PDB supplied in `input_pdb` when provided. If `input_pdb` is omitted, it retrieves the structure from the configured MutateX repository. Without a MutateX repository, `input_pdb` is required for each protein. Each trimmed model is stored in the "structure_selection/original_model/" path (see example folder). Only regions with high pLDDT scores are retained. The residue range is used in subsequent steps to filter the mutation list for calculations. 
 For proteins using experimental PDB or any other custom structure, the specified PDB file is copied from working directory and trimmed as needed.
 Notice that when using the `idps` target rule, the PDB file always needs to be specified manually, as the MutateX run will not be available.
 

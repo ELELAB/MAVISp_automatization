@@ -179,16 +179,17 @@ modules['structure_selection'].update({"pdbminer_complexes":\
 
 modules['structure_selection']['procheck'].update({"readme":procheck_readme})
 
-def mutatex_trimmed_inputs(w):
-    """Return list of MutateX trimmed PDBs for this gene, or [] if external PDB is provided."""
+def structure_pdb_inputs(w):
+    """Declare the custom PDB or the legacy MutateX structure inputs."""
     row = df.loc[df['protein'].str.upper() == w.hugo_name]
     if row.empty:
         raise ValueError(f"No row in df for {w.hugo_name}")
     row = row.iloc[0]
 
-    # if external PDB is present, nothing to fetch from MutateX
     if not pd.isna(row['input_pdb']):
-        return []
+        return [row['input_pdb']]
+    if not mutatex_path:
+        raise ValueError(f"Set input_pdb for {w.hugo_name} in the input CSV when no MutateX repository is configured.")
 
     gene_lc     = w.hugo_name.lower()
     rf          = row['research_field']
@@ -199,19 +200,20 @@ def mutatex_trimmed_inputs(w):
     trimmed = row['trimmed']
     resranges = trimmed if isinstance(trimmed, (list, tuple)) else [trimmed]
 
-    base_repo = modules['mutations_aggregation']['mutatex']['repository']
-
     return [
-        f"{base_repo}/{rf}/{gene_lc}/free/stability/mutatex_input_preparation/"
+        f"{mutatex_path}/{rf}/{gene_lc}/free/stability/mutatex_input_preparation/"
         f"{ss}_{res}/model_{model}/saturation/{uniprot_ac}_trimmed.pdb"
         for res in resranges
     ]
 
-def fetch_foldx_version(modules, df, gene):
+def fetch_foldx_version(df, gene):
+    if not mutatex_path:
+        return None
+
     row = df.loc[df['protein'] == gene].iloc[0]
     versions= set()
     for resrange in row['trimmed']:
-        log_path = (f"{modules['mutations_aggregation']['mutatex']['repository']}/"
+        log_path = (f"{mutatex_path}/"
                     f"{row['research_field']}/{gene.lower()}/free/stability/mutatex_runs/"
                     f"{row['structure_source']}_{resrange}/model_{row['model']}/saturation/"
                     f"{row['uniprot_ac']}_scan/repair/repair_{row['uniprot_ac']}_trimmed_model0_checked/FoldXrun.log")
@@ -421,7 +423,7 @@ thermompnn_path=modules['thermompnn']['output_path_folder']
 df['output_thermompnn_folder'] = thermompnn_path
 
 # Mutatex
-mutatex_path=modules['mutations_aggregation']['mutatex']['repository']
+mutatex_path = (modules['mutations_aggregation'].get('mutatex') or {}).get('repository')
 
 # Rosetta
 rosetta_path=modules['rosetta_relax']['rosetta_folder'].rstrip("/")
@@ -536,13 +538,13 @@ rule all:
                structure_source = df_exploded['structure_source'],
                model = df_exploded['model']),
 
-        expand("{hugo_name}/phosphorylation/{structure_source}_{resrange}/mutatex/summary_stability.txt",
+        (expand("{hugo_name}/phosphorylation/{structure_source}_{resrange}/mutatex/summary_stability.txt",
             zip,
             hugo_name = df_exploded['protein'],
             resrange = df_exploded['trimmed'],
-            structure_source = df_exploded['structure_source']),
+            structure_source = df_exploded['structure_source']) if mutatex_path else []),
 
-        expand("{hugo_name}/phosphorylation/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa",
+        expand("{hugo_name}/sas/{structure_source}_{resrange}/naccess/{uniprot_ac}.rsa",
             zip,
             hugo_name = df_exploded['protein'],
             resrange = df_exploded['trimmed'],
@@ -687,7 +689,7 @@ rule essentials_idps:
 rule structure_selection:
     localrule: True
     input:
-        mutatex_trimmed = mutatex_trimmed_inputs
+        pdbs = structure_pdb_inputs
     output:
         directory("{hugo_name}/structure_selection/original_model")
     run:
@@ -738,7 +740,7 @@ rule structure_selection:
             # AF/MutateX: original model from the first resrange folder
             first_res = str(trimmed_list[0])
             mutatex_base_first = (
-                f"{modules['mutations_aggregation']['mutatex']['repository']}/"
+                f"{mutatex_path}/"
                 f"{rf}/{gene_lc}/free/stability/mutatex_input_preparation/"
                 f"{ss}_{first_res}/model_{model}/saturation/"
             )
@@ -748,7 +750,7 @@ rule structure_selection:
             shell("cp {src_orig} {gene_dir}/{uniprot_ac}.pdb")
         else:
             # Custom PDB → copy once as {gene_lc}/{UNIPROT}.pdb
-            shell("cp {pdb_custom} {gene_dir}/{uniprot_ac}.pdb")
+            shell("cp {pdb_custom:q} {gene_dir}/{uniprot_ac}.pdb")
 
         # ---------------- TRIMMED per-resrange PDBs (in root_dir/) ---------------- #
         for resrange in trimmed_list:
@@ -756,7 +758,7 @@ rule structure_selection:
             if pd.isna(pdb_custom):
                 # AF/MutateX: copy pre-trimmed
                 mutatex_trimmed = (
-                    f"{modules['mutations_aggregation']['mutatex']['repository']}/"
+                    f"{mutatex_path}/"
                     f"{rf}/{gene_lc}/free/stability/mutatex_input_preparation/"
                     f"{ss}_{resrange}/model_{model}/saturation/{uniprot_ac}_trimmed.pdb"
                 )
@@ -1398,13 +1400,13 @@ rule denovo_phospho:
 rule phosphorylation_stability:
     localrule: True
     input:
-        data=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
+        data=lambda wcs: f"{mutatex_path}/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
                          f"free/stability/mutatex_runs/{wcs.structure_source}_" +\
                          f"{wcs.resrange}/model_" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'model'].iloc[0]}/saturation/" +\
                          f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/results/mutation_ddgs/final_averages/",
-        pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
+        pdb=lambda wcs: f"{mutatex_path}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
                         f"free/stability/mutatex_runs/{wcs.structure_source}_" +\
                         f"{wcs.resrange}/model_" +\
@@ -1437,23 +1439,29 @@ rule phosphorylation_stability:
                   bash run_ddgs.sh {os.path.basename(input.pdb)} {mutlist}
                """)
 
-rule phosphorylation_sas:
+rule naccess_sas:
     localrule: True
     output:
-        rsa="{hugo_name}/phosphorylation/{structure_source}_{resrange}/naccess/{uniprot_ac}_trimmed_model0_checked.rsa"
+        rsa="{hugo_name}/sas/{structure_source}_{resrange}/naccess/{uniprot_ac}.rsa"
     input:
-        pdb=lambda wcs: f"{modules['mutations_aggregation']['mutatex']['repository']}/" +\
+        models=lambda wcs: [] if mutatex_path else f"{wcs.hugo_name}/structure_selection/original_model",
+        foldx_pdb=lambda wcs: [] if not mutatex_path else f"{mutatex_path}/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'research_field'].iloc[0]}/{wcs.hugo_name.lower()}/" +\
                         f"free/stability/mutatex_runs/{wcs.structure_source}_{wcs.resrange}/model_" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'model'].iloc[0]}/saturation/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_scan/" +\
                         f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}_trimmed_model0_checked.pdb"
     run:
-        outdir = os.path.dirname(output.rsa)
-        pdb_fname = os.path.basename(input.pdb)
-        shutil.copy(modules['mutations_aggregation']['phosphorylation']['naccess']['readme'], outdir)
-        shutil.copy(input.pdb, outdir)
-        shell(f"cd {outdir} && naccess {pdb_fname}")
+        if input.foldx_pdb:
+            pdb = Path(input.foldx_pdb[0])
+        else:
+            pdb = Path(input.models[0]) / f"{wildcards.uniprot_ac}_{wildcards.resrange}.pdb"
+        rsa = Path(output.rsa)
+        outdir = rsa.parent
+        outdir.mkdir(parents=True, exist_ok=True)
+        pdb_name = rsa.with_suffix(".pdb").name
+        shutil.copy(pdb, outdir / pdb_name)
+        shell("cd {outdir:q} && naccess {pdb_name:q}")
 
 
 
@@ -1838,6 +1846,8 @@ rule metadata:
     output:
         metadata  = "{hugo_name}/metadata/metadata.yaml",
         importing = "{hugo_name}/metadata/importing.yaml"
+    params:
+        mutatex_repository = mutatex_path or ""
     run:
         gene    = wildcards.hugo_name
         meta_dir = os.path.dirname(output.metadata)
@@ -1873,7 +1883,7 @@ rule metadata:
             'structure_source': structure_source,
             'linker_design': False,
             'pdb_id': pdb_id,
-            'stability_foldx_version': fetch_foldx_version(modules, df, gene)
+            'stability_foldx_version': fetch_foldx_version(df, gene)
         }
         with open(output.metadata, 'w') as fh:
             yaml.safe_dump(metadata_dict, fh, sort_keys=False)
@@ -1914,11 +1924,9 @@ rule collect_outputs:
     input:
         phosphorylation_stability = lambda wcs: [
             f"{wcs.hugo_name}/phosphorylation/{wcs.structure_source}_{resrange}/mutatex/summary_stability.txt"
-            for resrange in df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]],
-        phosphorylation_sas = lambda wcs: [
-            f"{wcs.hugo_name}/phosphorylation/{wcs.structure_source}_{resrange}/naccess/"
-            f"{df.loc[df['protein'] == wcs.hugo_name, 'uniprot_ac'].iloc[0]}"
-            f"_trimmed_model0_checked.rsa"
+            for resrange in df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]] if mutatex_path else [],
+        sas = lambda wcs: [
+            f"{wcs.hugo_name}/sas/{wcs.structure_source}_{resrange}/naccess/{wcs.uniprot_ac}.rsa"
             for resrange in df.loc[df['protein'] == wcs.hugo_name, 'trimmed'].iloc[0]],
         demask=lambda wcs: f"{wcs.hugo_name}/demask/myquery_predictions.txt",
         alphamissense=lambda wcs: f"{wcs.hugo_name}/alphamissense/am.tsv.gz",
@@ -1937,12 +1945,12 @@ rule collect_outputs:
             f"{mutatex_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/"
             f"mutatex_runs/{wcs.structure_source}_{resrange}/model_{wcs.model}/"
             f"saturation/{wcs.uniprot_ac}_table/energies.csv"
-            for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
+            for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]] if mutatex_path else [],
         structure_foldx5_std=lambda wcs: [
             f"{mutatex_path}/{wcs.research_field}/{wcs.hugo_name.lower()}/free/stability/"
             f"mutatex_runs/{wcs.structure_source}_{resrange}/model_{wcs.model}/"
             f"saturation/{wcs.uniprot_ac}_table/energies_std.csv"
-            for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]],
+            for resrange in df.loc[df['protein']==wcs.hugo_name,'trimmed'].iloc[0]] if mutatex_path else [],
         pfam=lambda wcs: (
             [] if df.loc[df['protein'] == wcs.hugo_name, 'run_as_isoform'].iloc[0]
             else f"{wcs.hugo_name}/structure_selection/domain_annotations/summary.csv"
@@ -1960,24 +1968,13 @@ rule collect_outputs:
         out  = Path(hn) / "simple_mode"
         out.mkdir(parents=True, exist_ok=True)
 
-        # 1) phosphorylation stability
-        phosphorylation_dir = out / "phosphorylation"
-        phosphorylation_dir.mkdir(parents=True, exist_ok=True)
-
-        stability_contents = []
-        for fn in input.phosphorylation_stability:
-            if Path(fn).stat().st_size > 0:
-                stability_contents.append(Path(fn).read_text())
-
-        if stability_contents:
-            with open(phosphorylation_dir / "summary_stability.txt", "w") as fw:
-                fw.writelines(stability_contents)
-
-	# 2) phosphorylation sasa.rsa
-        rsa_files = sorted(input.phosphorylation_sas,
+        meta_src = Path(input.cancermuts) / f"metatable_pancancer_{hn}.csv"
+        sas_dir = out / "sas"
+        sas_dir.mkdir(parents=True, exist_ok=True)
+        rsa_files = sorted(input.sas,
         key=lambda p: int(Path(p).parent.parent.name.split("_", 1)[1].split("-", 1)[1]))
         first, last = rsa_files[0], rsa_files[-1]
-        sasa_out = phosphorylation_dir / "sasa.rsa"
+        sasa_out = sas_dir / "sasa.rsa"
         with open(first) as fh_first:
             header = [next(fh_first) for _ in range(4)]
         res_lines = []
@@ -1994,14 +1991,27 @@ rule collect_outputs:
             fout.writelines(res_lines)
             fout.writelines(tail)
 
-	# 3) phosphorylation metatable
-        meta_src = Path(input.cancermuts) / f"metatable_pancancer_{hn}.csv"
-        shutil.copy(meta_src, phosphorylation_dir / "metatable.csv")
+        phosphorylation_dir = out / "phosphorylation"
+        summary_path = phosphorylation_dir / "summary_stability.txt"
+        if input.phosphorylation_stability:
+            phosphorylation_dir.mkdir(parents=True, exist_ok=True)
+            stability_contents = []
+            for fn in input.phosphorylation_stability:
+                if Path(fn).stat().st_size > 0:
+                    stability_contents.append(Path(fn).read_text())
 
-        # 4) copy SAS into its own folder
-        sas_dir = out / "sas"
-        sas_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy(sasa_out, sas_dir / "sasa.rsa")
+            if stability_contents:
+                with open(summary_path, "w") as fw:
+                    fw.writelines(stability_contents)
+            else:
+                summary_path.unlink(missing_ok=True)
+            shutil.copy(meta_src, phosphorylation_dir / "metatable.csv")
+            shutil.copy(sasa_out, phosphorylation_dir / "sasa.rsa")
+        else:
+            for filename in ("summary_stability.txt", "sasa.rsa", "metatable.csv"):
+                (phosphorylation_dir / filename).unlink(missing_ok=True)
+            if phosphorylation_dir.is_dir() and not any(phosphorylation_dir.iterdir()):
+                phosphorylation_dir.rmdir()
 
         # 5) demask
         dem_dir = out / "demask"
@@ -2085,7 +2095,6 @@ rule collect_outputs:
 
 	# 16) foldx5 energies
         fx_dir = base / "foldx5"
-        fx_dir.mkdir(parents=True, exist_ok=True)
 
         def merge_foldx_csv(files, out_file):
             fx_files = sorted(Path(f) for f in files)
@@ -2104,8 +2113,15 @@ rule collect_outputs:
                 fout.write(header)
                 fout.writelines(fx_lines)
 
-        merge_foldx_csv(input.structure_foldx5, fx_dir / "energies.csv")
-        merge_foldx_csv(input.structure_foldx5_std, fx_dir / "energies_std.csv")
+        if input.structure_foldx5:
+            fx_dir.mkdir(parents=True, exist_ok=True)
+            merge_foldx_csv(input.structure_foldx5, fx_dir / "energies.csv")
+            merge_foldx_csv(input.structure_foldx5_std, fx_dir / "energies_std.csv")
+        else:
+            (fx_dir / "energies.csv").unlink(missing_ok=True)
+            (fx_dir / "energies_std.csv").unlink(missing_ok=True)
+            if fx_dir.is_dir() and not any(fx_dir.iterdir()):
+                fx_dir.rmdir()
 
         # 17) mutation_list
         ml_dir = out / "mutation_list"
